@@ -7,7 +7,7 @@ namespace Metrics.Core
 {
     public class DefaultDataProvider : MetricsDataProvider
     {
-        private readonly string context;
+        private string context;
         private readonly Func<DateTime> timestampProvider;
         private readonly IEnumerable<EnvironmentEntry> environment;
         private readonly RegistryDataProvider registryDataProvider;
@@ -32,6 +32,11 @@ namespace Metrics.Core
             this.environment = environment;
             this.registryDataProvider = registryDataProvider;
             this.childProviders = childProviders;
+        }
+
+        public void SetContextName(string contextName)
+        {
+            context = contextName;
         }
 
         public MetricsData CurrentMetricsData

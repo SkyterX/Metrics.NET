@@ -16,5 +16,10 @@ namespace Metrics
         {
             return new DefaultMetricsContext(contextName);
         }
+
+        public void SetContextName(string contextName)
+        {
+            ((DefaultDataProvider)DataProvider).SetContextName(contextName);
+        }
     }
 }

@@ -32,6 +32,11 @@ namespace Metrics
             config.ApplySettingsFromConfigFile();
         }
 
+        public static void SetGlobalContextName(string globalContextName)
+        {
+            globalContext.SetContextName(globalContextName);
+        }
+
         /// <summary>
         /// Exposes advanced operations that are possible on this metrics context.
         /// </summary>
