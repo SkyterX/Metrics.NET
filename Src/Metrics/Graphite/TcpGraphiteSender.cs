@@ -1,8 +1,9 @@
-﻿using System.Net;
+﻿using Metrics.Logging;
+using Metrics.Utils;
+using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using Metrics.Logging;
-using Metrics.Utils;
 
 namespace Metrics.Graphite
 {
@@ -34,11 +35,11 @@ namespace Metrics.Graphite
 
                 this.client.GetStream().Write(bytes, 0, bytes.Length);
             }
-            catch
+            catch (Exception x)
             {
                 using (this.client) { }
                 this.client = null;
-                throw;
+                MetricsErrorHandler.Handle(x, "Error sending TCP data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
 
@@ -48,11 +49,11 @@ namespace Metrics.Graphite
             {
                 this.client?.GetStream().Flush();
             }
-            catch
+            catch (Exception x)
             {
                 using (this.client) { }
                 this.client = null;
-                throw;
+                MetricsErrorHandler.Handle(x, "Error sending TCP data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
 
