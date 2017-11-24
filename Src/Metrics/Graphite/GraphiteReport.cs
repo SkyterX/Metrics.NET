@@ -99,6 +99,7 @@ namespace Metrics.Graphite
             Send(SubfolderName(name, AsRate(unit, rateUnit), "Rate-5-min"), value.Rate.FiveMinuteRate);
             Send(SubfolderName(name, AsRate(unit, rateUnit), "Rate-15-min"), value.Rate.FifteenMinuteRate);
 
+            Send(SubfolderName(name, durationUnit.Unit(), "Duration-Total"), value.TotalTime);
             Send(SubfolderName(name, durationUnit.Unit(), "Duration-Last"), value.Histogram.LastValue);
             Send(SubfolderName(name, durationUnit.Unit(), "Duration-Min"), value.Histogram.Min);
             Send(SubfolderName(name, durationUnit.Unit(), "Duration-Mean"), value.Histogram.Mean);

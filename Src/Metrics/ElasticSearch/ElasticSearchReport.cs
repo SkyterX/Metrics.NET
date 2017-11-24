@@ -189,6 +189,7 @@ namespace Metrics.ElasticSearch
                 new JsonProperty("1 Min Rate", value.Rate.OneMinuteRate),
                 new JsonProperty("5 Min Rate", value.Rate.FiveMinuteRate),
                 new JsonProperty("15 Min Rate", value.Rate.FifteenMinuteRate),
+                new JsonProperty("Total Time", value.TotalTime),
                 new JsonProperty("Last", value.Histogram.LastValue),
                 new JsonProperty("Last User Value", value.Histogram.LastUserValue),
                 new JsonProperty("Min",value.Histogram.Min),

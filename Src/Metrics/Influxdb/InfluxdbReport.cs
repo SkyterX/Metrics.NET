@@ -22,7 +22,7 @@ namespace Metrics.Influxdb
         {
             "Total Count", "Active Sessions",
             "Mean Rate", "1 Min Rate", "5 Min Rate", "15 Min Rate",
-            "Last", "Last User Value", "Min", "Min User Value", "Mean", "Max", "Max User Value",
+            "Total Time", "Last", "Last User Value", "Min", "Min User Value", "Mean", "Max", "Max User Value",
             "StdDev", "Median", "Percentile 75%", "Percentile 95%", "Percentile 98%", "Percentile 99%", "Percentile 99.9%" , "Sample Size"
         };
 
@@ -180,6 +180,7 @@ namespace Metrics.Influxdb
                 Value(value.Rate.OneMinuteRate),
                 Value(value.Rate.FiveMinuteRate),
                 Value(value.Rate.FifteenMinuteRate),
+                Value(value.TotalTime),
                 Value(value.Histogram.LastValue),
                 Value(value.Histogram.LastUserValue),
                 Value(value.Histogram.Min),
