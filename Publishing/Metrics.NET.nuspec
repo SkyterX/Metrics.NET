@@ -1,23 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
-        <id>Metrics.NET</id>
+        <id>SkbKontur.Metrics.Net</id>
         <version>0.4.7</version>
-        <title>Metrics.NET</title>
+        <title>Metrics.NET fork for SKB Kontur projects</title>
         <authors>iulian.margarintescu, The Recognos Metrics.NET Team</authors>
-        <owners>Iulian Margarintescu, The Recognos Metrics.NET Team</owners>
-        <licenseUrl>https://github.com/Recognos/Metrics.NET/blob/master/LICENSE</licenseUrl>
-        <projectUrl>https://github.com/Recognos/Metrics.NET</projectUrl>
-        <iconUrl>http://www.erata.net/Metrics.NET/metrics_32.png</iconUrl>
+        <projectUrl>https://github.com/skbkontur/Metrics.NET</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>The library provides support for capturing: Gauges, Counters, Meters, Histograms and Timers</description>
-        <summary>.NET Port of the Java Metrics Library, a library for collecting metrics. Library also provides Health Checks.</summary>
-        <copyright>Iulian Margarintescu, The Recognos Metrics.NET Team</copyright>
-        <tags>metrics, measurements, charts, timer, histogram, duration, graphite, health checks</tags>
+        <tags>metrics</tags>
     </metadata>
     <files>
       <file src="lib\net45\Metrics.dll" target="lib\net45\Metrics.dll" />
       <file src="lib\net45\Metrics.pdb" target="lib\net45\Metrics.pdb" />
-      <file src="lib\net45\Metrics.XML" target="lib\net45\Metrics.XML" />      
+      <file src="lib\net45\Metrics.XML" target="lib\net45\Metrics.XML" />
     </files>
 </package>
