@@ -11,6 +11,17 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>SkbKontur.Metrics.Net</PackageId>
+    <PackageVersion>0.4.8-rc1</PackageVersion>
+    <Authors>iulian.margarintescu, The Recognos Metrics.NET Team</Authors>
+    <PackageDescription>The library provides support for capturing: Gauges, Counters, Meters, Histograms and Timers</PackageDescription>
+    <PackageTags>metrics</PackageTags>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/skbkontur/Metrics.NET</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DocumentationFile>..\..\bin\Release\Metrics.XML</DocumentationFile>
     <NoWarn>1591; 1570; 1587;</NoWarn>
