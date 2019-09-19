@@ -60,7 +60,7 @@ namespace Metrics.Tests.Core
         [Fact]
         public void MetricsContext_RaisesShutdownEventOnMetricsDisable()
         {
-            using (var monitor = context.Monitor())
+            using (var monitor = ((DefaultMetricsContext)context).Monitor())
             {
                 context.Advanced.CompletelyDisableMetrics();
                 monitor.Should().Raise("ContextShuttingDown");
@@ -70,7 +70,7 @@ namespace Metrics.Tests.Core
         [Fact]
         public void MetricsContext_RaisesShutdownEventOnDispose()
         {
-            using (var monitor = context.Monitor())
+            using (var monitor = ((DefaultMetricsContext)context).Monitor())
             {
                 context.Dispose();
                 monitor.Should().Raise("ContextShuttingDown");
