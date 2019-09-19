@@ -1,6 +1,4 @@
-﻿using System;
-using CsQuery;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Metrics.Endpoints;
 using Xunit;
 
@@ -13,9 +11,6 @@ namespace Metrics.Tests.Endpoints
         {
             var html = FlotWebApp.GetFlotApp();
             html.Should().NotBeEmpty();
-
-            Action createHtml = () => CQ.CreateDocument(html);
-            createHtml.ShouldNotThrow();
         }
     }
 }

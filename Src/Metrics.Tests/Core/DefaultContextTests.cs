@@ -9,7 +9,11 @@ namespace Metrics.Tests.Core
     public class DefaultContextTests
     {
         private readonly MetricsContext context = new DefaultMetricsContext();
-        public MetricsData CurrentData { get { return this.context.DataProvider.CurrentMetricsData; } }
+
+        public MetricsData CurrentData
+        {
+            get { return this.context.DataProvider.CurrentMetricsData; }
+        }
 
         [Fact]
         public void MetricsContext_EmptyChildContextIsSameContext()
@@ -56,17 +60,21 @@ namespace Metrics.Tests.Core
         [Fact]
         public void MetricsContext_RaisesShutdownEventOnMetricsDisable()
         {
-            context.MonitorEvents();
-            context.Advanced.CompletelyDisableMetrics();
-            context.ShouldRaise("ContextShuttingDown");
+            using (var monitor = context.Monitor())
+            {
+                context.Advanced.CompletelyDisableMetrics();
+                monitor.Should().Raise("ContextShuttingDown");
+            }
         }
 
         [Fact]
         public void MetricsContext_RaisesShutdownEventOnDispose()
         {
-            context.MonitorEvents();
-            context.Dispose();
-            context.ShouldRaise("ContextShuttingDown");
+            using (var monitor = context.Monitor())
+            {
+                context.Dispose();
+                monitor.Should().Raise("ContextShuttingDown");
+            }
         }
 
         [Fact]
@@ -117,7 +125,7 @@ namespace Metrics.Tests.Core
         [Fact]
         public void MetricsContext_DowsNotThrowOnMetricsOfDifferentTypeWithSameName()
         {
-            ((Action)(() =>
+            ((Action) (() =>
             {
                 var name = "Test";
                 context.Gauge(name, () => 0.0, Unit.Calls);
@@ -125,7 +133,7 @@ namespace Metrics.Tests.Core
                 context.Meter(name, Unit.Calls);
                 context.Histogram(name, Unit.Calls);
                 context.Timer(name, Unit.Calls);
-            })).ShouldNotThrow();
+            })).Should().NotThrow();
         }
 
         [Fact]
@@ -140,16 +148,16 @@ namespace Metrics.Tests.Core
         public void MetricsContext_CanPropagateValueTags()
         {
             context.Counter("test", Unit.None, "tag");
-            context.DataProvider.CurrentMetricsData.Counters.Single().Tags.Should().Equal(new[] { "tag" });
+            context.DataProvider.CurrentMetricsData.Counters.Single().Tags.Should().Equal(new[] {"tag"});
 
             context.Meter("test", Unit.None, tags: "tag");
-            context.DataProvider.CurrentMetricsData.Meters.Single().Tags.Should().Equal(new[] { "tag" });
+            context.DataProvider.CurrentMetricsData.Meters.Single().Tags.Should().Equal(new[] {"tag"});
 
             context.Histogram("test", Unit.None, tags: "tag");
-            context.DataProvider.CurrentMetricsData.Histograms.Single().Tags.Should().Equal(new[] { "tag" });
+            context.DataProvider.CurrentMetricsData.Histograms.Single().Tags.Should().Equal(new[] {"tag"});
 
             context.Timer("test", Unit.None, tags: "tag");
-            context.DataProvider.CurrentMetricsData.Timers.Single().Tags.Should().Equal(new[] { "tag" });
+            context.DataProvider.CurrentMetricsData.Timers.Single().Tags.Should().Equal(new[] {"tag"});
         }
     }
 }

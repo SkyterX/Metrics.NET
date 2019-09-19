@@ -1,10 +1,8 @@
-﻿
-using Metrics.Core;
+﻿using Metrics.Core;
 using Metrics.Logging;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Principal;
 
 namespace Metrics.PerfCounters
 {
@@ -99,27 +97,15 @@ namespace Metrics.PerfCounters
             }
             catch (UnauthorizedAccessException x)
             {
-                var message = "Error reading performance counter data. The application is currently running as user " + GetIdentity() +
-                   ". Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
+                const string message = "Error reading performance counter data." +
+                                       " Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
                 MetricsErrorHandler.Handle(x, message);
             }
             catch (Exception x)
             {
-                var message = "Error reading performance counter data. The application is currently running as user " + GetIdentity() +
-                   ". Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
+                const string message = "Error reading performance counter data." +
+                                       " Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
                 MetricsErrorHandler.Handle(x, message);
-            }
-        }
-
-        private static string GetIdentity()
-        {
-            try
-            {
-                return WindowsIdentity.GetCurrent().Name;
-            }
-            catch (Exception x)
-            {
-                return "[Unknown user | " + x.Message + " ]";
             }
         }
 
@@ -136,7 +122,7 @@ namespace Metrics.PerfCounters
                 {
                     if (PerformanceCounterCategory.CounterExists(counter, category))
                     {
-                        var counterTags = new MetricTags(tags.Tags.Concat(new[] { "PerfCounter" }));
+                        var counterTags = new MetricTags(tags.Tags.Concat(new[] {"PerfCounter"}));
                         if (derivate == null)
                         {
                             context.Advanced.Gauge(name, () => new PerformanceCounterGauge(category, counter, instance), unit, counterTags);
@@ -145,6 +131,7 @@ namespace Metrics.PerfCounters
                         {
                             context.Advanced.Gauge(name, () => new DerivedGauge(new PerformanceCounterGauge(category, counter, instance), derivate), unit, counterTags);
                         }
+
                         return;
                     }
                 }
