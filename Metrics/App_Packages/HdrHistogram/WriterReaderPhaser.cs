@@ -1,4 +1,4 @@
-﻿// Written by Gil Tene of Azul Systems, and released to the public domain,
+// Written by Gil Tene of Azul Systems, and released to the public domain,
 // as explained at http://creativecommons.org/publicdomain/zero/1.0/
 // 
 // Ported to .NET by Iulian Margarintescu under the same license and terms as the java version
@@ -8,6 +8,7 @@ using System;
 using System.Threading;
 using Metrics.ConcurrencyUtilities;
 
+// ReSharper disable once CheckNamespace
 namespace HdrHistogram
 {
     /// <summary>

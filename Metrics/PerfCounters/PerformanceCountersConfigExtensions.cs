@@ -1,6 +1,4 @@
-﻿using Metrics.PerfCounters;
-
-namespace Metrics
+namespace Metrics.PerfCounters
 {
     public static class PerformanceCountersConfigExtensions
     {

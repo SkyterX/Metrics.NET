@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+
 using Metrics.MetricData;
-using Metrics.Reporters;
 using Metrics.Utils;
 
-namespace Metrics.Reports
+namespace Metrics.Reporters
 {
     public sealed class MetricsReports : IHideObjectMembers, IDisposable
     {

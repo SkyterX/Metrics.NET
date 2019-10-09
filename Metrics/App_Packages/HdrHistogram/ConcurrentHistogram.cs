@@ -8,6 +8,7 @@
 using Metrics.ConcurrencyUtilities;
 using System.Diagnostics;
 
+// ReSharper disable once CheckNamespace
 namespace HdrHistogram
 {
     /// <summary>

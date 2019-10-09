@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Configuration;
-using Metrics.Graphite;
-using Metrics.Logging;
-using Metrics.Reports;
 
-namespace Metrics
+using Metrics.Logging;
+using Metrics.Reporters;
+
+namespace Metrics.Graphite
 {
     public static class GraphiteExtensions
     {

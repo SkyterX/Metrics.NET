@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using Metrics.ConcurrencyUtilities;
 
+// ReSharper disable once CheckNamespace
 namespace HdrHistogram
 {
 #pragma warning disable 0659 // GetHashCode does not make sense for a histogram, even if Equals is implemented

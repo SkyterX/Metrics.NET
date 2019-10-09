@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using Metrics.Core;
 using Metrics.Logging;
 using Metrics.Utils;
 

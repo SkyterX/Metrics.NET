@@ -2,7 +2,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using Metrics.Logging;
-using Metrics.Reports;
+using Metrics.Reporters;
 
 namespace Metrics
 {

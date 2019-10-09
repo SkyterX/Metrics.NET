@@ -5,6 +5,7 @@
 // Java Version repo: https://github.com/HdrHistogram/HdrHistogram
 // Latest ported version is available in the Java submodule in the root of the repo
 
+// ReSharper disable once CheckNamespace
 namespace HdrHistogram
 {
 
