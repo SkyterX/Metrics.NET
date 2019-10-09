@@ -1,27 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics", "Src\Metrics\Metrics.csproj", "{95E29D40-DBEC-49E2-9CC5-26B88966DADE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.Tests", "Src\Metrics.Tests\Metrics.Tests.csproj", "{4E0F8CB9-6919-48B8-8212-BCE75D04E0D9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FE317A5A-E540-401C-994F-353A1349C70B}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A42F567-91B0-4FFB-A9AD-DB0D158784EA}"
 	ProjectSection(SolutionItems) = preProject
-		build.bat = build.bat
-		build.sh = build.sh
 		CHANGELOG.md = CHANGELOG.md
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics", "Metrics\Metrics.csproj", "{8B16D506-D59D-4C94-8451-F5497AB8595B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.Tests", "Metrics.Tests\Metrics.Tests.csproj", "{5EAFF16E-5172-43F0-9BC5-F9E0C75DD70D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +19,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{95E29D40-DBEC-49E2-9CC5-26B88966DADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95E29D40-DBEC-49E2-9CC5-26B88966DADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95E29D40-DBEC-49E2-9CC5-26B88966DADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95E29D40-DBEC-49E2-9CC5-26B88966DADE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E0F8CB9-6919-48B8-8212-BCE75D04E0D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E0F8CB9-6919-48B8-8212-BCE75D04E0D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E0F8CB9-6919-48B8-8212-BCE75D04E0D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E0F8CB9-6919-48B8-8212-BCE75D04E0D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B16D506-D59D-4C94-8451-F5497AB8595B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B16D506-D59D-4C94-8451-F5497AB8595B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B16D506-D59D-4C94-8451-F5497AB8595B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B16D506-D59D-4C94-8451-F5497AB8595B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EAFF16E-5172-43F0-9BC5-F9E0C75DD70D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EAFF16E-5172-43F0-9BC5-F9E0C75DD70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EAFF16E-5172-43F0-9BC5-F9E0C75DD70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EAFF16E-5172-43F0-9BC5-F9E0C75DD70D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
