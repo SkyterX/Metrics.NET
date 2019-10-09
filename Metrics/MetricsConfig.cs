@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Configuration;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Metrics.Endpoints;
 using Metrics.Logging;
-using Metrics.MetricData;
 using Metrics.Reports;
 
 namespace Metrics
@@ -21,10 +16,6 @@ namespace Metrics
         private readonly MetricsReports reports;
 
         private Func<HealthStatus> healthStatus;
-
-        private readonly CancellationTokenSource httpEndpointCancellation = new CancellationTokenSource();
-
-        private readonly Dictionary<string, Task<MetricsHttpListener>> httpEndpoints = new Dictionary<string, Task<MetricsHttpListener>>();
 
         private SamplingType defaultSamplingType = SamplingType.ExponentiallyDecaying;
 
@@ -59,57 +50,6 @@ namespace Metrics
             }
         }
 
-        /// <summary>
-        /// Create HTTP endpoint where metrics will be available in various formats:
-        /// GET / => visualization application
-        /// GET /json => metrics serialized as JSON
-        /// GET /text => metrics in human readable text format
-        /// </summary>
-        /// <param name="httpUriPrefix">prefix where to start HTTP endpoint</param>
-        /// <param name="filter">Only report metrics that match the filter.</param> 
-        /// <param name="maxRetries">maximum number of attempts to start the http listener. Note the retry time between attempts is dependent on this value</param>
-        /// <returns>Chain-able configuration object.</returns>
-        public MetricsConfig WithHttpEndpoint(string httpUriPrefix, MetricsFilter filter = null, int maxRetries = 3)
-        {
-            if (this.isDisabled)
-            {
-                return this;
-            }
-
-            return WithHttpEndpoint(httpUriPrefix, _ => { }, filter, maxRetries);
-        }
-
-        /// <summary>
-        /// Create HTTP endpoint where metrics will be available in various formats:
-        /// GET / => visualization application
-        /// GET /json => metrics serialized as JSON
-        /// GET /text => metrics in human readable text format
-        /// </summary>
-        /// <param name="httpUriPrefix">prefix where to start HTTP endpoint</param>
-        /// <param name="reportsConfig">Endpoint reports configuration</param>
-        /// <param name="filter">Only report metrics that match the filter.</param> 
-        /// <param name="maxRetries">maximum number of attempts to start the http listener. Note the retry time between attempts is dependent on this value</param>
-        /// <returns>Chain-able configuration object.</returns>
-        public MetricsConfig WithHttpEndpoint(string httpUriPrefix, Action<MetricsEndpointReports> reportsConfig, MetricsFilter filter = null, int maxRetries = 3)
-        {
-            if (this.isDisabled)
-            {
-                return this;
-            }
-
-            if (this.httpEndpoints.ContainsKey(httpUriPrefix))
-            {
-                throw new InvalidOperationException($"Http URI prefix {httpUriPrefix} already configured.");
-            }
-
-            var endpointReports = new MetricsEndpointReports(this.context.DataProvider.WithFilter(filter), this.healthStatus);
-            reportsConfig(endpointReports);
-
-            var endpoint = MetricsHttpListener.StartHttpListenerAsync(httpUriPrefix, endpointReports.Endpoints, this.httpEndpointCancellation.Token, maxRetries);
-            this.httpEndpoints.Add(httpUriPrefix, endpoint);
-
-            return this;
-        }
         /// <summary>
         /// Configure Metrics library to use a custom health status reporter. By default HealthChecks.GetStatus() is used.
         /// </summary>
@@ -270,33 +210,12 @@ namespace Metrics
 
         public void Dispose()
         {
-            ShutdownHttpEndpoints();
             this.reports.Dispose();
-        }
-
-        private void ShutdownHttpEndpoints()
-        {
-            this.httpEndpointCancellation.Cancel();
-            foreach (var endpoint in this.httpEndpoints.Values)
-            {
-                if (endpoint.IsCompleted)
-                {
-                    using (endpoint.Result)
-                    {
-                    }
-                }
-                else
-                {
-                    log.Warn("The task for Metrics Http Endpoint has not completed. Listener will not be disposed");
-                }
-            }
-            this.httpEndpoints.Clear();
         }
 
         private void DisableAllReports()
         {
             this.reports.StopAndClearAllReports();
-            ShutdownHttpEndpoints();
         }
 
         internal void ApplySettingsFromConfigFile()
@@ -304,24 +223,6 @@ namespace Metrics
             if (!GloballyDisabledMetrics)
             {
                 ConfigureCsvReports();
-                ConfigureHttpListener();
-            }
-        }
-
-        private void ConfigureHttpListener()
-        {
-            try
-            {
-                var httpEndpoint = ConfigurationManager.AppSettings["Metrics.HttpListener.HttpUriPrefix"];
-                if (!string.IsNullOrEmpty(httpEndpoint))
-                {
-                    WithHttpEndpoint(httpEndpoint);
-                    log.Debug(() => "Metrics: HttpListener configured at " + httpEndpoint);
-                }
-            }
-            catch (Exception x)
-            {
-                MetricsErrorHandler.Handle(x, "Invalid Metrics Configuration: Metrics.HttpListener.HttpUriPrefix must be a valid HttpListener endpoint prefix");
             }
         }
 
