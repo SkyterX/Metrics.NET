@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 using Metrics.MetricData;
 using Metrics.Utils;
@@ -79,18 +78,13 @@ namespace Metrics.Reporters
         private static int ReadToleratedFailuresConfig()
         {
             const string configKey = "Metrics.Reports.ToleratedConsecutiveFailures";
-            var configValue = ConfigurationManager.AppSettings[configKey];
+            var configValue = Environment.GetEnvironmentVariable(configKey);
 
             if (configValue == null)
-            {
                 return 0;
-            }
 
-            int toleratedConsecutiveFailures;
-            if (!int.TryParse(configValue, out toleratedConsecutiveFailures) || toleratedConsecutiveFailures < -1)
-            {
+            if (!int.TryParse(configValue, out var toleratedConsecutiveFailures) || toleratedConsecutiveFailures < -1)
                 throw new InvalidOperationException($"Invalid Metrics Configuration for {configKey}: \"{configValue}\". Value must be an integer >= -1.");
-            }
 
             return toleratedConsecutiveFailures;
         }

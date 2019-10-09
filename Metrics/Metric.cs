@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -24,7 +23,6 @@ namespace Metrics
                 log.Info(() => "Metrics: Metrics.NET Library is completely disabled. Set Metrics.CompletelyDisableMetrics to false to re-enable.");
             }
             Config = new MetricsConfig(globalContext);
-            Config.ApplySettingsFromConfigFile();
         }
 
         internal static MetricsContext Internal { get; } = new DefaultMetricsContext("Metrics.NET");
@@ -191,8 +189,7 @@ namespace Metrics
             try
             {
                 const string contextNameKey = "Metrics.GlobalContextName";
-                // look in the runtime environment first, then in ConfigurationManager.AppSettings
-                var contextNameValue = Environment.GetEnvironmentVariable(contextNameKey) ?? ConfigurationManager.AppSettings[contextNameKey];
+                var contextNameValue = Environment.GetEnvironmentVariable(contextNameKey);
                 var name = string.IsNullOrEmpty(contextNameValue) ? GetDefaultGlobalContextName() : ParseGlobalContextName(contextNameValue);
                 log.Debug(() => "Metrics: GlobalContext Name set to " + name);
                 return name;
@@ -241,19 +238,13 @@ namespace Metrics
                     throw new InvalidOperationException(msg);
                 }
 
-                // first look in the runtime Environment.
+                // look in the runtime Environment.
                 var val = Environment.GetEnvironmentVariable(key.Value);
-
                 if (string.IsNullOrWhiteSpace(val))
                 {
-                    // next look in ConfigurationManager.AppSettings
-                    val = ConfigurationManager.AppSettings[key.Value];
-                    if (string.IsNullOrWhiteSpace(val))
-                    {
-                        var msg = $"Metrics: Error substituting Environment tokens in Metrics.GlobalContextName. Found key '{key}' has no value in Environment or AppSettings. Original string {configName}";
-                        log.Error(msg);
-                        throw new InvalidOperationException(msg);
-                    }
+                    var msg = $"Metrics: Error substituting Environment tokens in Metrics.GlobalContextName. Found key '{key}' has no value in Environment. Original string {configName}";
+                    log.Error(msg);
+                    throw new InvalidOperationException(msg);
                 }
 
                 configName = configName.Replace(match.Value, val);

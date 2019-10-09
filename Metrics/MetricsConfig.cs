@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Diagnostics;
 
 using Metrics.Logging;
@@ -211,47 +210,16 @@ namespace Metrics
             this.reports.StopAndClearAllReports();
         }
 
-        internal void ApplySettingsFromConfigFile()
-        {
-            if (!GloballyDisabledMetrics)
-            {
-                ConfigureCsvReports();
-            }
-        }
-
-        private void ConfigureCsvReports()
-        {
-            try
-            {
-                var csvMetricsPath = ConfigurationManager.AppSettings["Metrics.CSV.Path"];
-                var csvMetricsInterval = ConfigurationManager.AppSettings["Metrics.CSV.Interval.Seconds"];
-
-                if (!string.IsNullOrEmpty(csvMetricsPath) && !string.IsNullOrEmpty(csvMetricsInterval))
-                {
-                    int seconds;
-                    if (int.TryParse(csvMetricsInterval, out seconds) && seconds > 0)
-                    {
-                        WithReporting(r => r.WithCSVReports(csvMetricsPath, TimeSpan.FromSeconds(seconds)));
-                        log.Debug($"Metrics: Storing CSV reports in {csvMetricsPath} every {seconds} seconds.");
-                    }
-                }
-            }
-            catch (Exception x)
-            {
-                MetricsErrorHandler.Handle(x, "Invalid Metrics Configuration: Metrics.CSV.Path must be a valid path and Metrics.CSV.Interval.Seconds must be an integer > 0 ");
-            }
-        }
-
         private static bool ReadGloballyDisableMetricsSetting()
         {
             try
             {
-                var isDisabled = ConfigurationManager.AppSettings["Metrics.CompletelyDisableMetrics"];
+                var isDisabled = Environment.GetEnvironmentVariable("Metrics.CompletelyDisableMetrics");
                 return !string.IsNullOrEmpty(isDisabled) && isDisabled.Equals("TRUE", StringComparison.OrdinalIgnoreCase);
             }
             catch (Exception x)
             {
-                MetricsErrorHandler.Handle(x, "Invalid Metrics Configuration: Metrics.CompletelyDisableMetrics must be set to true or false");
+                MetricsErrorHandler.Handle(x, "Invalid Metrics Configuration: Metrics.CompletelyDisableMetrics must be set to TRUE or FALSE");
                 return false;
             }
         }
