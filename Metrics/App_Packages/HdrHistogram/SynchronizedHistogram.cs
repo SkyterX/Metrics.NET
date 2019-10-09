@@ -1,4 +1,4 @@
-﻿// Written by Gil Tene of Azul Systems, and released to the public domain,
+// Written by Gil Tene of Azul Systems, and released to the public domain,
 // as explained at http://creativecommons.org/publicdomain/zero/1.0/
 // 
 // Ported to .NET by Iulian Margarintescu under the same license and terms as the java version
@@ -10,23 +10,21 @@ using System.Runtime.CompilerServices;
 
 namespace HdrHistogram
 {
-    /**
- * <h3>An integer values High Dynamic Range (HDR) Histogram that is synchronized as a whole</h3>
- * <p>
- * A {@link SynchronizedHistogram} is a variant of {@link Histogram} that is
- * synchronized as a whole, such that queries, copying, and addition operations are atomic with relation to
- * modification on the {@link SynchronizedHistogram}, and such that external accessors (e.g. iterations on the
- * histogram data) that synchronize on the {@link SynchronizedHistogram} instance can safely assume that no
- * modifications to the histogram data occur within their synchronized block.
- * <p>
- * It is important to note that synchronization can result in blocking recoding calls. If non-blocking recoding
- * operations are required, consider using {@link ConcurrentHistogram}, {@link AtomicHistogram}, or (recommended)
- * {@link Recorder} or {@link org.HdrHistogram.SingleWriterRecorder} which were intended for concurrent operations.
- * <p>
- * See package description for {@link org.HdrHistogram} and {@link org.HdrHistogram.Histogram} for more details.
- */
-
-
+    /// <summary>
+    /// <h3>An integer values High Dynamic Range (HDR) Histogram that is synchronized as a whole</h3>
+    /// 
+    /// A {@link SynchronizedHistogram} is a variant of {@link Histogram} that is
+    /// synchronized as a whole, such that queries, copying, and addition operations are atomic with relation to
+    /// modification on the {@link SynchronizedHistogram}, and such that external accessors (e.g. iterations on the
+    /// histogram data) that synchronize on the {@link SynchronizedHistogram} instance can safely assume that no
+    /// modifications to the histogram data occur within their synchronized block.
+    /// 
+    /// It is important to note that synchronization can result in blocking recoding calls. If non-blocking recoding
+    /// operations are required, consider using {@link ConcurrentHistogram}, {@link AtomicHistogram}, or (recommended)
+    /// {@link Recorder} or {@link org.HdrHistogram.SingleWriterRecorder} which were intended for concurrent operations.
+    /// 
+    /// See package description for {@link org.HdrHistogram} and {@link org.HdrHistogram.Histogram} for more details.
+    /// </summary>
     internal class SynchronizedHistogram : Histogram
     {
         [MethodImpl(MethodImplOptions.Synchronized)]

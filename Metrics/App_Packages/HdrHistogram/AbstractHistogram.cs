@@ -1,4 +1,4 @@
-﻿// Written by Gil Tene of Azul Systems, and released to the public domain,
+// Written by Gil Tene of Azul Systems, and released to the public domain,
 // as explained at http://creativecommons.org/publicdomain/zero/1.0/
 // 
 // Ported to .NET by Iulian Margarintescu under the same license and terms as the java version
@@ -345,9 +345,9 @@ namespace HdrHistogram
         //
         //
 
-        /**
-         * Reset the contents and stats of this histogram
-         */
+        /// <summary>
+        /// Reset the contents and stats of this histogram
+        /// </summary>
         public void reset()
         {
             clearCounts();
@@ -364,42 +364,42 @@ namespace HdrHistogram
         //
         //
 
-        /**
-         * Create a copy of this histogram, complete with data and everything.
-         *
-         * @return A distinct copy of this histogram.
-         */
+        /// <summary>
+        /// Create a copy of this histogram, complete with data and everything.
+        ///
+        /// @return A distinct copy of this histogram.
+        /// </summary>
         abstract public AbstractHistogram copy();
 
-        /**
-         * Get a copy of this histogram, corrected for coordinated omission.
-         * <p>
-         * To compensate for the loss of sampled values when a recorded value is larger than the expected
-         * interval between value samples, the new histogram will include an auto-generated additional series of
-         * decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records for each count found
-         * in the current histogram that is larger than the expectedIntervalBetweenValueSamples.
-         *
-         * Note: This is a post-correction method, as opposed to the at-recording correction method provided
-         * by {@link #RecordValueWithExpectedInterval(long, long) RecordValueWithExpectedInterval}. The two
-         * methods are mutually exclusive, and only one of the two should be be used on a given data set to correct
-         * for the same coordinated omission issue.
-         * by
-         * <p>
-         * See notes in the description of the Histogram calls for an illustration of why this corrective behavior is
-         * important.
-         *
-         * @param expectedIntervalBetweenValueSamples If expectedIntervalBetweenValueSamples is larger than 0, add
-         *                                           auto-generated value records as appropriate if value is larger
-         *                                           than expectedIntervalBetweenValueSamples
-         * @return a copy of this histogram, corrected for coordinated omission.
-         */
+        /// <summary>
+        /// Get a copy of this histogram, corrected for coordinated omission.
+        /// 
+        /// To compensate for the loss of sampled values when a recorded value is larger than the expected
+        /// interval between value samples, the new histogram will include an auto-generated additional series of
+        /// decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records for each count found
+        /// in the current histogram that is larger than the expectedIntervalBetweenValueSamples.
+        ///
+        /// Note: This is a post-correction method, as opposed to the at-recording correction method provided
+        /// by {@link #RecordValueWithExpectedInterval(long, long) RecordValueWithExpectedInterval}. The two
+        /// methods are mutually exclusive, and only one of the two should be be used on a given data set to correct
+        /// for the same coordinated omission issue.
+        /// by
+        /// 
+        /// See notes in the description of the Histogram calls for an illustration of why this corrective behavior is
+        /// important.
+        ///
+        /// @param expectedIntervalBetweenValueSamples If expectedIntervalBetweenValueSamples is larger than 0, add
+        ///                                           auto-generated value records as appropriate if value is larger
+        ///                                           than expectedIntervalBetweenValueSamples
+        /// @return a copy of this histogram, corrected for coordinated omission.
+        /// </summary>
         abstract public AbstractHistogram copyCorrectedForCoordinatedOmission(long expectedIntervalBetweenValueSamples);
 
-        /**
-         * Copy this histogram into the target histogram, overwriting it's contents.
-         *
-         * @param targetHistogram the histogram to copy into
-         */
+        /// <summary>
+        /// Copy this histogram into the target histogram, overwriting it's contents.
+        ///
+        /// @param targetHistogram the histogram to copy into
+        /// </summary>
         public void copyInto(AbstractHistogram targetHistogram)
         {
             targetHistogram.reset();
@@ -433,17 +433,16 @@ namespace HdrHistogram
         //
         //
 
-        /**
-         * Add the contents of another histogram to this one.
-         * <p>
-         * As part of adding the contents, the start/end timestamp range of this histogram will be
-         * extended to include the start/end timestamp range of the other histogram.
-         *
-         * @param otherHistogram The other histogram.
-         * @throws ArrayIndexOutOfBoundsException (may throw) if values in fromHistogram's are
-         * higher than highestTrackableValue.
-         */
-
+        /// <summary>
+        /// Add the contents of another histogram to this one.
+        /// 
+        /// As part of adding the contents, the start/end timestamp range of this histogram will be
+        /// extended to include the start/end timestamp range of the other histogram.
+        ///
+        /// @param otherHistogram The other histogram.
+        /// @throws ArrayIndexOutOfBoundsException (may throw) if values in fromHistogram's are
+        /// higher than highestTrackableValue.
+        /// </summary>
         public void add(AbstractHistogram otherHistogram)
         {
             long highestRecordableValue = highestEquivalentValue(ValueFromIndex(countsArrayLength - 1));
@@ -492,16 +491,14 @@ namespace HdrHistogram
             setEndTimeStamp(Math.Max(endTimeStampMsec, otherHistogram.endTimeStampMsec));
         }
 
-        /**
-         * Subtract the contents of another histogram from this one.
-         * <p>
-         * The start/end timestamps of this histogram will remain unchanged.
-         *
-         * @param otherHistogram The other histogram.
-         * @throws ArrayIndexOutOfBoundsException (may throw) if values in otherHistogram's are higher than highestTrackableValue.
-         *
-         */
-
+        /// <summary>
+        /// Subtract the contents of another histogram from this one.
+        /// 
+        /// The start/end timestamps of this histogram will remain unchanged.
+        ///
+        /// @param otherHistogram The other histogram.
+        /// @throws ArrayIndexOutOfBoundsException (may throw) if values in otherHistogram's are higher than highestTrackableValue.
+        /// </summary>
         public void subtract(AbstractHistogram otherHistogram)
         {
             long highestRecordableValue = ValueFromIndex(countsArrayLength - 1);
@@ -564,29 +561,29 @@ namespace HdrHistogram
             }
         }
 
-        /**
-         * Add the contents of another histogram to this one, while correcting the incoming data for coordinated omission.
-         * <p>
-         * To compensate for the loss of sampled values when a recorded value is larger than the expected
-         * interval between value samples, the values added will include an auto-generated additional series of
-         * decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records for each count found
-         * in the current histogram that is larger than the expectedIntervalBetweenValueSamples.
-         *
-         * Note: This is a post-recording correction method, as opposed to the at-recording correction method provided
-         * by {@link #RecordValueWithExpectedInterval(long, long) RecordValueWithExpectedInterval}. The two
-         * methods are mutually exclusive, and only one of the two should be be used on a given data set to correct
-         * for the same coordinated omission issue.
-         * by
-         * <p>
-         * See notes in the description of the Histogram calls for an illustration of why this corrective behavior is
-         * important.
-         *
-         * @param otherHistogram The other histogram. highestTrackableValue and largestValueWithSingleUnitResolution must match.
-         * @param expectedIntervalBetweenValueSamples If expectedIntervalBetweenValueSamples is larger than 0, add
-         *                                           auto-generated value records as appropriate if value is larger
-         *                                           than expectedIntervalBetweenValueSamples
-         * @throws ArrayIndexOutOfBoundsException (may throw) if values exceed highestTrackableValue
-         */
+        /// <summary>
+        /// Add the contents of another histogram to this one, while correcting the incoming data for coordinated omission.
+        /// 
+        /// To compensate for the loss of sampled values when a recorded value is larger than the expected
+        /// interval between value samples, the values added will include an auto-generated additional series of
+        /// decreasingly-smaller (down to the expectedIntervalBetweenValueSamples) value records for each count found
+        /// in the current histogram that is larger than the expectedIntervalBetweenValueSamples.
+        ///
+        /// Note: This is a post-recording correction method, as opposed to the at-recording correction method provided
+        /// by {@link #RecordValueWithExpectedInterval(long, long) RecordValueWithExpectedInterval}. The two
+        /// methods are mutually exclusive, and only one of the two should be be used on a given data set to correct
+        /// for the same coordinated omission issue.
+        /// by
+        /// 
+        /// See notes in the description of the Histogram calls for an illustration of why this corrective behavior is
+        /// important.
+        ///
+        /// @param otherHistogram The other histogram. highestTrackableValue and largestValueWithSingleUnitResolution must match.
+        /// @param expectedIntervalBetweenValueSamples If expectedIntervalBetweenValueSamples is larger than 0, add
+        ///                                           auto-generated value records as appropriate if value is larger
+        ///                                           than expectedIntervalBetweenValueSamples
+        /// @throws ArrayIndexOutOfBoundsException (may throw) if values exceed highestTrackableValue
+        /// </summary>
         public void addWhileCorrectingForCoordinatedOmission(AbstractHistogram otherHistogram, long expectedIntervalBetweenValueSamples)
         {
             AbstractHistogram toHistogram = this;
@@ -710,21 +707,20 @@ namespace HdrHistogram
             // will never loop, and their shifts will remain O(1).
         }
 
-        /**
-         * Shift recorded values to the right (the equivalent of a &gt;&gt; shift operation on all recorded values). The
-         * configured integer value range limits and value precision setting will remain unchanged.
-         * <p>
-         * Shift right operations that do not underflow are reversible with a shift left operation with no loss of
-         * information. An {@link ArrayIndexOutOfBoundsException} reflecting an "underflow" conditions will be thrown
-         * if any recorded values may lose representation accuracy as a result of the attempted shift operation.
-         * <p>
-         * For a shift of a single order of magnitude, expect such an underflow exception if any recorded non-zero
-         * values up to [numberOfSignificantValueDigits (rounded up to nearest power of 2) multiplied by
-         * (2 ^ numberOfBinaryOrdersOfMagnitude) currently exist in the histogram.
-         *
-         * @param numberOfBinaryOrdersOfMagnitude The number of binary orders of magnitude to shift by
-         */
-
+        /// <summary>
+        /// Shift recorded values to the right (the equivalent of a &gt;&gt; shift operation on all recorded values). The
+        /// configured integer value range limits and value precision setting will remain unchanged.
+        /// 
+        /// Shift right operations that do not underflow are reversible with a shift left operation with no loss of
+        /// information. An {@link ArrayIndexOutOfBoundsException} reflecting an "underflow" conditions will be thrown
+        /// if any recorded values may lose representation accuracy as a result of the attempted shift operation.
+        /// 
+        /// For a shift of a single order of magnitude, expect such an underflow exception if any recorded non-zero
+        /// values up to [numberOfSignificantValueDigits (rounded up to nearest power of 2) multiplied by
+        /// (2 ^ numberOfBinaryOrdersOfMagnitude) currently exist in the histogram.
+        ///
+        /// @param numberOfBinaryOrdersOfMagnitude The number of binary orders of magnitude to shift by
+        /// </summary>
         protected internal virtual void shiftValuesRight(int numberOfBinaryOrdersOfMagnitude)
         {
             if (numberOfBinaryOrdersOfMagnitude < 0)
@@ -1114,22 +1110,21 @@ namespace HdrHistogram
             return std_deviation;
         }
 
-        /**
-         * Get the value at a given percentile.
-         * When the given percentile is &gt; 0.0, the value returned is the value that the given
-         * percentage of the overall recorded value entries in the histogram are either smaller than
-         * or equivalent to. When the given percentile is 0.0, the value returned is the value that all value
-         * entries in the histogram are either larger than or equivalent to.
-         * <p>
-         * Note that two values are "equivalent" in this statement if
-         * {@link org.HdrHistogram.AbstractHistogram#valuesAreEquivalent} would return true.
-         *
-         * @param percentile  The percentile for which to return the associated value
-         * @return The value that the given percentage of the overall recorded value entries in the
-         * histogram are either smaller than or equivalent to. When the percentile is 0.0, returns the
-         * value that all value entries in the histogram are either larger than or equivalent to.
-         */
-
+        /// <summary>
+        /// Get the value at a given percentile.
+        /// When the given percentile is &gt; 0.0, the value returned is the value that the given
+        /// percentage of the overall recorded value entries in the histogram are either smaller than
+        /// or equivalent to. When the given percentile is 0.0, the value returned is the value that all value
+        /// entries in the histogram are either larger than or equivalent to.
+        /// 
+        /// Note that two values are "equivalent" in this statement if
+        /// {@link org.HdrHistogram.AbstractHistogram#valuesAreEquivalent} would return true.
+        ///
+        /// @param percentile  The percentile for which to return the associated value
+        /// @return The value that the given percentage of the overall recorded value entries in the
+        /// histogram are either smaller than or equivalent to. When the percentile is 0.0, returns the
+        /// value that all value entries in the histogram are either larger than or equivalent to.
+        /// </summary>
         public long getValueAtPercentile(double percentile)
         {
             double requestedPercentile = Math.Min(percentile, 100.0); // Truncate down to 100%
@@ -1150,19 +1145,18 @@ namespace HdrHistogram
             return 0;
         }
 
-        /**
-         * Get the percentile at a given value.
-         * The percentile returned is the percentile of values recorded in the histogram that are smaller
-         * than or equivalent to the given value.
-         * <p>
-         * Note that two values are "equivalent" in this statement if
-         * {@link org.HdrHistogram.AbstractHistogram#valuesAreEquivalent} would return true.
-         *
-         * @param value The value for which to return the associated percentile
-         * @return The percentile of values recorded in the histogram that are smaller than or equivalent
-         * to the given value.
-         */
-
+        /// <summary>
+        /// Get the percentile at a given value.
+        /// The percentile returned is the percentile of values recorded in the histogram that are smaller
+        /// than or equivalent to the given value.
+        /// 
+        /// Note that two values are "equivalent" in this statement if
+        /// {@link org.HdrHistogram.AbstractHistogram#valuesAreEquivalent} would return true.
+        ///
+        /// @param value The value for which to return the associated percentile
+        /// @return The percentile of values recorded in the histogram that are smaller than or equivalent
+        /// to the given value.
+        /// </summary>
         public double getPercentileAtOrBelowValue(long value)
         {
             if (getTotalCount() == 0)
@@ -1178,18 +1172,17 @@ namespace HdrHistogram
             return (100.0 * totalToCurrentIndex) / getTotalCount();
         }
 
-        /**
-         * Get the count of recorded values within a range of value levels (inclusive to within the histogram's resolution).
-         *
-         * @param lowValue  The lower value bound on the range for which
-         *                  to provide the recorded count. Will be rounded down with
-         *                  {@link Histogram#lowestEquivalentValue lowestEquivalentValue}.
-         * @param highValue  The higher value bound on the range for which to provide the recorded count.
-         *                   Will be rounded up with {@link Histogram#highestEquivalentValue highestEquivalentValue}.
-         * @return the total count of values recorded in the histogram within the value range that is
-         * {@literal >=} lowestEquivalentValue(<i>lowValue</i>) and {@literal <=} highestEquivalentValue(<i>highValue</i>)
-         */
-
+        /// <summary>
+        /// Get the count of recorded values within a range of value levels (inclusive to within the histogram's resolution).
+        ///
+        /// @param lowValue  The lower value bound on the range for which
+        ///                  to provide the recorded count. Will be rounded down with
+        ///                  {@link Histogram#lowestEquivalentValue lowestEquivalentValue}.
+        /// @param highValue  The higher value bound on the range for which to provide the recorded count.
+        ///                   Will be rounded up with {@link Histogram#highestEquivalentValue highestEquivalentValue}.
+        /// @return the total count of values recorded in the histogram within the value range that is
+        /// ≥ lowestEquivalentValue(<i>lowValue</i>) and ≤ highestEquivalentValue(<i>highValue</i>)
+        /// </summary>
         public long getCountBetweenValues(long lowValue, long highValue)
         {
             int lowIndex = Math.Max(0, CountsArrayIndex(lowValue));
@@ -1202,13 +1195,13 @@ namespace HdrHistogram
             return count;
         }
 
-        /**
-         * Get the count of recorded values at a specific value (to within the histogram resolution at the value level).
-         *
-         * @param value The value for which to provide the recorded count
-         * @return The total count of values recorded in the histogram within the value range that is
-         * {@literal >=} lowestEquivalentValue(<i>value</i>) and {@literal <=} highestEquivalentValue(<i>value</i>)
-         */
+        /// <summary>
+        /// Get the count of recorded values at a specific value (to within the histogram resolution at the value level).
+        ///
+        /// @param value The value for which to provide the recorded count
+        /// @return The total count of values recorded in the histogram within the value range that is
+        /// ≥ lowestEquivalentValue(<i>value</i>) and ≤ highestEquivalentValue(<i>value</i>)
+        /// </summary>
         public long getCountAtValue(long value)
         {
             int index = Math.Min(Math.Max(0, CountsArrayIndex(value)), (countsArrayLength - 1));

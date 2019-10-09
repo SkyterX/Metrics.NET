@@ -1,4 +1,4 @@
-﻿// Written by Gil Tene of Azul Systems, and released to the public domain,
+// Written by Gil Tene of Azul Systems, and released to the public domain,
 // as explained at http://creativecommons.org/publicdomain/zero/1.0/
 // 
 // Ported to .NET by Iulian Margarintescu under the same license and terms as the java version
@@ -15,7 +15,7 @@ namespace HdrHistogram
     /// A ConcurrentHistogram guarantees lossless recording of values into the histogram even when the
     /// histogram is updated by multiple threads, and supports auto-resize and shift operations that may
     /// result from or occur concurrently with other recording operations.
-
+    /// 
     /// It is important to note that concurrent recording, auto-sizing, and value shifting are the only thread-safe
     /// behaviors provided by {@link ConcurrentHistogram}, and that it is not otherwise synchronized. Specifically, {@link
     /// ConcurrentHistogram} provides no implicit synchronization that would prevent the contents of the histogram
