@@ -1,15 +1,14 @@
-﻿using Metrics.MetricData;
-using System;
+﻿using System;
 using System.Diagnostics;
+
+using Metrics.MetricData;
 
 namespace Metrics.PerfCounters
 {
     public class PerformanceCounterGauge : MetricValueProvider<double>
     {
-        private readonly PerformanceCounter performanceCounter;
-
         public PerformanceCounterGauge(string category, string counter)
-            : this(category, counter, instance: null)
+            : this(category, counter, instance : null)
         {
         }
 
@@ -50,5 +49,7 @@ namespace Metrics.PerfCounters
                 }
             }
         }
+
+        private readonly PerformanceCounter performanceCounter;
     }
 }

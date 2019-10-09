@@ -1,7 +1,8 @@
-﻿using Metrics.MetricData;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
+
+using Metrics.MetricData;
 
 namespace Metrics.Reporters
 {
@@ -14,18 +15,19 @@ namespace Metrics.Reporters
             return report.Result;
         }
 
-        private StringBuilder buffer;
-
         protected override void StartReport(string contextName)
         {
             this.buffer = new StringBuilder();
             base.StartReport(contextName);
         }
+
         protected override void WriteLine(string line, params string[] args)
         {
             this.buffer.AppendLine(string.Format(line, args));
         }
 
         public string Result => this.buffer.ToString();
+
+        private StringBuilder buffer;
     }
 }

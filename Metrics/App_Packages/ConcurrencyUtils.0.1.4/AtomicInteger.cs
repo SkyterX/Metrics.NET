@@ -25,23 +25,23 @@ using System.Threading;
 namespace Metrics.ConcurrencyUtilities
 {
     /// <summary>
-    /// Atomic int value. Operations exposed on this class are performed using System.Threading.Interlocked class and are thread safe.
-    /// For AtomicInt values that are stored in arrays PaddedAtomicInt is recommended.
+    ///     Atomic int value. Operations exposed on this class are performed using System.Threading.Interlocked class and are thread safe.
+    ///     For AtomicInt values that are stored in arrays PaddedAtomicInt is recommended.
     /// </summary>
     /// <remarks>
-    /// The AtomicInteger is a struct not a class and members of this type should *not* be declared readonly or changes will not be reflected in the member instance. 
+    ///     The AtomicInteger is a struct not a class and members of this type should *not* be declared readonly or changes will not be reflected in the member instance.
     /// </remarks>
 #if CONCURRENCY_UTILS_PUBLIC
 public
 #else
-internal
+    internal
 #endif
-    struct AtomicInteger
+        struct AtomicInteger
     {
         private int value;
 
         /// <summary>
-        /// Initializes a new instance with the specified <paramref name="value"/>.
+        ///     Initializes a new instance with the specified <paramref name="value" />.
         /// </summary>
         /// <param name="value">Initial value of the instance.</param>
         public AtomicInteger(int value)
@@ -50,7 +50,7 @@ internal
         }
 
         /// <summary>
-        /// Returns the latest value of this instance written by any processor.
+        ///     Returns the latest value of this instance written by any processor.
         /// </summary>
         /// <returns>The latest written value of this instance.</returns>
         public int GetValue()
@@ -59,7 +59,7 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance without using Volatile.Read fence and ordering.  
+        ///     Returns the current value of the instance without using Volatile.Read fence and ordering.
         /// </summary>
         /// <returns>The current value of the instance in a non-volatile way (might not observe changes on other threads).</returns>
         public int NonVolatileGetValue()
@@ -68,7 +68,7 @@ internal
         }
 
         /// <summary>
-        /// Write a new value to this instance. The value is immediately seen by all processors.
+        ///     Write a new value to this instance. The value is immediately seen by all processors.
         /// </summary>
         /// <param name="value">The new value for this instance.</param>
         public void SetValue(int value)
@@ -77,15 +77,15 @@ internal
         }
 
         /// <summary>
-        /// From the Java Version:
-        /// Eventually sets to the given value.
-        /// The semantics are that the write is guaranteed not to be re-ordered with any previous write, 
-        /// but may be reordered with subsequent operations (or equivalently, might not be visible to other threads) 
-        /// until some other volatile write or synchronizing action occurs).
+        ///     From the Java Version:
+        ///     Eventually sets to the given value.
+        ///     The semantics are that the write is guaranteed not to be re-ordered with any previous write,
+        ///     but may be reordered with subsequent operations (or equivalently, might not be visible to other threads)
+        ///     until some other volatile write or synchronizing action occurs).
         /// </summary>
         /// <remarks>
-        /// Currently implemented by calling Volatile.Write which is different from the java version. 
-        /// Not sure if it is possible on CLR to implement this.
+        ///     Currently implemented by calling Volatile.Write which is different from the java version.
+        ///     Not sure if it is possible on CLR to implement this.
         /// </remarks>
         /// <param name="value">The new value for this instance.</param>
         public void LazySetValue(int value)
@@ -94,7 +94,7 @@ internal
         }
 
         /// <summary>
-        /// Set the value without using Volatile.Write fence and ordering.
+        ///     Set the value without using Volatile.Write fence and ordering.
         /// </summary>
         /// <param name="value">The new value for this instance.</param>
         public void NonVolatileSetValue(int value)
@@ -103,7 +103,7 @@ internal
         }
 
         /// <summary>
-        /// Add <paramref name="value"/> to this instance and return the resulting value.
+        ///     Add <paramref name="value" /> to this instance and return the resulting value.
         /// </summary>
         /// <param name="value">The amount to add.</param>
         /// <returns>The value of this instance + the amount added.</returns>
@@ -113,7 +113,7 @@ internal
         }
 
         /// <summary>
-        /// Add <paramref name="value"/> to this instance and return the value this instance had before the add operation.
+        ///     Add <paramref name="value" /> to this instance and return the value this instance had before the add operation.
         /// </summary>
         /// <param name="value">The amount to add.</param>
         /// <returns>The value of this instance before the amount was added.</returns>
@@ -123,7 +123,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance and return the value the instance had before the increment.
+        ///     Increment this instance and return the value the instance had before the increment.
         /// </summary>
         /// <returns>The value of the instance *before* the increment.</returns>
         public int GetAndIncrement()
@@ -132,7 +132,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance with <paramref name="value"/> and return the value the instance had before the increment.
+        ///     Increment this instance with <paramref name="value" /> and return the value the instance had before the increment.
         /// </summary>
         /// <returns>The value of the instance *before* the increment.</returns>
         public int GetAndIncrement(int value)
@@ -141,7 +141,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance and return the value the instance had before the decrement.
+        ///     Decrement this instance and return the value the instance had before the decrement.
         /// </summary>
         /// <returns>The value of the instance *before* the decrement.</returns>
         public int GetAndDecrement()
@@ -150,7 +150,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance with <paramref name="value"/> and return the value the instance had before the decrement.
+        ///     Decrement this instance with <paramref name="value" /> and return the value the instance had before the decrement.
         /// </summary>
         /// <returns>The value of the instance *before* the decrement.</returns>
         public int GetAndDecrement(int value)
@@ -159,7 +159,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance and return the value after the increment.
+        ///     Increment this instance and return the value after the increment.
         /// </summary>
         /// <returns>The value of the instance *after* the increment.</returns>
         public int Increment()
@@ -168,7 +168,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance with <paramref name="value"/> and return the value after the increment.
+        ///     Increment this instance with <paramref name="value" /> and return the value after the increment.
         /// </summary>
         /// <returns>The value of the instance *after* the increment.</returns>
         public int Increment(int value)
@@ -177,7 +177,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance and return the value after the decrement.
+        ///     Decrement this instance and return the value after the decrement.
         /// </summary>
         /// <returns>The value of the instance *after* the decrement.</returns>
         public int Decrement()
@@ -186,7 +186,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance with <paramref name="value"/> and return the value after the decrement.
+        ///     Decrement this instance with <paramref name="value" /> and return the value after the decrement.
         /// </summary>
         /// <returns>The value of the instance *after* the decrement.</returns>
         public int Decrement(int value)
@@ -195,7 +195,7 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance and sets it to zero as an atomic operation.
+        ///     Returns the current value of the instance and sets it to zero as an atomic operation.
         /// </summary>
         /// <returns>The current value of the instance.</returns>
         public int GetAndReset()
@@ -204,7 +204,7 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance and sets it to <paramref name="newValue"/> as an atomic operation.
+        ///     Returns the current value of the instance and sets it to <paramref name="newValue" /> as an atomic operation.
         /// </summary>
         /// <returns>The current value of the instance.</returns>
         public int GetAndSet(int newValue)
@@ -213,7 +213,7 @@ internal
         }
 
         /// <summary>
-        /// Replace the value of this instance, if the current value is equal to the <paramref name="expected"/> value.
+        ///     Replace the value of this instance, if the current value is equal to the <paramref name="expected" /> value.
         /// </summary>
         /// <param name="expected">Value this instance is expected to be equal with.</param>
         /// <param name="updated">Value to set this instance to, if the current value is equal to the expected value</param>

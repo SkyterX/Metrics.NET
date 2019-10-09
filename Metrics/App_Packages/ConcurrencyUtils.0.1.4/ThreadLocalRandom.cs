@@ -26,22 +26,41 @@ using System.Threading;
 namespace Metrics.ConcurrencyUtilities
 {
     /// <summary>
-    /// Helper class to generate Random values is a thread safe way. Not suitable for cryptographic operations.
+    ///     Helper class to generate Random values is a thread safe way. Not suitable for cryptographic operations.
     /// </summary>
 #if CONCURRENCY_UTILS_PUBLIC
 public
 #else
-internal
+    internal
 #endif
-    static class ThreadLocalRandom
+        static class ThreadLocalRandom
     {
         private static readonly ThreadLocal<Random> LocalRandom = new ThreadLocal<Random>(() => new Random(Thread.CurrentThread.ManagedThreadId));
 
-        public static int Next() { return LocalRandom.Value.Next(); }
-        public static int Next(int maxValue) { return LocalRandom.Value.Next(); }
-        public static int Next(int minValue, int maxValue) { return LocalRandom.Value.Next(); }
-        public static void NextBytes(byte[] buffer) { LocalRandom.Value.NextBytes(buffer); }
-        public static double NextDouble() { return LocalRandom.Value.NextDouble(); }
+        public static int Next()
+        {
+            return LocalRandom.Value.Next();
+        }
+
+        public static int Next(int maxValue)
+        {
+            return LocalRandom.Value.Next();
+        }
+
+        public static int Next(int minValue, int maxValue)
+        {
+            return LocalRandom.Value.Next();
+        }
+
+        public static void NextBytes(byte[] buffer)
+        {
+            LocalRandom.Value.NextBytes(buffer);
+        }
+
+        public static double NextDouble()
+        {
+            return LocalRandom.Value.NextDouble();
+        }
 
         public static long NextLong()
         {

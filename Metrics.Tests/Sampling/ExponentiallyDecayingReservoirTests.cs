@@ -1,16 +1,16 @@
 ﻿using System.Linq;
+
 using FluentAssertions;
+
 using Metrics.Sampling;
 using Metrics.Utils;
+
 using Xunit;
 
 namespace Metrics.Tests.Sampling
 {
     public class ExponentiallyDecayingReservoirTests
     {
-        private readonly TestClock clock = new TestClock();
-        private readonly TestScheduler scheduler;
-
         public ExponentiallyDecayingReservoirTests()
         {
             this.scheduler = new TestScheduler(clock);
@@ -187,5 +187,8 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().MinUserValue.Should().Be("A");
             reservoir.GetSnapshot().MaxUserValue.Should().Be("B");
         }
+
+        private readonly TestClock clock = new TestClock();
+        private readonly TestScheduler scheduler;
     }
 }

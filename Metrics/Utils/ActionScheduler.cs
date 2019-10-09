@@ -5,17 +5,14 @@ using System.Threading.Tasks;
 namespace Metrics.Utils
 {
     /// <summary>
-    /// Utility class to schedule an Action to be executed repeatedly according to the interval.
+    ///     Utility class to schedule an Action to be executed repeatedly according to the interval.
     /// </summary>
     /// <remarks>
-    /// The scheduling code is inspired form Daniel Crenna's metrics port
-    /// https://github.com/danielcrenna/metrics-net/blob/master/src/metrics/Reporting/ReporterBase.cs
+    ///     The scheduling code is inspired form Daniel Crenna's metrics port
+    ///     https://github.com/danielcrenna/metrics-net/blob/master/src/metrics/Reporting/ReporterBase.cs
     /// </remarks>
     public sealed class ActionScheduler : Scheduler
     {
-        private CancellationTokenSource token;
-        private readonly int toleratedConsecutiveFailures;
-
         public ActionScheduler(int toleratedConsecutiveFailures = 0)
         {
             if (toleratedConsecutiveFailures < -1)
@@ -28,21 +25,21 @@ namespace Metrics.Utils
         public void Start(TimeSpan interval, Action action)
         {
             Start(interval, t =>
-            {
-                if (!t.IsCancellationRequested)
                 {
-                    action();
-                }
-            });
+                    if (!t.IsCancellationRequested)
+                    {
+                        action();
+                    }
+                });
         }
 
         public void Start(TimeSpan interval, Action<CancellationToken> action)
         {
             Start(interval, t =>
-            {
-                action(t);
-                return Task.FromResult(true);
-            });
+                {
+                    action(t);
+                    return Task.FromResult(true);
+                });
         }
 
         public void Start(TimeSpan interval, Func<Task> action)
@@ -70,34 +67,36 @@ namespace Metrics.Utils
         private static void RunScheduler(TimeSpan interval, Func<CancellationToken, Task> action, CancellationTokenSource token, int toleratedConsecutiveFailures)
         {
             Task.Factory.StartNew(async () =>
-            {
-                var nbFailures = 0;
-                while (!token.IsCancellationRequested)
                 {
-                    try
+                    var nbFailures = 0;
+                    while (!token.IsCancellationRequested)
                     {
-                        await Task.Delay(interval, token.Token).ConfigureAwait(false);
                         try
                         {
-                            await action(token.Token).ConfigureAwait(false);
-                            nbFailures = 0;
-                        }
-                        catch (Exception x)
-                        {
-                            MetricsErrorHandler.Handle(x, "Error while executing action scheduler.");
-                            if (toleratedConsecutiveFailures >= 0)
+                            await Task.Delay(interval, token.Token).ConfigureAwait(false);
+                            try
                             {
-                                nbFailures++;
-                                if (nbFailures > toleratedConsecutiveFailures)
+                                await action(token.Token).ConfigureAwait(false);
+                                nbFailures = 0;
+                            }
+                            catch (Exception x)
+                            {
+                                MetricsErrorHandler.Handle(x, "Error while executing action scheduler.");
+                                if (toleratedConsecutiveFailures >= 0)
                                 {
-                                    token.Cancel();
+                                    nbFailures++;
+                                    if (nbFailures > toleratedConsecutiveFailures)
+                                    {
+                                        token.Cancel();
+                                    }
                                 }
                             }
                         }
+                        catch (TaskCanceledException)
+                        {
+                        }
                     }
-                    catch (TaskCanceledException) { }
-                }
-            }, token.Token);
+                }, token.Token);
         }
 
         public void Stop()
@@ -116,5 +115,8 @@ namespace Metrics.Utils
                 this.token.Dispose();
             }
         }
+
+        private CancellationTokenSource token;
+        private readonly int toleratedConsecutiveFailures;
     }
 }

@@ -1,7 +1,9 @@
-﻿
-using System;
+﻿using System;
+
 using FluentAssertions;
+
 using Metrics.Core;
+
 using Xunit;
 
 namespace Metrics.Tests.HealthChecksTests
@@ -36,8 +38,16 @@ namespace Metrics.Tests.HealthChecksTests
         {
             string name = "test";
             new HealthCheck(name, () => ThrowException()).Execute().Check.IsHealthy.Should().BeFalse();
-            new HealthCheck(name, () => { ThrowException(); return "string"; }).Execute().Check.IsHealthy.Should().BeFalse();
-            new HealthCheck(name, () => { ThrowException(); HealthCheckResult.Healthy(); }).Execute().Check.IsHealthy.Should().BeFalse();
+            new HealthCheck(name, () =>
+                {
+                    ThrowException();
+                    return "string";
+                }).Execute().Check.IsHealthy.Should().BeFalse();
+            new HealthCheck(name, () =>
+                {
+                    ThrowException();
+                    HealthCheckResult.Healthy();
+                }).Execute().Check.IsHealthy.Should().BeFalse();
         }
 
         private static void ThrowExceptionWithBracketsInMessage()
@@ -50,8 +60,16 @@ namespace Metrics.Tests.HealthChecksTests
         {
             string name = "test";
             new HealthCheck(name, () => ThrowExceptionWithBracketsInMessage()).Execute().Check.IsHealthy.Should().BeFalse();
-            new HealthCheck(name, () => { ThrowExceptionWithBracketsInMessage(); return "string"; }).Execute().Check.IsHealthy.Should().BeFalse();
-            new HealthCheck(name, () => { ThrowExceptionWithBracketsInMessage(); HealthCheckResult.Healthy(); }).Execute().Check.IsHealthy.Should().BeFalse();
+            new HealthCheck(name, () =>
+                {
+                    ThrowExceptionWithBracketsInMessage();
+                    return "string";
+                }).Execute().Check.IsHealthy.Should().BeFalse();
+            new HealthCheck(name, () =>
+                {
+                    ThrowExceptionWithBracketsInMessage();
+                    HealthCheckResult.Healthy();
+                }).Execute().Check.IsHealthy.Should().BeFalse();
         }
 
         [Fact]

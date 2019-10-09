@@ -1,20 +1,20 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 namespace Metrics.Sampling
 {
     public struct UserValueWrapper
     {
-        public static readonly UserValueWrapper Empty = new UserValueWrapper();
-        public static readonly IComparer<UserValueWrapper> Comparer = new UserValueComparer();
-
-        public readonly long Value;
-        public readonly string UserValue;
-
         public UserValueWrapper(long value, string userValue = null)
         {
             this.Value = value;
             this.UserValue = userValue;
         }
+
+        public static readonly UserValueWrapper Empty = new UserValueWrapper();
+        public static readonly IComparer<UserValueWrapper> Comparer = new UserValueComparer();
+
+        public readonly long Value;
+        public readonly string UserValue;
 
         private class UserValueComparer : IComparer<UserValueWrapper>
         {

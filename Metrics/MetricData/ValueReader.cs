@@ -4,11 +4,6 @@ namespace Metrics.MetricData
 {
     public static class ValueReader
     {
-        private static readonly CounterValue EmptyCounter = new CounterValue(0);
-        private static readonly MeterValue EmptyMeter = new MeterValue(0, 0.0, 0.0, 0.0, 0.0, TimeUnit.Seconds);
-        private static readonly HistogramValue EmptyHistogram = new HistogramValue(0, 0.0, null, 0.0, null, 0.0, 0.0, null, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0);
-        private static readonly TimerValue EmptyTimer = new TimerValue(EmptyMeter, EmptyHistogram, 0, 0, TimeUnit.Milliseconds);
-
         public static CounterValue GetCurrentValue(Counter metric)
         {
             var implementation = metric as CounterImplementation;
@@ -48,5 +43,10 @@ namespace Metrics.MetricData
             }
             return EmptyTimer;
         }
+
+        private static readonly CounterValue EmptyCounter = new CounterValue(0);
+        private static readonly MeterValue EmptyMeter = new MeterValue(0, 0.0, 0.0, 0.0, 0.0, TimeUnit.Seconds);
+        private static readonly HistogramValue EmptyHistogram = new HistogramValue(0, 0.0, null, 0.0, null, 0.0, 0.0, null, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0);
+        private static readonly TimerValue EmptyTimer = new TimerValue(EmptyMeter, EmptyHistogram, 0, 0, TimeUnit.Milliseconds);
     }
 }

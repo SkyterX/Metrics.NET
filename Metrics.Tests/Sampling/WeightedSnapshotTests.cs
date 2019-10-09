@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Linq;
+
 using FluentAssertions;
+
 using Metrics.Sampling;
+
 using Xunit;
 
 namespace Metrics.Tests.Sampling
 {
     public class WeightedSnapshotTests
     {
-        private readonly WeightedSnapshot snapshot = MakeSanpshot(new long[] { 5, 1, 2, 3, 4 }, new double[] { 1, 2, 3, 2, 2 });
-
         private static WeightedSnapshot MakeSanpshot(long[] values, double[] weights)
         {
             if (values.Length != weights.Length)
@@ -21,7 +22,6 @@ namespace Metrics.Tests.Sampling
 
             return new WeightedSnapshot(values.Length, samples);
         }
-
 
         [Fact]
         public void WeightedSnapshot_SmallQuantilesAreTheFirstValue()
@@ -74,7 +74,7 @@ namespace Metrics.Tests.Sampling
         [Fact]
         public void WeightedSnapshot_HasValues()
         {
-            snapshot.Values.Should().Equal(new long[] { 1, 2, 3, 4, 5 });
+            snapshot.Values.Should().Equal(new long[] {1, 2, 3, 4, 5});
         }
 
         [Fact]
@@ -149,5 +149,7 @@ namespace Metrics.Tests.Sampling
             ((Action)(() => snapshot.GetValue(1.5))).Should().Throw<ArgumentException>();
             ((Action)(() => snapshot.GetValue(double.NaN))).Should().Throw<ArgumentException>();
         }
+
+        private readonly WeightedSnapshot snapshot = MakeSanpshot(new long[] {5, 1, 2, 3, 4}, new double[] {1, 2, 3, 2, 2});
     }
 }

@@ -8,8 +8,6 @@ namespace Metrics.Graphite
 {
     public static class GraphiteExtensions
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
         public static MetricsReports WithGraphite(this MetricsReports reports, Uri graphiteUri, TimeSpan interval)
         {
             if (graphiteUri.Scheme.ToLowerInvariant() == "net.tcp")
@@ -75,5 +73,7 @@ namespace Metrics.Graphite
             log.Info(() => "Graphite configuration missing from config file. Graphite reporting will be disabled.");
             return reports;
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
     }
 }

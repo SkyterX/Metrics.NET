@@ -1,28 +1,23 @@
-﻿
-using Metrics.MetricData;
-using Metrics.Utils;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
+
+using Metrics.MetricData;
+using Metrics.Utils;
+
 namespace Metrics.Core
 {
-    public interface MeterImplementation : Meter, MetricValueProvider<MeterValue> { }
+    public interface MeterImplementation : Meter, MetricValueProvider<MeterValue>
+    {
+    }
 
     public sealed class MeterMetric : SimpleMeter, MeterImplementation, IDisposable
     {
-        private static readonly TimeSpan TickInterval = TimeSpan.FromSeconds(5);
-
-        private ConcurrentDictionary<string, SimpleMeter> setMeters;
-
-        private readonly Clock clock;
-        private readonly Scheduler tickScheduler;
-
-        private long startTime;
-
         public MeterMetric()
             : this(Clock.Default, new ActionScheduler())
-        { }
+        {
+        }
 
         public MeterMetric(Clock clock, Scheduler scheduler)
         {
@@ -128,7 +123,9 @@ namespace Metrics.Core
         public void Dispose()
         {
             this.tickScheduler.Stop();
-            using (this.tickScheduler) { }
+            using (this.tickScheduler)
+            {
+            }
 
             if (this.setMeters != null)
             {
@@ -149,5 +146,14 @@ namespace Metrics.Core
                 }
             }
         }
+
+        private static readonly TimeSpan TickInterval = TimeSpan.FromSeconds(5);
+
+        private ConcurrentDictionary<string, SimpleMeter> setMeters;
+
+        private readonly Clock clock;
+        private readonly Scheduler tickScheduler;
+
+        private long startTime;
     }
 }

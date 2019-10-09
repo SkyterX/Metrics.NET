@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Linq;
+
 using Metrics.ConcurrencyUtilities;
 
 namespace Metrics.Sampling
 {
     public sealed class SlidingWindowReservoir : Reservoir
     {
-        private const int DefaultSize = 1028;
-
-        private readonly UserValueWrapper[] values;
-        private AtomicLong count = new AtomicLong();
-
         public SlidingWindowReservoir()
-            : this(DefaultSize) { }
+            : this(DefaultSize)
+        {
+        }
 
         public SlidingWindowReservoir(int size)
         {
             this.values = new UserValueWrapper[size];
         }
+
+        private const int DefaultSize = 1028;
 
         public void Update(long value, string userValue = null)
         {
@@ -51,7 +51,10 @@ namespace Metrics.Sampling
             Array.Sort(snapshotValues, UserValueWrapper.Comparer);
             var minValue = snapshotValues[0].UserValue;
             var maxValue = snapshotValues[size - 1].UserValue;
-            return new UniformSnapshot(this.count.GetValue(), snapshotValues.Select(v => v.Value), valuesAreSorted: true, minUserValue: minValue, maxUserValue: maxValue);
+            return new UniformSnapshot(this.count.GetValue(), snapshotValues.Select(v => v.Value), valuesAreSorted : true, minUserValue : minValue, maxUserValue : maxValue);
         }
+
+        private readonly UserValueWrapper[] values;
+        private AtomicLong count = new AtomicLong();
     }
 }

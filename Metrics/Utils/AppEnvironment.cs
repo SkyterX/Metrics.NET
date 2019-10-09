@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+
 using Metrics.Logging;
 using Metrics.MetricData;
 
@@ -12,8 +13,6 @@ namespace Metrics.Utils
 {
     public static class AppEnvironment
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
         public static IEnumerable<EnvironmentEntry> Current
         {
             get
@@ -45,8 +44,8 @@ namespace Metrics.Utils
             try
             {
                 var ipAddress = Dns.GetHostEntry(hostName)
-                    .AddressList
-                    .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+                                   .AddressList
+                                   .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
 
                 if (ipAddress != null)
                 {
@@ -79,7 +78,7 @@ namespace Metrics.Utils
         }
 
         /// <summary>
-        /// Try to resolve Asp site name without compile-time linking System.Web assembly.
+        ///     Try to resolve Asp site name without compile-time linking System.Web assembly.
         /// </summary>
         /// <returns>Site name if able to identify</returns>
         public static string ResolveAspSiteName()
@@ -134,5 +133,7 @@ namespace Metrics.Utils
 
             return UnknownName;
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
     }
 }

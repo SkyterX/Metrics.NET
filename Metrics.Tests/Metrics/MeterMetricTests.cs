@@ -1,16 +1,13 @@
-﻿
-using FluentAssertions;
+﻿using FluentAssertions;
+
 using Metrics.Core;
+
 using Xunit;
 
 namespace Metrics.Tests.Metrics
 {
     public class MeterMetricTests
     {
-        private readonly TestClock clock = new TestClock();
-        private readonly TestScheduler scheduler;
-        private readonly MeterMetric meter;
-
         public MeterMetricTests()
         {
             this.scheduler = new TestScheduler(this.clock);
@@ -67,7 +64,7 @@ namespace Metrics.Tests.Metrics
             value.FiveMinuteRate.Should().BeApproximately(0.1966, 0.001);
             value.FifteenMinuteRate.Should().BeApproximately(0.1988, 0.001);
         }
-        
+
         [Fact]
         public void MeterMetric_CanReset()
         {
@@ -173,5 +170,9 @@ namespace Metrics.Tests.Metrics
 
             scaledValue.MeanRate.Should().Be(1);
         }
+
+        private readonly TestClock clock = new TestClock();
+        private readonly TestScheduler scheduler;
+        private readonly MeterMetric meter;
     }
 }

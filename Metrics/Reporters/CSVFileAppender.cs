@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
 namespace Metrics.Reporters
 {
     public class CSVFileAppender : CSVAppender
     {
-        private readonly string directory;
-
         public CSVFileAppender(string directory, string delimiter)
             : base(delimiter)
         {
@@ -31,11 +30,11 @@ namespace Metrics.Reporters
 
             if (!File.Exists(fileName))
             {
-                File.AppendAllLines(fileName, new[] { GetHeader(values), GetValues(timestamp, values) });
+                File.AppendAllLines(fileName, new[] {GetHeader(values), GetValues(timestamp, values)});
             }
             else
             {
-                File.AppendAllLines(fileName, new[] { GetValues(timestamp, values) });
+                File.AppendAllLines(fileName, new[] {GetValues(timestamp, values)});
             }
         }
 
@@ -48,5 +47,7 @@ namespace Metrics.Reporters
             }
             return name;
         }
+
+        private readonly string directory;
     }
 }

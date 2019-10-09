@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+
 using Metrics.Logging;
 using Metrics.Utils;
 
@@ -8,25 +9,14 @@ namespace Metrics.Graphite
 {
     public sealed class PickleGraphiteSender : GraphiteSender
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
-        public const int DefaultPickleJarSize = 100;
-
-        private readonly string host;
-        private readonly int port;
-
-        private readonly int pickleJarSize;
-
-        private TcpClient client;
-        private PickleJar jar = new PickleJar();
-
-
         public PickleGraphiteSender(string host, int port, int batchSize = DefaultPickleJarSize)
         {
             this.host = host;
             this.port = port;
             this.pickleJarSize = batchSize;
         }
+
+        public const int DefaultPickleJarSize = 100;
 
         public override void Send(string name, string value, string timestamp)
         {
@@ -52,14 +42,17 @@ namespace Metrics.Graphite
             }
             catch (Exception x)
             {
-                using (this.client) { }
+                using (this.client)
+                {
+                }
                 this.client = null;
                 MetricsErrorHandler.Handle(x, "Error sending Pickled data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
 
         protected override void SendData(string data)
-        { }
+        {
+        }
 
         public override void Flush()
         {
@@ -70,7 +63,9 @@ namespace Metrics.Graphite
             }
             catch (Exception x)
             {
-                using (this.client) { }
+                using (this.client)
+                {
+                }
                 this.client = null;
                 MetricsErrorHandler.Handle(x, "Error sending Pickled data to graphite endpoint " + host + ":" + port.ToString());
             }
@@ -85,7 +80,6 @@ namespace Metrics.Graphite
             return client;
         }
 
-
         protected override void Dispose(bool disposing)
         {
             Flush();
@@ -95,10 +89,22 @@ namespace Metrics.Graphite
                 {
                     this.client.Close();
                 }
-                catch { }
+                catch
+                {
+                }
             }
             this.client = null;
             base.Dispose(disposing);
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
+
+        private readonly string host;
+        private readonly int port;
+
+        private readonly int pickleJarSize;
+
+        private TcpClient client;
+        private PickleJar jar = new PickleJar();
     }
 }

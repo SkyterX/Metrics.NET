@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Metrics.Core;
 using Metrics.MetricData;
 using Metrics.PerfCounters;
@@ -9,9 +10,6 @@ namespace Metrics.Tests
 {
     public class TestMetricsBuilder : MetricsBuilder
     {
-        private readonly Clock clock;
-        private readonly Scheduler scheduler;
-
         public TestMetricsBuilder(Clock clock, Scheduler scheduler)
         {
             this.clock = clock;
@@ -62,5 +60,8 @@ namespace Metrics.Tests
         {
             return new TimerMetric(new HistogramMetric(new UniformReservoir()), new MeterMetric(this.clock, this.scheduler), this.clock);
         }
+
+        private readonly Clock clock;
+        private readonly Scheduler scheduler;
     }
 }

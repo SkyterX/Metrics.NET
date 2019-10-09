@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Metrics.Utils;
+
 namespace Metrics
 {
     /// <summary>
-    /// Collection of tags that can be attached to a metric.
+    ///     Collection of tags that can be attached to a metric.
     /// </summary>
-    public struct MetricTags : Utils.IHideObjectMembers
+    public struct MetricTags : IHideObjectMembers
     {
-        private static readonly string[] empty = new string[0];
-
-        public static readonly MetricTags None = new MetricTags(Enumerable.Empty<string>());
-
-        private readonly string[] tags;
-
         public MetricTags(params string[] tags)
         {
             this.tags = tags.ToArray();
@@ -22,19 +18,15 @@ namespace Metrics
 
         public MetricTags(IEnumerable<string> tags)
             : this(tags.ToArray())
-        { }
+        {
+        }
 
         public MetricTags(string commaSeparatedTags)
             : this(ToTags(commaSeparatedTags))
-        { }
-
-        public string[] Tags
         {
-            get
-            {
-                return tags ?? empty;
-            }
         }
+
+        public string[] Tags { get { return tags ?? empty; } }
 
         private static IEnumerable<string> ToTags(string commaSeparatedTags)
         {
@@ -43,8 +35,8 @@ namespace Metrics
                 return Enumerable.Empty<string>();
             }
 
-            return commaSeparatedTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(t => t.Trim().ToLowerInvariant());
+            return commaSeparatedTags.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                                     .Select(t => t.Trim().ToLowerInvariant());
         }
 
         public static implicit operator MetricTags(string commaSeparatedTags)
@@ -56,5 +48,11 @@ namespace Metrics
         {
             return new MetricTags(tags);
         }
+
+        private static readonly string[] empty = new string[0];
+
+        public static readonly MetricTags None = new MetricTags(Enumerable.Empty<string>());
+
+        private readonly string[] tags;
     }
 }

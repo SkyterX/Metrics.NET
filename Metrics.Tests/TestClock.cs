@@ -1,12 +1,11 @@
 ﻿using System;
+
 using Metrics.Utils;
 
 namespace Metrics.Tests
 {
     public sealed class TestClock : Clock
     {
-        private long nanoseconds = 0;
-
         public override long Nanoseconds { get { return this.nanoseconds; } }
 
         public override DateTime UTCDateTime { get { return new DateTime(this.nanoseconds / 100L, DateTimeKind.Utc); } }
@@ -21,5 +20,6 @@ namespace Metrics.Tests
         }
 
         public event EventHandler Advanced;
+        private long nanoseconds = 0;
     }
 }

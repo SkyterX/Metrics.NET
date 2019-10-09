@@ -1,27 +1,25 @@
-﻿
-using Metrics.ConcurrencyUtilities;
-using System;
+﻿using System;
 using System.Linq;
+
+using Metrics.ConcurrencyUtilities;
+
 using static System.Math;
 
 namespace Metrics.Sampling
 {
     public sealed class UniformReservoir : Reservoir
     {
-        private const int DefaultSize = 1028;
-
-        private AtomicLong count = new AtomicLong();
-
-        private readonly UserValueWrapper[] values;
-
         public UniformReservoir()
             : this(DefaultSize)
-        { }
+        {
+        }
 
         public UniformReservoir(int size)
         {
             this.values = new UserValueWrapper[size];
         }
+
+        private const int DefaultSize = 1028;
 
         public int Size => Min((int)this.count.GetValue(), this.values.Length);
 
@@ -44,7 +42,7 @@ namespace Metrics.Sampling
             Array.Sort(snapshotValues, UserValueWrapper.Comparer);
             var minValue = snapshotValues[0].UserValue;
             var maxValue = snapshotValues[size - 1].UserValue;
-            return new UniformSnapshot(this.count.GetValue(), snapshotValues.Select(v => v.Value), valuesAreSorted: true, minUserValue: minValue, maxUserValue: maxValue);
+            return new UniformSnapshot(this.count.GetValue(), snapshotValues.Select(v => v.Value), valuesAreSorted : true, minUserValue : minValue, maxUserValue : maxValue);
         }
 
         public void Update(long value, string userValue = null)
@@ -68,5 +66,9 @@ namespace Metrics.Sampling
         {
             this.count.SetValue(0L);
         }
+
+        private AtomicLong count = new AtomicLong();
+
+        private readonly UserValueWrapper[] values;
     }
 }

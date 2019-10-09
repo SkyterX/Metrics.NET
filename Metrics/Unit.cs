@@ -1,39 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+
 using Metrics.Utils;
+
 namespace Metrics
 {
     [DebuggerDisplay("{Name}")]
     public struct Unit : IHideObjectMembers
     {
-        public static readonly Unit None = new Unit(string.Empty);
-        public static readonly Unit Requests = new Unit("Requests");
-        public static readonly Unit Commands = new Unit("Commands");
-        public static readonly Unit Calls = new Unit("Calls");
-        public static readonly Unit Events = new Unit("Events");
-        public static readonly Unit Errors = new Unit("Errors");
-        public static readonly Unit Results = new Unit("Results");
-        public static readonly Unit Items = new Unit("Items");
-        public static readonly Unit MegaBytes = new Unit("Mb");
-        public static readonly Unit KiloBytes = new Unit("Kb");
-        public static readonly Unit Bytes = new Unit("bytes");
-        public static readonly Unit Percent = new Unit("%");
-        public static readonly Unit Threads = new Unit("Threads");
-
-        public static Unit Custom(string name)
-        {
-            return new Unit(name);
-        }
-
-        public static implicit operator Unit(string name)
-        {
-            return Unit.Custom(name);
-        }
-
-        public readonly string Name;
-
         private Unit(string name)
         {
             if (name == null)
@@ -42,6 +17,16 @@ namespace Metrics
             }
 
             this.Name = name;
+        }
+
+        public static Unit Custom(string name)
+        {
+            return new Unit(name);
+        }
+
+        public static implicit operator Unit(string name)
+        {
+            return Custom(name);
         }
 
         public override string ToString()
@@ -76,5 +61,21 @@ namespace Metrics
         {
             return $"{value.ToString("F2", CultureInfo.InvariantCulture)} {(timeUnit.HasValue ? timeUnit.Value.Unit() : this.Name)}";
         }
+
+        public static readonly Unit None = new Unit(string.Empty);
+        public static readonly Unit Requests = new Unit("Requests");
+        public static readonly Unit Commands = new Unit("Commands");
+        public static readonly Unit Calls = new Unit("Calls");
+        public static readonly Unit Events = new Unit("Events");
+        public static readonly Unit Errors = new Unit("Errors");
+        public static readonly Unit Results = new Unit("Results");
+        public static readonly Unit Items = new Unit("Items");
+        public static readonly Unit MegaBytes = new Unit("Mb");
+        public static readonly Unit KiloBytes = new Unit("Kb");
+        public static readonly Unit Bytes = new Unit("bytes");
+        public static readonly Unit Percent = new Unit("%");
+        public static readonly Unit Threads = new Unit("Threads");
+
+        public readonly string Name;
     }
 }

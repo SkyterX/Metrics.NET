@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using FluentAssertions;
+
 using Metrics.Utils;
+
 using Xunit;
 
 namespace Metrics.Tests.Utils
@@ -40,10 +43,10 @@ namespace Metrics.Tests.Utils
                 int data = 0;
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-                {
-                    data++;
-                    tcs.SetResult(true);
-                });
+                    {
+                        data++;
+                        tcs.SetResult(true);
+                    });
 
                 tcs.Task.Wait();
                 scheduler.Stop();
@@ -61,10 +64,10 @@ namespace Metrics.Tests.Utils
                 var tcs = new TaskCompletionSource<bool>();
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-                {
-                    data++;
-                    tcs.SetResult(true);
-                });
+                    {
+                        data++;
+                        tcs.SetResult(true);
+                    });
 
                 tcs.Task.Wait();
                 scheduler.Stop();
@@ -81,10 +84,10 @@ namespace Metrics.Tests.Utils
                 var tcs = new TaskCompletionSource<bool>();
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), () =>
-                {
-                    data++;
-                    tcs.SetResult(true);
-                });
+                    {
+                        data++;
+                        tcs.SetResult(true);
+                    });
 
                 tcs.Task.Wait();
                 data.Should().Be(1);
@@ -104,17 +107,14 @@ namespace Metrics.Tests.Utils
             var tcs = new TaskCompletionSource<bool>();
 
             Metric.Config.WithErrorHandler(e =>
-            {
-                x = e;
-                tcs.SetResult(true);
-            });
+                {
+                    x = e;
+                    tcs.SetResult(true);
+                });
 
             using (ActionScheduler scheduler = new ActionScheduler())
             {
-                scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-                {
-                    throw new InvalidOperationException("boom");
-                });
+                scheduler.Start(TimeSpan.FromMilliseconds(10), t => { throw new InvalidOperationException("boom"); });
 
                 tcs.Task.Wait(1000);
                 scheduler.Stop();
@@ -153,10 +153,10 @@ namespace Metrics.Tests.Utils
             var actionCounter = 0;
 
             scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-            {
-                actionCounter++;
-                throw new Exception();
-            });
+                {
+                    actionCounter++;
+                    throw new Exception();
+                });
 
             Thread.Sleep(200);
             scheduler.Stop();
@@ -173,18 +173,18 @@ namespace Metrics.Tests.Utils
                 var tcs = new TaskCompletionSource<bool>();
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-                {
-                    if (actionCounter < 3)
                     {
-                        actionCounter++;
-                        throw new Exception();
-                    }
-                    else
-                    {
-                        actionCounter++;
-                        tcs.SetResult(true);
-                    }
-                });
+                        if (actionCounter < 3)
+                        {
+                            actionCounter++;
+                            throw new Exception();
+                        }
+                        else
+                        {
+                            actionCounter++;
+                            tcs.SetResult(true);
+                        }
+                    });
 
                 tcs.Task.Wait();
                 scheduler.Stop();
@@ -203,26 +203,26 @@ namespace Metrics.Tests.Utils
                 var errorCounter = 0;
 
                 Metric.Config.WithErrorHandler(e =>
-                {
-                    if (e.Message == "reports_error")
                     {
-                        errorCounter++;
-                    }
-                });
+                        if (e.Message == "reports_error")
+                        {
+                            errorCounter++;
+                        }
+                    });
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-                {
-                    if (actionCounter < 3)
                     {
-                        actionCounter++;
-                        throw new Exception("reports_error");
-                    }
-                    else
-                    {
-                        actionCounter++;
-                        tcs.SetResult(true);
-                    }
-                });
+                        if (actionCounter < 3)
+                        {
+                            actionCounter++;
+                            throw new Exception("reports_error");
+                        }
+                        else
+                        {
+                            actionCounter++;
+                            tcs.SetResult(true);
+                        }
+                    });
 
                 tcs.Task.Wait();
                 scheduler.Stop();
@@ -241,18 +241,18 @@ namespace Metrics.Tests.Utils
                 var tcs = new TaskCompletionSource<bool>();
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
-                {
-                    if (actionCounter < 10)
                     {
-                        actionCounter++;
-                        throw new Exception();
-                    }
-                    else
-                    {
-                        actionCounter++;
-                        tcs.SetResult(true);
-                    }
-                });
+                        if (actionCounter < 10)
+                        {
+                            actionCounter++;
+                            throw new Exception();
+                        }
+                        else
+                        {
+                            actionCounter++;
+                            tcs.SetResult(true);
+                        }
+                    });
 
                 tcs.Task.Wait();
                 scheduler.Stop();

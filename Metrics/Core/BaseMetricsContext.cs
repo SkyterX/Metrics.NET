@@ -1,20 +1,14 @@
-﻿using Metrics.MetricData;
-using Metrics.Sampling;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
+
+using Metrics.MetricData;
+using Metrics.Sampling;
 
 namespace Metrics.Core
 {
     public abstract class BaseMetricsContext : MetricsContext, AdvancedMetricsContext
     {
-        private readonly ConcurrentDictionary<string, MetricsContext> childContexts = new ConcurrentDictionary<string, MetricsContext>();
-
-        private MetricsRegistry registry;
-        private MetricsBuilder metricsBuilder;
-
-        private bool isDisabled;
-
         protected BaseMetricsContext(string context, MetricsRegistry registry, MetricsBuilder metricsBuilder, Func<DateTime> timestampProvider)
         {
             this.registry = registry;
@@ -76,7 +70,9 @@ namespace Metrics.Core
             MetricsContext context;
             if (this.childContexts.TryRemove(contextName, out context))
             {
-                using (context) { }
+                using (context)
+                {
+                }
             }
         }
 
@@ -112,7 +108,7 @@ namespace Metrics.Core
         }
 
         public Meter Meter<T>(string name, Unit unit, Func<T> builder, TimeUnit rateUnit, MetricTags tags)
-           where T : MeterImplementation
+            where T : MeterImplementation
         {
             return this.registry.Meter(name, builder, unit, rateUnit, tags);
         }
@@ -166,7 +162,9 @@ namespace Metrics.Core
             var oldRegistry = this.registry;
             this.registry = new NullMetricsRegistry();
             oldRegistry.ClearAllMetrics();
-            using (oldRegistry as IDisposable) { }
+            using (oldRegistry as IDisposable)
+            {
+            }
 
             ForAllChildContexts(c => c.Advanced.CompletelyDisableMetrics());
 
@@ -210,5 +208,12 @@ namespace Metrics.Core
                 action(context);
             }
         }
+
+        private readonly ConcurrentDictionary<string, MetricsContext> childContexts = new ConcurrentDictionary<string, MetricsContext>();
+
+        private MetricsRegistry registry;
+        private MetricsBuilder metricsBuilder;
+
+        private bool isDisabled;
     }
 }

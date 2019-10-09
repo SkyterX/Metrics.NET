@@ -1,17 +1,17 @@
 ﻿using System;
+
 using FluentAssertions;
+
 using Metrics.Core;
 using Metrics.Sampling;
 using Metrics.Utils;
+
 using Xunit;
 
 namespace Metrics.Tests.Metrics
 {
     public class TimerMetricTests
     {
-        private readonly TestClock clock = new TestClock();
-        private readonly TimerMetric timer;
-
         public TimerMetricTests()
         {
             this.timer = new TimerMetric(new HistogramMetric(new UniformReservoir()), new MeterMetric(this.clock, new TestScheduler(this.clock)), this.clock);
@@ -21,9 +21,13 @@ namespace Metrics.Tests.Metrics
         public void TimerMetric_CanCount()
         {
             timer.Value.Rate.Count.Should().Be(0);
-            using (timer.NewContext()) { }
+            using (timer.NewContext())
+            {
+            }
             timer.Value.Rate.Count.Should().Be(1);
-            using (timer.NewContext()) { }
+            using (timer.NewContext())
+            {
+            }
             timer.Value.Rate.Count.Should().Be(2);
             timer.Time(() => { });
             timer.Value.Rate.Count.Should().Be(3);
@@ -138,5 +142,8 @@ namespace Metrics.Tests.Metrics
 
             timer.Value.Histogram.LastUserValue.Should().Be("b");
         }
+
+        private readonly TestClock clock = new TestClock();
+        private readonly TimerMetric timer;
     }
 }

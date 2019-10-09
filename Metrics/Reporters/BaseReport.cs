@@ -1,16 +1,15 @@
-﻿using Metrics.MetricData;
-using Metrics.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+
+using Metrics.MetricData;
+using Metrics.Utils;
 
 namespace Metrics.Reporters
 {
     public abstract class BaseReport : MetricsReport
     {
-        private CancellationToken token;
-
         public void RunReport(MetricsData metricsData, Func<HealthStatus> healthStatus, CancellationToken token)
         {
             this.token = token;
@@ -41,7 +40,7 @@ namespace Metrics.Reporters
             ReportSection("Histograms", data.Histograms, h => ReportHistogram(FormatMetricName(contextName, h), h.Value, h.Unit, h.Tags));
             ReportSection("Timers", data.Timers, t => ReportTimer(FormatMetricName(contextName, t), t.Value, t.Unit, t.RateUnit, t.DurationUnit, t.Tags));
 
-            var stack = contextStack.Concat(new[] { data.Context });
+            var stack = contextStack.Concat(new[] {data.Context});
             foreach (var child in data.ChildMetrics)
             {
                 ReportContext(child, stack);
@@ -53,14 +52,33 @@ namespace Metrics.Reporters
         protected DateTime ReportTimestamp { get; private set; }
         protected DateTime CurrentContextTimestamp { get; private set; }
 
-        protected virtual void StartReport(string contextName) { }
-        protected virtual void StartContext(string contextName) { }
-        protected virtual void StartMetricGroup(string metricName) { }
-        protected virtual void EndMetricGroup(string metricName) { }
-        protected virtual void EndContext(string contextName) { }
-        protected virtual void EndReport(string contextName) { }
+        protected virtual void StartReport(string contextName)
+        {
+        }
 
-        protected virtual void ReportEnvironment(string name, IEnumerable<EnvironmentEntry> environment) { }
+        protected virtual void StartContext(string contextName)
+        {
+        }
+
+        protected virtual void StartMetricGroup(string metricName)
+        {
+        }
+
+        protected virtual void EndMetricGroup(string metricName)
+        {
+        }
+
+        protected virtual void EndContext(string contextName)
+        {
+        }
+
+        protected virtual void EndReport(string contextName)
+        {
+        }
+
+        protected virtual void ReportEnvironment(string name, IEnumerable<EnvironmentEntry> environment)
+        {
+        }
 
         protected abstract void ReportGauge(string name, double value, Unit unit, MetricTags tags);
         protected abstract void ReportCounter(string name, CounterValue value, Unit unit, MetricTags tags);
@@ -117,5 +135,7 @@ namespace Metrics.Reporters
             StartMetricGroup("Health Checks");
             ReportHealth(status);
         }
+
+        private CancellationToken token;
     }
 }

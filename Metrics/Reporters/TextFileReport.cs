@@ -6,10 +6,6 @@ namespace Metrics.Reporters
 {
     public class TextFileReport : HumanReadableReport
     {
-        private readonly string fileName;
-
-        private StringBuilder buffer;
-
         public TextFileReport(string fileName)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fileName));
@@ -42,5 +38,9 @@ namespace Metrics.Reporters
             base.EndReport(contextName);
             this.buffer = null;
         }
+
+        private readonly string fileName;
+
+        private StringBuilder buffer;
     }
 }

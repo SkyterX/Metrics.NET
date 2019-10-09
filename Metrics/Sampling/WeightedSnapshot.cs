@@ -1,39 +1,25 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace Metrics.Sampling
 {
     public struct WeightedSample
     {
-        public readonly long Value;
-        public readonly string UserValue;
-        public readonly double Weight;
-
         public WeightedSample(long value, string userValue, double weight)
         {
             this.Value = value;
             this.UserValue = userValue;
             this.Weight = weight;
         }
+
+        public readonly long Value;
+        public readonly string UserValue;
+        public readonly double Weight;
     }
 
     public sealed class WeightedSnapshot : Snapshot
     {
-        private readonly long[] values;
-        private readonly double[] normWeights;
-        private readonly double[] quantiles;
-
-        private class WeightedSampleComparer : IComparer<WeightedSample>
-        {
-            public static readonly IComparer<WeightedSample> Instance = new WeightedSampleComparer();
-
-            public int Compare(WeightedSample x, WeightedSample y)
-            {
-                return Comparer<long>.Default.Compare(x.Value, y.Value);
-            }
-        }
-
         public WeightedSnapshot(long count, IEnumerable<WeightedSample> values)
         {
             this.Count = count;
@@ -142,6 +128,20 @@ namespace Metrics.Sampling
             }
 
             return posx >= this.values.Length ? this.values[this.values.Length - 1] : this.values[posx];
+        }
+
+        private readonly long[] values;
+        private readonly double[] normWeights;
+        private readonly double[] quantiles;
+
+        private class WeightedSampleComparer : IComparer<WeightedSample>
+        {
+            public int Compare(WeightedSample x, WeightedSample y)
+            {
+                return Comparer<long>.Default.Compare(x.Value, y.Value);
+            }
+
+            public static readonly IComparer<WeightedSample> Instance = new WeightedSampleComparer();
         }
     }
 }

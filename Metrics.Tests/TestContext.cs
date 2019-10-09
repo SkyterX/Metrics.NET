@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using FluentAssertions;
+
 using Metrics.Core;
 using Metrics.MetricData;
 
@@ -17,11 +19,13 @@ namespace Metrics.Tests
 
         private TestContext(string contextName, TestClock clock)
             : this(contextName, clock, new TestScheduler(clock))
-        { }
+        {
+        }
 
         public TestContext()
             : this("TestContext", new TestClock())
-        { }
+        {
+        }
 
         public TestClock Clock { get; private set; }
         public TestScheduler Scheduler { get; private set; }
@@ -59,10 +63,10 @@ namespace Metrics.Tests
         private T ValueFor<T>(IEnumerable<MetricValueSource<T>> values, string[] nameWithContext)
         {
             var value = values.Where(t => t.Name == nameWithContext.Last())
-                .Select(t => t.Value);
+                              .Select(t => t.Value);
 
             value.Should().HaveCount(1, "No metric found with name {0} in context {1}. Available names: {2}", nameWithContext.Last(),
-                string.Join(".", nameWithContext.Take(nameWithContext.Length - 1)), string.Join(",", values.Select(v => v.Name)));
+                                     string.Join(".", nameWithContext.Take(nameWithContext.Length - 1)), string.Join(",", values.Select(v => v.Name)));
 
             return value.Single();
         }

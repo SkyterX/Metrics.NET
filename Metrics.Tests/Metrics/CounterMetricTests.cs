@@ -1,17 +1,17 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
 using FluentAssertions;
+
 using Metrics.Core;
+
 using Xunit;
 
 namespace Metrics.Tests.Metrics
 {
     public class CounterMetricTests
     {
-        private readonly CounterMetric counter = new CounterMetric();
-
         [Fact]
         public void CounterMetric_StartsFromZero()
         {
@@ -76,13 +76,13 @@ namespace Metrics.Tests.Metrics
             for (int i = 0; i < threadCount; i++)
             {
                 threads.Add(new Thread(s =>
-                {
-                    tcs.Task.Wait();
-                    for (long j = 0; j < iterations; j++)
                     {
-                        counter.Increment();
-                    }
-                }));
+                        tcs.Task.Wait();
+                        for (long j = 0; j < iterations; j++)
+                        {
+                            counter.Increment();
+                        }
+                    }));
             }
 
             threads.ForEach(t => t.Start());
@@ -153,5 +153,6 @@ namespace Metrics.Tests.Metrics
             counter.Value.Items[0].Percent.Should().Be(0);
         }
 
+        private readonly CounterMetric counter = new CounterMetric();
     }
 }

@@ -1,21 +1,25 @@
 ﻿using System;
+
 using Metrics.MetricData;
 using Metrics.Sampling;
 
 namespace Metrics.Core
 {
-    public interface HistogramImplementation : Histogram, MetricValueProvider<HistogramValue> { }
+    public interface HistogramImplementation : Histogram, MetricValueProvider<HistogramValue>
+    {
+    }
 
     public sealed class HistogramMetric : HistogramImplementation
     {
-        private readonly Reservoir reservoir;
-        private UserValueWrapper last;
-
         public HistogramMetric()
-            : this(SamplingType.Default) { }
+            : this(SamplingType.Default)
+        {
+        }
 
         public HistogramMetric(SamplingType samplingType)
-            : this(SamplingTypeToReservoir(samplingType)) { }
+            : this(SamplingTypeToReservoir(samplingType))
+        {
+        }
 
         public HistogramMetric(Reservoir reservoir)
         {
@@ -38,13 +42,7 @@ namespace Metrics.Core
             return value;
         }
 
-        public HistogramValue Value
-        {
-            get
-            {
-                return GetValue();
-            }
-        }
+        public HistogramValue Value { get { return GetValue(); } }
 
         public void Reset()
         {
@@ -58,20 +56,23 @@ namespace Metrics.Core
             {
                 switch (samplingType)
                 {
-                    case SamplingType.Default:
-                        samplingType = Metric.Config.DefaultSamplingType;
-                        continue;
-                    case SamplingType.HighDynamicRange:
-                        return new HdrHistogramReservoir();
-                    case SamplingType.ExponentiallyDecaying:
-                        return new ExponentiallyDecayingReservoir();
-                    case SamplingType.LongTerm:
-                        return new UniformReservoir();
-                    case SamplingType.SlidingWindow:
-                        return new SlidingWindowReservoir();
+                case SamplingType.Default:
+                    samplingType = Metric.Config.DefaultSamplingType;
+                    continue;
+                case SamplingType.HighDynamicRange:
+                    return new HdrHistogramReservoir();
+                case SamplingType.ExponentiallyDecaying:
+                    return new ExponentiallyDecayingReservoir();
+                case SamplingType.LongTerm:
+                    return new UniformReservoir();
+                case SamplingType.SlidingWindow:
+                    return new SlidingWindowReservoir();
                 }
                 throw new InvalidOperationException("Sampling type not implemented " + samplingType);
             }
         }
+
+        private readonly Reservoir reservoir;
+        private UserValueWrapper last;
     }
 }

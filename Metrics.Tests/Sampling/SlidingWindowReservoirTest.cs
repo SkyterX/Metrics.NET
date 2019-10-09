@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
+
 using Metrics.Sampling;
+
 using Xunit;
 
 namespace Metrics.Tests.Sampling
 {
     public class SlidingWindowReservoirTest
     {
-        private readonly SlidingWindowReservoir reservoir = new SlidingWindowReservoir(3);
-
         [Fact]
         public void SlidingWindowReservoir_CanStoreSmallSample()
         {
@@ -38,5 +38,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().MinUserValue.Should().Be("A");
             reservoir.GetSnapshot().MaxUserValue.Should().Be("B");
         }
+
+        private readonly SlidingWindowReservoir reservoir = new SlidingWindowReservoir(3);
     }
 }

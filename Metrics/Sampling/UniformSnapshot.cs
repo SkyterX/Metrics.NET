@@ -6,8 +6,6 @@ namespace Metrics.Sampling
 {
     public sealed class UniformSnapshot : Snapshot
     {
-        private readonly long[] values;
-
         public UniformSnapshot(long count, IEnumerable<long> values, bool valuesAreSorted = false, string minUserValue = null, string maxUserValue = null)
         {
             this.Count = count;
@@ -87,5 +85,7 @@ namespace Metrics.Sampling
 
             return lower + (pos - Math.Floor(pos)) * (upper - lower);
         }
+
+        private readonly long[] values;
     }
 }

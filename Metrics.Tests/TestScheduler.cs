@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Metrics.Utils;
 
 namespace Metrics.Tests
 {
     /// <summary>
-    /// Utility class for manually executing the scheduled task.
+    ///     Utility class for manually executing the scheduled task.
     /// </summary>
     /// <remarks>
-    /// This class is useful for testing.
+    ///     This class is useful for testing.
     /// </remarks>
     public sealed class TestScheduler : Scheduler
     {
-        private readonly TestClock clock;
-        private TimeSpan interval;
-        private Action<CancellationToken> action;
-        private long lastRun = 0;
-
         public TestScheduler(TestClock clock)
         {
             this.clock = clock;
@@ -64,8 +60,17 @@ namespace Metrics.Tests
                 }
         }
 
-        public void Stop() { }
-        public void Dispose() { }
-    }
+        public void Stop()
+        {
+        }
 
+        public void Dispose()
+        {
+        }
+
+        private readonly TestClock clock;
+        private TimeSpan interval;
+        private Action<CancellationToken> action;
+        private long lastRun = 0;
+    }
 }

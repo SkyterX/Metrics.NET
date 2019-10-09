@@ -5,20 +5,10 @@ using System.Text;
 namespace Metrics
 {
     /// <summary>
-    /// Result of a health check
+    ///     Result of a health check
     /// </summary>
     public struct HealthCheckResult
     {
-        /// <summary>
-        /// True if the check was successful, false if the check failed.
-        /// </summary>
-        public readonly bool IsHealthy;
-
-        /// <summary>
-        /// Status message of the check. A status can be provided for both healthy and unhealthy states.
-        /// </summary>
-        public readonly string Message;
-
         private HealthCheckResult(bool isHealthy, string message)
         {
             this.IsHealthy = isHealthy;
@@ -26,7 +16,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Create a healthy status response.
+        ///     Create a healthy status response.
         /// </summary>
         /// <returns>Healthy status response.</returns>
         public static HealthCheckResult Healthy()
@@ -35,7 +25,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Create a healthy status response.
+        ///     Create a healthy status response.
         /// </summary>
         /// <param name="message">Status message.</param>
         /// <param name="values">Values to format the status message with.</param>
@@ -47,7 +37,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Create a unhealthy status response.
+        ///     Create a unhealthy status response.
         /// </summary>
         /// <returns>Unhealthy status response.</returns>
         public static HealthCheckResult Unhealthy()
@@ -56,7 +46,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Create a unhealthy status response.
+        ///     Create a unhealthy status response.
         /// </summary>
         /// <param name="message">Status message.</param>
         /// <param name="values">Values to format the status message with.</param>
@@ -68,7 +58,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Create a unhealthy status response.
+        ///     Create a unhealthy status response.
         /// </summary>
         /// <param name="exception">Exception to use for reason.</param>
         /// <returns>Unhealthy status response.</returns>
@@ -100,8 +90,8 @@ namespace Metrics
                 if (exception.StackTrace != null)
                 {
                     var stackLines = exception.StackTrace.Split('\n')
-                        .Where(l => !string.IsNullOrWhiteSpace(l))
-                        .Select(l => string.Concat(pad, l.Trim()));
+                                              .Where(l => !string.IsNullOrWhiteSpace(l))
+                                              .Select(l => string.Concat(pad, l.Trim()));
 
                     builder.AppendLine(string.Join(Environment.NewLine, stackLines));
                 }
@@ -118,5 +108,15 @@ namespace Metrics
 
             return builder.ToString();
         }
+
+        /// <summary>
+        ///     True if the check was successful, false if the check failed.
+        /// </summary>
+        public readonly bool IsHealthy;
+
+        /// <summary>
+        ///     Status message of the check. A status can be provided for both healthy and unhealthy states.
+        /// </summary>
+        public readonly string Message;
     }
 }

@@ -25,23 +25,23 @@ using System.Threading;
 namespace Metrics.ConcurrencyUtilities
 {
     /// <summary>
-    /// Double value on which the GetValue/SetValue operations are performed using Volatile.Read/Volatile.Write.
+    ///     Double value on which the GetValue/SetValue operations are performed using Volatile.Read/Volatile.Write.
     /// </summary>
     /// <remarks>
-    /// This datastructure is a struct. If a member is declared readonly VolatileDouble calling set will *NOT* modify the value.
-    /// GetValue/SetValue are expressed as methods to make it obvious that a non-trivial operation is performed.
+    ///     This datastructure is a struct. If a member is declared readonly VolatileDouble calling set will *NOT* modify the value.
+    ///     GetValue/SetValue are expressed as methods to make it obvious that a non-trivial operation is performed.
     /// </remarks>
 #if CONCURRENCY_UTILS_PUBLIC
 public
 #else
-internal
+    internal
 #endif
-    struct VolatileDouble
+        struct VolatileDouble
     {
         private double value;
 
         /// <summary>
-        /// Initialize the value of this instance
+        ///     Initialize the value of this instance
         /// </summary>
         /// <param name="value">Initial value of the instance.</param>
         public VolatileDouble(double value)
@@ -50,10 +50,10 @@ internal
         }
 
         /// <summary>
-        /// Set the the value of this instance to <paramref name="newValue"/>
+        ///     Set the the value of this instance to <paramref name="newValue" />
         /// </summary>
         /// <remarks>
-        /// Don't call Set on readonly fields.
+        ///     Don't call Set on readonly fields.
         /// </remarks>
         /// <param name="newValue">New value for this instance</param>
         public void SetValue(double newValue)
@@ -62,15 +62,15 @@ internal
         }
 
         /// <summary>
-        /// From the Java Version:
-        /// Eventually sets to the given value.
-        /// The semantics are that the write is guaranteed not to be re-ordered with any previous write, 
-        /// but may be reordered with subsequent operations (or equivalently, might not be visible to other threads) 
-        /// until some other volatile write or synchronizing action occurs).
+        ///     From the Java Version:
+        ///     Eventually sets to the given value.
+        ///     The semantics are that the write is guaranteed not to be re-ordered with any previous write,
+        ///     but may be reordered with subsequent operations (or equivalently, might not be visible to other threads)
+        ///     until some other volatile write or synchronizing action occurs).
         /// </summary>
         /// <remarks>
-        /// Currently implemented by calling Volatile.Write which is different from the java version. 
-        /// Not sure if it is possible on CLR to implement this.
+        ///     Currently implemented by calling Volatile.Write which is different from the java version.
+        ///     Not sure if it is possible on CLR to implement this.
         /// </remarks>
         /// <param name="value">The new value for this instance.</param>
         public void LazySetValue(double value)
@@ -79,7 +79,7 @@ internal
         }
 
         /// <summary>
-        /// Set the value without using Volatile.Write fence and ordering.
+        ///     Set the value without using Volatile.Write fence and ordering.
         /// </summary>
         /// <param name="value">The new value for this instance.</param>
         public void NonVolatileSetValue(double value)
@@ -88,7 +88,7 @@ internal
         }
 
         /// <summary>
-        /// Get the current value of this instance
+        ///     Get the current value of this instance
         /// </summary>
         /// <returns>The current value of the instance</returns>
         public double GetValue()
@@ -97,7 +97,7 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance without using Volatile.Read fence and ordering.  
+        ///     Returns the current value of the instance without using Volatile.Read fence and ordering.
         /// </summary>
         /// <returns>The current value of the instance in a non-volatile way (might not observe changes on other threads).</returns>
         public double NonVolatileGetValue()

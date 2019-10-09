@@ -1,21 +1,15 @@
-﻿using Metrics.Logging;
-using Metrics.Utils;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+
+using Metrics.Logging;
+using Metrics.Utils;
 
 namespace Metrics.Graphite
 {
     public sealed class TcpGraphiteSender : GraphiteSender
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
-        private readonly string host;
-        private readonly int port;
-
-        private TcpClient client;
-
         public TcpGraphiteSender(string host, int port)
         {
             this.host = host;
@@ -37,7 +31,9 @@ namespace Metrics.Graphite
             }
             catch (Exception x)
             {
-                using (this.client) { }
+                using (this.client)
+                {
+                }
                 this.client = null;
                 MetricsErrorHandler.Handle(x, "Error sending TCP data to graphite endpoint " + host + ":" + port.ToString());
             }
@@ -51,7 +47,9 @@ namespace Metrics.Graphite
             }
             catch (Exception x)
             {
-                using (this.client) { }
+                using (this.client)
+                {
+                }
                 this.client = null;
                 MetricsErrorHandler.Handle(x, "Error sending TCP data to graphite endpoint " + host + ":" + port.ToString());
             }
@@ -66,7 +64,6 @@ namespace Metrics.Graphite
             return client;
         }
 
-
         protected override void Dispose(bool disposing)
         {
             using (this.client)
@@ -75,10 +72,19 @@ namespace Metrics.Graphite
                 {
                     this.client.Close();
                 }
-                catch { }
+                catch
+                {
+                }
             }
             this.client = null;
             base.Dispose(disposing);
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
+
+        private readonly string host;
+        private readonly int port;
+
+        private TcpClient client;
     }
 }

@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
+
 using Metrics.Core;
+
 using Xunit;
 
 namespace Metrics.Tests.Metrics
 {
     public class HistogramMetricTests
     {
-        private readonly HistogramMetric histogram = new HistogramMetric();
-
         [Fact]
         public void HistogramMetric_CanCount()
         {
@@ -50,5 +50,7 @@ namespace Metrics.Tests.Metrics
             histogram.Update(1L);
             histogram.Value.Mean.Should().Be(1);
         }
+
+        private readonly HistogramMetric histogram = new HistogramMetric();
     }
 }

@@ -9,11 +9,6 @@ namespace Metrics.Reporters
 {
     public sealed class MetricsReports : IHideObjectMembers, IDisposable
     {
-        private readonly MetricsDataProvider metricsDataProvider;
-        private readonly Func<HealthStatus> healthStatus;
-
-        private readonly List<ScheduledReporter> reports = new List<ScheduledReporter>();
-
         public MetricsReports(MetricsDataProvider metricsDataProvider, Func<HealthStatus> healthStatus)
         {
             this.metricsDataProvider = metricsDataProvider;
@@ -21,12 +16,12 @@ namespace Metrics.Reporters
         }
 
         /// <summary>
-        /// Schedule a generic reporter to be executed at a fixed <paramref name="interval"/>
+        ///     Schedule a generic reporter to be executed at a fixed <paramref name="interval" />
         /// </summary>
         /// <param name="report">Function that returns an instance of a reporter</param>
         /// <param name="interval">Interval at which to run the report.</param>
-		/// <param name="filter">Only report metrics that match the filter.</param> 
-		public MetricsReports WithReport(MetricsReport report, TimeSpan interval, MetricsFilter filter = null)
+        /// <param name="filter">Only report metrics that match the filter.</param>
+        public MetricsReports WithReport(MetricsReport report, TimeSpan interval, MetricsFilter filter = null)
         {
             var toleratedConsecutiveFailures = ReadToleratedFailuresConfig();
             var newReport = new ScheduledReporter(report, this.metricsDataProvider.WithFilter(filter), this.healthStatus, interval, new ActionScheduler(toleratedConsecutiveFailures));
@@ -35,40 +30,40 @@ namespace Metrics.Reporters
         }
 
         /// <summary>
-        /// Schedule a Console Report to be executed and displayed on the console at a fixed <paramref name="interval"/>.
+        ///     Schedule a Console Report to be executed and displayed on the console at a fixed <paramref name="interval" />.
         /// </summary>
         /// <param name="interval">Interval at which to display the report on the Console.</param>
-		/// <param name="filter">Only report metrics that match the filter.</param> 
-		public MetricsReports WithConsoleReport(TimeSpan interval, MetricsFilter filter = null)
+        /// <param name="filter">Only report metrics that match the filter.</param>
+        public MetricsReports WithConsoleReport(TimeSpan interval, MetricsFilter filter = null)
         {
             return WithReport(new ConsoleReport(), interval, filter);
         }
 
         /// <summary>
-        /// Configure Metrics to append a line for each metric to a CSV file in the <paramref name="directory"/>.
+        ///     Configure Metrics to append a line for each metric to a CSV file in the <paramref name="directory" />.
         /// </summary>
         /// <param name="directory">Directory where to store the CSV files.</param>
         /// <param name="interval">Interval at which to append a line to the files.</param>
         /// <param name="delimiter">CSV delimiter to use</param>
-		/// <param name="filter">Only report metrics that match the filter.</param> 
-		public MetricsReports WithCSVReports(string directory, TimeSpan interval, MetricsFilter filter = null, string delimiter = CSVAppender.CommaDelimiter)
+        /// <param name="filter">Only report metrics that match the filter.</param>
+        public MetricsReports WithCSVReports(string directory, TimeSpan interval, MetricsFilter filter = null, string delimiter = CSVAppender.CommaDelimiter)
         {
             return WithReport(new CSVReport(new CSVFileAppender(directory, delimiter)), interval, filter);
         }
 
         /// <summary>
-        /// Schedule a Human Readable report to be executed and appended to a text file.
+        ///     Schedule a Human Readable report to be executed and appended to a text file.
         /// </summary>
         /// <param name="filePath">File where to append the report.</param>
         /// <param name="interval">Interval at which to run the report.</param>
-		/// <param name="filter">Only report metrics that match the filter.</param> 
-		public MetricsReports WithTextFileReport(string filePath, TimeSpan interval, MetricsFilter filter = null)
+        /// <param name="filter">Only report metrics that match the filter.</param>
+        public MetricsReports WithTextFileReport(string filePath, TimeSpan interval, MetricsFilter filter = null)
         {
             return WithReport(new TextFileReport(filePath), interval, filter);
         }
 
         /// <summary>
-        /// Stop all registered reports and clear the registrations.
+        ///     Stop all registered reports and clear the registrations.
         /// </summary>
         public void StopAndClearAllReports()
         {
@@ -99,5 +94,10 @@ namespace Metrics.Reporters
 
             return toleratedConsecutiveFailures;
         }
+
+        private readonly MetricsDataProvider metricsDataProvider;
+        private readonly Func<HealthStatus> healthStatus;
+
+        private readonly List<ScheduledReporter> reports = new List<ScheduledReporter>();
     }
 }

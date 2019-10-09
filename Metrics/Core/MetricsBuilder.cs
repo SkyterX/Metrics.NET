@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+
 using Metrics.MetricData;
 using Metrics.Sampling;
 

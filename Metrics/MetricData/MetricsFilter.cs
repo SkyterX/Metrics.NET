@@ -1,6 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using Metrics.Utils;
+
 namespace Metrics.MetricData
 {
     public enum MetricType
@@ -12,7 +14,7 @@ namespace Metrics.MetricData
         Timer
     }
 
-    public interface MetricsFilter : Utils.IHideObjectMembers
+    public interface MetricsFilter : IHideObjectMembers
     {
         bool IsMatch(string context);
 
@@ -25,31 +27,11 @@ namespace Metrics.MetricData
 
     public class Filter : MetricsFilter
     {
-        private Predicate<string> context;
-        private Predicate<string> name;
-        private HashSet<MetricType> types;
-
-        private class NoOpFilter : MetricsFilter
+        private Filter()
         {
-            public bool IsMatch(string context) { return true; }
-            public bool IsMatch(GaugeValueSource gauge) { return true; }
-            public bool IsMatch(CounterValueSource counter) { return true; }
-            public bool IsMatch(MeterValueSource meter) { return true; }
-            public bool IsMatch(HistogramValueSource histogram) { return true; }
-            public bool IsMatch(TimerValueSource timer) { return true; }
         }
 
-        public static MetricsFilter All = new NoOpFilter();
-
-        private Filter() { }
-
-        public static Filter New
-        {
-			get
-			{
-				return new Filter();
-			}
-        }
+        public static Filter New { get { return new Filter(); } }
 
         public Filter WhereContext(Predicate<string> condition)
         {
@@ -142,6 +124,45 @@ namespace Metrics.MetricData
             }
 
             return true;
+        }
+
+        private Predicate<string> context;
+        private Predicate<string> name;
+        private HashSet<MetricType> types;
+
+        public static MetricsFilter All = new NoOpFilter();
+
+        private class NoOpFilter : MetricsFilter
+        {
+            public bool IsMatch(string context)
+            {
+                return true;
+            }
+
+            public bool IsMatch(GaugeValueSource gauge)
+            {
+                return true;
+            }
+
+            public bool IsMatch(CounterValueSource counter)
+            {
+                return true;
+            }
+
+            public bool IsMatch(MeterValueSource meter)
+            {
+                return true;
+            }
+
+            public bool IsMatch(HistogramValueSource histogram)
+            {
+                return true;
+            }
+
+            public bool IsMatch(TimerValueSource timer)
+            {
+                return true;
+            }
         }
     }
 }

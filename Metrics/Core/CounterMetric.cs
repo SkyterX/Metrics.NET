@@ -2,19 +2,18 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
+
 using Metrics.ConcurrencyUtilities;
 using Metrics.MetricData;
 
 namespace Metrics.Core
 {
-    public interface CounterImplementation : Counter, MetricValueProvider<CounterValue> { }
+    public interface CounterImplementation : Counter, MetricValueProvider<CounterValue>
+    {
+    }
 
     public sealed class CounterMetric : CounterImplementation
     {
-        private ConcurrentDictionary<string, StripedLongAdder> setCounters;
-
-        private readonly StripedLongAdder counter = new StripedLongAdder();
-
         public CounterValue Value
         {
             get
@@ -127,5 +126,9 @@ namespace Metrics.Core
 
             return new CounterValue(total, items);
         }
+
+        private ConcurrentDictionary<string, StripedLongAdder> setCounters;
+
+        private readonly StripedLongAdder counter = new StripedLongAdder();
     }
 }

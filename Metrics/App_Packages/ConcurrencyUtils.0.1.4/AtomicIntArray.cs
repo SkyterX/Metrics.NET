@@ -29,12 +29,10 @@ namespace Metrics.ConcurrencyUtilities
 #if CONCURRENCY_UTILS_PUBLIC
 public
 #else
-internal
+    internal
 #endif
-    struct AtomicIntArray
+        struct AtomicIntArray
     {
-        private readonly int[] array;
-
         public AtomicIntArray(int length)
         {
             if (length < 0)
@@ -54,13 +52,10 @@ internal
             this.array = clone;
         }
 
-        public int Length
-        {
-            get { return this.array.Length; }
-        }
+        public int Length { get { return this.array.Length; } }
 
         /// <summary>
-        /// Returns the latest value of this instance written by any processor.
+        ///     Returns the latest value of this instance written by any processor.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <returns>The latest written value of this instance.</returns>
@@ -70,7 +65,7 @@ internal
         }
 
         /// <summary>
-        /// Write a new value to this instance. The value is immediately seen by all processors.
+        ///     Write a new value to this instance. The value is immediately seen by all processors.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">The new value for this instance.</param>
@@ -80,7 +75,7 @@ internal
         }
 
         /// <summary>
-        /// Add <paramref name="value"/> to this instance and return the resulting value.
+        ///     Add <paramref name="value" /> to this instance and return the resulting value.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">The amount to add.</param>
@@ -91,7 +86,7 @@ internal
         }
 
         /// <summary>
-        /// Add <paramref name="value"/> to this instance and return the value this instance had before the add operation.
+        ///     Add <paramref name="value" /> to this instance and return the value this instance had before the add operation.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">The amount to add.</param>
@@ -102,7 +97,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance and return the value the instance had before the increment.
+        ///     Increment this instance and return the value the instance had before the increment.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <returns>The value of the instance *before* the increment.</returns>
@@ -112,7 +107,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance with <paramref name="value"/> and return the value the instance had before the increment.
+        ///     Increment this instance with <paramref name="value" /> and return the value the instance had before the increment.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">value to increment with</param>
@@ -123,7 +118,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance and return the value the instance had before the decrement.
+        ///     Decrement this instance and return the value the instance had before the decrement.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <returns>The value of the instance *before* the decrement.</returns>
@@ -133,7 +128,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance with <paramref name="value"/> and return the value the instance had before the decrement.
+        ///     Decrement this instance with <paramref name="value" /> and return the value the instance had before the decrement.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">value to decrement with</param>
@@ -144,7 +139,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance and return the value after the increment.
+        ///     Increment this instance and return the value after the increment.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <returns>The value of the instance *after* the increment.</returns>
@@ -154,7 +149,7 @@ internal
         }
 
         /// <summary>
-        /// Increment this instance with <paramref name="value"/> and return the value after the increment.
+        ///     Increment this instance with <paramref name="value" /> and return the value after the increment.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">value to increment with</param>
@@ -165,7 +160,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance and return the value after the decrement.
+        ///     Decrement this instance and return the value after the decrement.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <returns>The value of the instance *after* the decrement.</returns>
@@ -175,7 +170,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement this instance with <paramref name="value"/> and return the value after the decrement.
+        ///     Decrement this instance with <paramref name="value" /> and return the value after the decrement.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="value">value to decrement with</param>
@@ -186,7 +181,7 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance and sets it to zero as an atomic operation.
+        ///     Returns the current value of the instance and sets it to zero as an atomic operation.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <returns>The current value of the instance.</returns>
@@ -196,10 +191,10 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance and sets it to <paramref name="newValue"/> as an atomic operation.
+        ///     Returns the current value of the instance and sets it to <paramref name="newValue" /> as an atomic operation.
         /// </summary>
         /// <param name="index">index in the array</param>
-        /// <param name="newValue">value that will be set in the array at <paramref name="index"/></param>
+        /// <param name="newValue">value that will be set in the array at <paramref name="index" /></param>
         /// <returns>The current value of the instance.</returns>
         public int GetAndSet(int index, int newValue)
         {
@@ -207,7 +202,7 @@ internal
         }
 
         /// <summary>
-        /// Replace the value of this instance, if the current value is equal to the <paramref name="expected"/> value.
+        ///     Replace the value of this instance, if the current value is equal to the <paramref name="expected" /> value.
         /// </summary>
         /// <param name="index">index in the array</param>
         /// <param name="expected">Value this instance is expected to be equal with.</param>
@@ -217,5 +212,7 @@ internal
         {
             return Interlocked.CompareExchange(ref this.array[index], updated, expected) == expected;
         }
+
+        private readonly int[] array;
     }
 }

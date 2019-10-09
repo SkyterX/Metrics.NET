@@ -16,6 +16,7 @@
 // To make them public define you have to define the conditional compilation symbol CONCURRENCY_UTILS_PUBLIC in your project properties.
 //
 
+
 #pragma warning disable 1591
 
 // ReSharper disable All
@@ -37,34 +38,34 @@
 // ReSharper disable InvertIf
 // ReSharper disable ForCanBeConvertedToForeach
 // ReSharper disable LoopCanBeConvertedToQuery
+
 namespace Metrics.ConcurrencyUtilities
 {
     /// <summary>
-    /// One or more variables that together maintain an initially zero sum.
-    /// When updates are contended cross threads, the set of variables may grow dynamically to reduce contention.
-    /// Method GetValue() returns the current total combined across the variables maintaining the sum.
-    /// 
-    /// This class is usually preferable to AtomicLong when multiple threads update a common sum that is used for purposes such
-    /// as collecting statistics, not for fine-grained synchronization control.
-    /// 
-    /// Under low update contention, the two classes have similar characteristics. 
-    /// But under high contention, expected throughput of this class is significantly higher, at the expense of higher space consumption.
-    /// 
+    ///     One or more variables that together maintain an initially zero sum.
+    ///     When updates are contended cross threads, the set of variables may grow dynamically to reduce contention.
+    ///     Method GetValue() returns the current total combined across the variables maintaining the sum.
+    ///     This class is usually preferable to AtomicLong when multiple threads update a common sum that is used for purposes such
+    ///     as collecting statistics, not for fine-grained synchronization control.
+    ///     Under low update contention, the two classes have similar characteristics.
+    ///     But under high contention, expected throughput of this class is significantly higher, at the expense of higher space consumption.
     /// </summary>
 #if CONCURRENCY_UTILS_PUBLIC
 public
 #else
-internal
+    internal
 #endif
-    sealed class StripedLongAdder : Striped64
+        sealed class StripedLongAdder : Striped64
     {
         /// <summary>
-        /// Creates a new instance of the adder with initial value of zero.
+        ///     Creates a new instance of the adder with initial value of zero.
         /// </summary>
-        public StripedLongAdder() { }
+        public StripedLongAdder()
+        {
+        }
 
         /// <summary>
-        /// Creates a new instance of the adder with initial <paramref name="value"/>.
+        ///     Creates a new instance of the adder with initial <paramref name="value" />.
         /// </summary>
         public StripedLongAdder(long value)
         {
@@ -72,12 +73,13 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of this adder. This method sums all the buckets and returns the result.
+        ///     Returns the current value of this adder. This method sums all the buckets and returns the result.
         /// </summary>
         /// <returns>The current value recored by this adder.</returns>
         public long GetValue()
         {
-            var @as = this.Cells; Cell a;
+            var @as = this.Cells;
+            Cell a;
             var sum = Base.GetValue();
             if (@as != null)
             {
@@ -91,12 +93,13 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of the instance without using Volatile.Read fence and ordering.  
+        ///     Returns the current value of the instance without using Volatile.Read fence and ordering.
         /// </summary>
         /// <returns>The current value of the instance in a non-volatile way (might not observe changes on other threads).</returns>
         public long NonVolatileGetValue()
         {
-            var @as = this.Cells; Cell a;
+            var @as = this.Cells;
+            Cell a;
             var sum = Base.NonVolatileGetValue();
             if (@as != null)
             {
@@ -110,16 +113,17 @@ internal
         }
 
         /// <summary>
-        /// Returns the current value of this adder and resets the value to zero.
-        /// This method sums all the buckets, resets their value and returns the result.
+        ///     Returns the current value of this adder and resets the value to zero.
+        ///     This method sums all the buckets, resets their value and returns the result.
         /// </summary>
         /// <remarks>
-        /// This method is thread-safe. If updates happen during this method, they are either included in the final sum, or reflected in the value after the reset.
+        ///     This method is thread-safe. If updates happen during this method, they are either included in the final sum, or reflected in the value after the reset.
         /// </remarks>
         /// <returns>The current value recored by this adder.</returns>
         public long GetAndReset()
         {
-            var @as = this.Cells; Cell a;
+            var @as = this.Cells;
+            Cell a;
             var sum = Base.GetAndReset();
             if (@as != null)
             {
@@ -135,11 +139,12 @@ internal
         }
 
         /// <summary>
-        /// Resets the current value to zero.
+        ///     Resets the current value to zero.
         /// </summary>
         public void Reset()
         {
-            var @as = this.Cells; Cell a;
+            var @as = this.Cells;
+            Cell a;
             Base.SetValue(0L);
             if (@as != null)
             {
@@ -154,7 +159,7 @@ internal
         }
 
         /// <summary>
-        /// Increment the value of this instance.
+        ///     Increment the value of this instance.
         /// </summary>
         public void Increment()
         {
@@ -162,7 +167,7 @@ internal
         }
 
         /// <summary>
-        /// Increment the value of this instance with <paramref name="value"/>.
+        ///     Increment the value of this instance with <paramref name="value" />.
         /// </summary>
         public void Increment(long value)
         {
@@ -170,7 +175,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement the value of this instance.
+        ///     Decrement the value of this instance.
         /// </summary>
         public void Decrement()
         {
@@ -178,7 +183,7 @@ internal
         }
 
         /// <summary>
-        /// Decrement the value of this instance with <paramref name="value"/>.
+        ///     Decrement the value of this instance with <paramref name="value" />.
         /// </summary>
         public void Decrement(long value)
         {
@@ -186,7 +191,7 @@ internal
         }
 
         /// <summary>
-        /// Add <paramref name="value"/> to this instance.
+        ///     Add <paramref name="value" /> to this instance.
         /// </summary>
         /// <param name="value">Value to add.</param>
         public void Add(long value)

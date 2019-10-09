@@ -1,29 +1,26 @@
 using System;
 using System.Linq;
+
 using FluentAssertions;
 
 using Metrics.Core;
 using Metrics.MetricData;
+
 using Xunit;
 
 namespace Metrics.Tests.Core
 {
     public class DefaultContextTests
     {
-        private readonly MetricsContext context = new DefaultMetricsContext();
-
-        public MetricsData CurrentData
-        {
-            get { return this.context.DataProvider.CurrentMetricsData; }
-        }
+        public MetricsData CurrentData { get { return this.context.DataProvider.CurrentMetricsData; } }
 
         [Fact]
         public void MetricsContext_EmptyChildContextIsSameContext()
         {
             var child = context.Context(string.Empty);
-            object.ReferenceEquals(context, child).Should().BeTrue();
+            ReferenceEquals(context, child).Should().BeTrue();
             child = context.Context(null);
-            object.ReferenceEquals(context, child).Should().BeTrue();
+            ReferenceEquals(context, child).Should().BeTrue();
         }
 
         [Fact]
@@ -32,7 +29,7 @@ namespace Metrics.Tests.Core
             var first = context.Context("test");
             var second = context.Context("test");
 
-            object.ReferenceEquals(first, second).Should().BeTrue();
+            ReferenceEquals(first, second).Should().BeTrue();
         }
 
         [Fact]
@@ -117,7 +114,7 @@ namespace Metrics.Tests.Core
             context.Context("test").Counter("test", Unit.Bytes).Increment();
 
             CurrentData.ChildMetrics.Single()
-                .Counters.Single().Name.Should().Be("test");
+                       .Counters.Single().Name.Should().Be("test");
 
             context.ShutdownContext("test");
 
@@ -127,15 +124,15 @@ namespace Metrics.Tests.Core
         [Fact]
         public void MetricsContext_DowsNotThrowOnMetricsOfDifferentTypeWithSameName()
         {
-            ((Action) (() =>
-            {
-                var name = "Test";
-                context.Gauge(name, () => 0.0, Unit.Calls);
-                context.Counter(name, Unit.Calls);
-                context.Meter(name, Unit.Calls);
-                context.Histogram(name, Unit.Calls);
-                context.Timer(name, Unit.Calls);
-            })).Should().NotThrow();
+            ((Action)(() =>
+                {
+                    var name = "Test";
+                    context.Gauge(name, () => 0.0, Unit.Calls);
+                    context.Counter(name, Unit.Calls);
+                    context.Meter(name, Unit.Calls);
+                    context.Histogram(name, Unit.Calls);
+                    context.Timer(name, Unit.Calls);
+                })).Should().NotThrow();
         }
 
         [Fact]
@@ -152,14 +149,16 @@ namespace Metrics.Tests.Core
             context.Counter("test", Unit.None, "tag");
             context.DataProvider.CurrentMetricsData.Counters.Single().Tags.Should().Equal(new[] {"tag"});
 
-            context.Meter("test", Unit.None, tags: "tag");
+            context.Meter("test", Unit.None, tags : "tag");
             context.DataProvider.CurrentMetricsData.Meters.Single().Tags.Should().Equal(new[] {"tag"});
 
-            context.Histogram("test", Unit.None, tags: "tag");
+            context.Histogram("test", Unit.None, tags : "tag");
             context.DataProvider.CurrentMetricsData.Histograms.Single().Tags.Should().Equal(new[] {"tag"});
 
-            context.Timer("test", Unit.None, tags: "tag");
+            context.Timer("test", Unit.None, tags : "tag");
             context.DataProvider.CurrentMetricsData.Timers.Single().Tags.Should().Equal(new[] {"tag"});
         }
+
+        private readonly MetricsContext context = new DefaultMetricsContext();
     }
 }

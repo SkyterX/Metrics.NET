@@ -1,38 +1,15 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
+
 using Metrics.Logging;
 using Metrics.Reporters;
+using Metrics.Utils;
 
 namespace Metrics
 {
-    public sealed class MetricsConfig : IDisposable, Utils.IHideObjectMembers
+    public sealed class MetricsConfig : IDisposable, IHideObjectMembers
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
-        public static readonly bool GloballyDisabledMetrics = ReadGloballyDisableMetricsSetting();
-
-        private readonly MetricsContext context;
-        private readonly MetricsReports reports;
-
-        private Func<HealthStatus> healthStatus;
-
-        private SamplingType defaultSamplingType = SamplingType.ExponentiallyDecaying;
-
-        private bool isDisabled = MetricsConfig.GloballyDisabledMetrics;
-
-        /// <summary>
-        /// Gets the currently configured default sampling type to use for histogram sampling.
-        /// </summary>
-        public SamplingType DefaultSamplingType
-        {
-            get
-            {
-                Debug.Assert(this.defaultSamplingType != SamplingType.Default);
-                return this.defaultSamplingType;
-            }
-        }
-
         public MetricsConfig(MetricsContext context)
         {
             this.context = context;
@@ -43,15 +20,27 @@ namespace Metrics
                 this.reports = new MetricsReports(this.context.DataProvider, this.healthStatus);
 
                 this.context.Advanced.ContextDisabled += (s, e) =>
-                {
-                    this.isDisabled = true;
-                    DisableAllReports();
-                };
+                    {
+                        this.isDisabled = true;
+                        DisableAllReports();
+                    };
             }
         }
 
         /// <summary>
-        /// Configure Metrics library to use a custom health status reporter. By default HealthChecks.GetStatus() is used.
+        ///     Gets the currently configured default sampling type to use for histogram sampling.
+        /// </summary>
+        public SamplingType DefaultSamplingType
+        {
+            get
+            {
+                Debug.Assert(this.defaultSamplingType != SamplingType.Default);
+                return this.defaultSamplingType;
+            }
+        }
+
+        /// <summary>
+        ///     Configure Metrics library to use a custom health status reporter. By default HealthChecks.GetStatus() is used.
         /// </summary>
         /// <param name="healthStatus">Function that provides the current health status.</param>
         /// <returns>Chain-able configuration object.</returns>
@@ -65,8 +54,8 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Error handler for the metrics library. If a handler is registered any error will be passed to the handler.
-        /// By default unhandled errors are logged, printed to console if Environment.UserInteractive is true, and logged with Trace.TracError.
+        ///     Error handler for the metrics library. If a handler is registered any error will be passed to the handler.
+        ///     By default unhandled errors are logged, printed to console if Environment.UserInteractive is true, and logged with Trace.TracError.
         /// </summary>
         /// <param name="errorHandler">Action with will be executed with the exception.</param>
         /// <param name="clearExistingHandlers">Is set to true, remove any existing handler.</param>
@@ -87,8 +76,8 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Error handler for the metrics library. If a handler is registered any error will be passed to the handler.
-        /// By default unhandled errors are logged, printed to console if Environment.UserInteractive is true, and logged with Trace.TracError.
+        ///     Error handler for the metrics library. If a handler is registered any error will be passed to the handler.
+        ///     By default unhandled errors are logged, printed to console if Environment.UserInteractive is true, and logged with Trace.TracError.
         /// </summary>
         /// <param name="errorHandler">Action with will be executed with the exception and a specific message.</param>
         /// <param name="clearExistingHandlers">Is set to true, remove any existing handler.</param>
@@ -109,7 +98,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Configure the way metrics are reported
+        ///     Configure the way metrics are reported
         /// </summary>
         /// <param name="reportsConfig">Reports configuration action</param>
         /// <returns>Chain-able configuration object.</returns>
@@ -124,11 +113,11 @@ namespace Metrics
         }
 
         /// <summary>
-        /// This method is used for customizing the metrics configuration.
-        /// The <paramref name="extension"/> will be called with the current MetricsContext and HealthStatus provider.
+        ///     This method is used for customizing the metrics configuration.
+        ///     The <paramref name="extension" /> will be called with the current MetricsContext and HealthStatus provider.
         /// </summary>
         /// <remarks>
-        /// In general you don't need to call this method directly.
+        ///     In general you don't need to call this method directly.
         /// </remarks>
         /// <param name="extension">Action to apply extra configuration.</param>
         /// <returns>Chain-able configuration object.</returns>
@@ -139,15 +128,19 @@ namespace Metrics
                 return this;
             }
 
-            return WithConfigExtension((m, h) => { extension(m, h); return this; }, () => this);
+            return WithConfigExtension((m, h) =>
+                {
+                    extension(m, h);
+                    return this;
+                }, () => this);
         }
 
         /// <summary>
-        /// This method is used for customizing the metrics configuration.
-        /// The <paramref name="extension"/> will be called with the current MetricsContext and HealthStatus provider.
+        ///     This method is used for customizing the metrics configuration.
+        ///     The <paramref name="extension" /> will be called with the current MetricsContext and HealthStatus provider.
         /// </summary>
         /// <remarks>
-        /// In general you don't need to call this method directly.
+        ///     In general you don't need to call this method directly.
         /// </remarks>
         /// <param name="extension">Action to apply extra configuration.</param>
         /// <returns>The result of calling the extension.</returns>
@@ -158,11 +151,11 @@ namespace Metrics
         }
 
         /// <summary>
-        /// This method is used for customizing the metrics configuration.
-        /// The <paramref name="extension"/> will be called with the current MetricsContext and HealthStatus provider.
+        ///     This method is used for customizing the metrics configuration.
+        ///     The <paramref name="extension" /> will be called with the current MetricsContext and HealthStatus provider.
         /// </summary>
         /// <remarks>
-        /// In general you don't need to call this method directly.
+        ///     In general you don't need to call this method directly.
         /// </remarks>
         /// <param name="extension">Action to apply extra configuration.</param>
         /// <param name="defaultValueProvider">Default value provider for T, which will be used when metrics are disabled.</param>
@@ -178,7 +171,7 @@ namespace Metrics
         }
 
         /// <summary>
-        /// Configure the default sampling type to use for histograms.
+        ///     Configure the default sampling type to use for histograms.
         /// </summary>
         /// <param name="type">Type of sampling to use.</param>
         /// <returns>Chain-able configuration object.</returns>
@@ -262,5 +255,18 @@ namespace Metrics
                 return false;
             }
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
+
+        public static readonly bool GloballyDisabledMetrics = ReadGloballyDisableMetricsSetting();
+
+        private readonly MetricsContext context;
+        private readonly MetricsReports reports;
+
+        private Func<HealthStatus> healthStatus;
+
+        private SamplingType defaultSamplingType = SamplingType.ExponentiallyDecaying;
+
+        private bool isDisabled = GloballyDisabledMetrics;
     }
 }

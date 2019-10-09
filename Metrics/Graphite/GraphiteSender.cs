@@ -21,6 +21,7 @@ namespace Metrics.Graphite
         }
 
         protected virtual void Dispose(bool disposing)
-        { }
+        {
+        }
     }
 }

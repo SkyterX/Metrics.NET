@@ -1,7 +1,8 @@
-﻿using Metrics.ConcurrencyUtilities;
+﻿using System;
+
+using Metrics.ConcurrencyUtilities;
 using Metrics.MetricData;
 using Metrics.Utils;
-using System;
 
 namespace Metrics.Core
 {
@@ -14,17 +15,6 @@ namespace Metrics.Core
         private const int OneMinute = 1;
         private const int FiveMinutes = 5;
         private const int FifteenMinutes = 15;
-        private static readonly double M1Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / OneMinute);
-        private static readonly double M5Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / FiveMinutes);
-        private static readonly double M15Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / FifteenMinutes);
-
-        private readonly StripedLongAdder uncounted = new StripedLongAdder();
-
-        private AtomicLong total = new AtomicLong(0L);
-        private VolatileDouble m1Rate = new VolatileDouble(0.0);
-        private VolatileDouble m5Rate = new VolatileDouble(0.0);
-        private VolatileDouble m15Rate = new VolatileDouble(0.0);
-        private volatile bool initialized;
 
         public void Mark(long count)
         {
@@ -89,5 +79,16 @@ namespace Metrics.Core
         private double FifteenMinuteRate { get { return this.m15Rate.GetValue() * NanosInSecond; } }
         private double FiveMinuteRate { get { return this.m5Rate.GetValue() * NanosInSecond; } }
         private double OneMinuteRate { get { return this.m1Rate.GetValue() * NanosInSecond; } }
+        private static readonly double M1Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / OneMinute);
+        private static readonly double M5Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / FiveMinutes);
+        private static readonly double M15Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / FifteenMinutes);
+
+        private readonly StripedLongAdder uncounted = new StripedLongAdder();
+
+        private AtomicLong total = new AtomicLong(0L);
+        private VolatileDouble m1Rate = new VolatileDouble(0.0);
+        private VolatileDouble m5Rate = new VolatileDouble(0.0);
+        private VolatileDouble m15Rate = new VolatileDouble(0.0);
+        private volatile bool initialized;
     }
 }

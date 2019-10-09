@@ -4,22 +4,20 @@ namespace Metrics.Utils
 {
     public static class TimeUnitExtensions
     {
-        private static readonly long[,] conversionFactors = BuildConversionFactorsMatrix();
-
         private static long[,] BuildConversionFactorsMatrix()
         {
             var count = Enum.GetValues(typeof(TimeUnit)).Length;
 
             var matrix = new long[count, count];
-            var timingFactors = new[] 
-            {
-                1000L,  // Nanoseconds to microseconds
-                1000L,  // Microseconds to milliseconds
-                1000L,  // Milliseconds to seconds
-                60L,    // Seconds to minutes
-                60L,    // Minutes to hours
-                24L     // Hours to days
-            };
+            var timingFactors = new[]
+                {
+                    1000L, // Nanoseconds to microseconds
+                    1000L, // Microseconds to milliseconds
+                    1000L, // Milliseconds to seconds
+                    60L, // Seconds to minutes
+                    60L, // Minutes to hours
+                    24L // Hours to days
+                };
 
             for (var source = 0; source < count; source++)
             {
@@ -102,15 +100,22 @@ namespace Metrics.Utils
         {
             switch (unit)
             {
-                case TimeUnit.Nanoseconds: return "ns";
-                case TimeUnit.Microseconds: return "us";
-                case TimeUnit.Milliseconds: return "ms";
-                case TimeUnit.Seconds: return "s";
-                case TimeUnit.Minutes: return "min";
-                case TimeUnit.Hours: return "h";
-                case TimeUnit.Days: return "days";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(unit));
+            case TimeUnit.Nanoseconds:
+                return "ns";
+            case TimeUnit.Microseconds:
+                return "us";
+            case TimeUnit.Milliseconds:
+                return "ms";
+            case TimeUnit.Seconds:
+                return "s";
+            case TimeUnit.Minutes:
+                return "min";
+            case TimeUnit.Hours:
+                return "h";
+            case TimeUnit.Days:
+                return "days";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(unit));
             }
         }
 
@@ -118,17 +123,25 @@ namespace Metrics.Utils
         {
             switch (unit)
             {
-                case "ns": return TimeUnit.Nanoseconds;
-                case "us": return TimeUnit.Microseconds;
-                case "ms": return TimeUnit.Milliseconds;
-                case "s": return TimeUnit.Seconds;
-                case "min": return TimeUnit.Minutes;
-                case "h": return TimeUnit.Hours;
-                case "days": return TimeUnit.Days;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(unit));
+            case "ns":
+                return TimeUnit.Nanoseconds;
+            case "us":
+                return TimeUnit.Microseconds;
+            case "ms":
+                return TimeUnit.Milliseconds;
+            case "s":
+                return TimeUnit.Seconds;
+            case "min":
+                return TimeUnit.Minutes;
+            case "h":
+                return TimeUnit.Hours;
+            case "days":
+                return TimeUnit.Days;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(unit));
             }
         }
 
+        private static readonly long[,] conversionFactors = BuildConversionFactorsMatrix();
     }
 }

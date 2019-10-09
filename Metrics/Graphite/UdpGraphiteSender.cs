@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+
 using Metrics.Logging;
 using Metrics.Utils;
 
@@ -9,13 +10,6 @@ namespace Metrics.Graphite
 {
     public sealed class UdpGraphiteSender : GraphiteSender
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
-        private readonly string host;
-        private readonly int port;
-
-        private UdpClient client;
-
         public UdpGraphiteSender(string host, int port)
         {
             this.host = host;
@@ -36,14 +30,16 @@ namespace Metrics.Graphite
             }
             catch (Exception x)
             {
-                using (this.client) { }
+                using (this.client)
+                {
+                }
                 this.client = null;
                 MetricsErrorHandler.Handle(x, "Error sending UDP data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
 
         public override void Flush()
-        { 
+        {
         }
 
         private static UdpClient InitClient(string host, int port)
@@ -63,10 +59,19 @@ namespace Metrics.Graphite
                 {
                     this.client.Close();
                 }
-                catch { }
+                catch
+                {
+                }
             }
             this.client = null;
             base.Dispose(disposing);
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
+
+        private readonly string host;
+        private readonly int port;
+
+        private UdpClient client;
     }
 }

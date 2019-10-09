@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using HdrHistogram;
 
 namespace Metrics.Sampling
 {
     internal sealed class HdrSnapshot : Snapshot
     {
-        private readonly AbstractHistogram histogram;
-
         public HdrSnapshot(AbstractHistogram histogram, long minValue, string minUserValue, long maxValue, string maxUserValue)
         {
             this.histogram = histogram;
@@ -17,10 +16,7 @@ namespace Metrics.Sampling
             this.MaxUserValue = maxUserValue;
         }
 
-        public IEnumerable<long> Values
-        {
-            get { return this.histogram.RecordedValues().Select(v => v.getValueIteratedTo()); }
-        }
+        public IEnumerable<long> Values { get { return this.histogram.RecordedValues().Select(v => v.getValueIteratedTo()); } }
 
         public double GetValue(double quantile)
         {
@@ -42,7 +38,8 @@ namespace Metrics.Sampling
         public double Percentile98 => this.histogram.getValueAtPercentile(98);
         public double Percentile99 => this.histogram.getValueAtPercentile(99);
         public double Percentile999 => this.histogram.getValueAtPercentile(99.9);
-        
+
         public int Size => this.histogram.getEstimatedFootprintInBytes();
+        private readonly AbstractHistogram histogram;
     }
 }

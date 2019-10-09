@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+
 namespace Metrics.Graphite
 {
     public sealed class PickleJar
@@ -18,18 +18,9 @@ namespace Metrics.Graphite
             Quote = '\'',
             Lf = '\n';
 
-        private class Pickle
-        {
-            public string Name { get; set; }
-            public string Value { get; set; }
-            public string Timestamp { get; set; }
-        }
-
-        private readonly List<Pickle> jar = new List<Pickle>();
-
         public void Append(string name, string value, string timestamp)
         {
-            this.jar.Add(new Pickle { Name = name, Value = value, Timestamp = timestamp });
+            this.jar.Add(new Pickle {Name = name, Value = value, Timestamp = timestamp});
         }
 
         public int Size { get { return this.jar.Count; } }
@@ -100,6 +91,15 @@ namespace Metrics.Graphite
             buffer.Append(Stop);
 
             return buffer.ToString();
+        }
+
+        private readonly List<Pickle> jar = new List<Pickle>();
+
+        private class Pickle
+        {
+            public string Name { get; set; }
+            public string Value { get; set; }
+            public string Timestamp { get; set; }
         }
     }
 }

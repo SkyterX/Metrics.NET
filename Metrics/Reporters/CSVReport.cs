@@ -1,38 +1,13 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Linq;
+
 using Metrics.MetricData;
 using Metrics.Utils;
-using System.Collections.Generic;
-using System.Linq;
+
 namespace Metrics.Reporters
 {
     public class CSVReport : BaseReport
     {
-        public class Value
-        {
-            public Value(string name, bool value)
-                : this(name, value ? "Yes" : "No")
-            { }
-
-            public Value(string name, double value)
-                : this(name, value.ToString("F"))
-            { }
-
-            public Value(string name, long value)
-                : this(name, value.ToString("D"))
-            { }
-
-            public Value(string name, string value)
-            {
-                this.Name = name;
-                this.FormattedValue = value;
-            }
-
-            public string Name { get; private set; }
-            public string FormattedValue { get; private set; }
-        }
-
-        private readonly CSVAppender appender;
-
         public CSVReport(CSVAppender appender)
         {
             this.appender = appender;
@@ -63,23 +38,25 @@ namespace Metrics.Reporters
             var values = MeterValues(value.Rate, unit, rateUnit)
                 .Concat(HistogramValues(value.Histogram, unit, durationUnit))
                 .Concat(new[]
-                {
-                    new Value("Active Sessions", value.ActiveSessions),
-                    new Value("Total Time", value.TotalTime)
-                });
+                    {
+                        new Value("Active Sessions", value.ActiveSessions),
+                        new Value("Total Time", value.TotalTime)
+                    });
 
             Write("Timer", name, values);
         }
 
         protected override void ReportHealth(HealthStatus status)
         {
-            Write("All", "HealthChecks", new[] {
-                new Value("All Healthy", status.IsHealthy) }.Union(
-                status.Results.SelectMany(r => new[]
-            {
-                new Value(r.Name + " IsHealthy" ,r.Check.IsHealthy),
-                new Value(r.Name + " Message" ,r.Check.Message.Split('\n').First() ) // only first line
-            })));
+            Write("All", "HealthChecks", new[]
+                {
+                    new Value("All Healthy", status.IsHealthy)
+                }.Union(
+                    status.Results.SelectMany(r => new[]
+                        {
+                            new Value(r.Name + " IsHealthy", r.Check.IsHealthy),
+                            new Value(r.Name + " Message", r.Check.Message.Split('\n').First()) // only first line
+                        })));
         }
 
         private static IEnumerable<Value> GaugeValues(double gaugeValue, Unit unit)
@@ -149,6 +126,35 @@ namespace Metrics.Reporters
         private void Write(string metricType, string metricName, IEnumerable<Value> values)
         {
             this.appender.AppendLine(CurrentContextTimestamp, metricType, metricName, values);
+        }
+
+        private readonly CSVAppender appender;
+
+        public class Value
+        {
+            public Value(string name, bool value)
+                : this(name, value ? "Yes" : "No")
+            {
+            }
+
+            public Value(string name, double value)
+                : this(name, value.ToString("F"))
+            {
+            }
+
+            public Value(string name, long value)
+                : this(name, value.ToString("D"))
+            {
+            }
+
+            public Value(string name, string value)
+            {
+                this.Name = name;
+                this.FormattedValue = value;
+            }
+
+            public string Name { get; private set; }
+            public string FormattedValue { get; private set; }
         }
     }
 }

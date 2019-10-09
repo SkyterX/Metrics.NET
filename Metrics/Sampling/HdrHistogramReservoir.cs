@@ -1,30 +1,19 @@
 ﻿using HdrHistogram;
+
 using Metrics.ConcurrencyUtilities;
 
 namespace Metrics.Sampling
 {
     /// <summary>
-    /// Sampling reservoir based on HdrHistogram.
-    /// Based on the java version from Marshall Pierce https://bitbucket.org/marshallpierce/hdrhistogram-metrics-reservoir/src/83a8ec568a1e?at=master
+    ///     Sampling reservoir based on HdrHistogram.
+    ///     Based on the java version from Marshall Pierce https://bitbucket.org/marshallpierce/hdrhistogram-metrics-reservoir/src/83a8ec568a1e?at=master
     /// </summary>
     public sealed class HdrHistogramReservoir : Reservoir
     {
-        private readonly Recorder recorder;
-
-        private readonly HdrHistogram.Histogram runningTotals;
-        private HdrHistogram.Histogram intervalHistogram;
-
-        private AtomicLong maxValue = new AtomicLong(0);
-        private string maxUserValue;
-        private readonly object maxValueLock = new object();
-
-        private AtomicLong minValue = new AtomicLong(long.MaxValue);
-        private string minUserValue;
-        private readonly object minValueLock = new object();
-
         public HdrHistogramReservoir()
             : this(new Recorder(2))
-        { }
+        {
+        }
 
         internal HdrHistogramReservoir(Recorder recorder)
         {
@@ -122,5 +111,18 @@ namespace Metrics.Sampling
                 }
             }
         }
+
+        private readonly Recorder recorder;
+
+        private readonly HdrHistogram.Histogram runningTotals;
+        private HdrHistogram.Histogram intervalHistogram;
+
+        private AtomicLong maxValue = new AtomicLong(0);
+        private string maxUserValue;
+        private readonly object maxValueLock = new object();
+
+        private AtomicLong minValue = new AtomicLong(long.MaxValue);
+        private string minUserValue;
+        private readonly object minValueLock = new object();
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
+
 using FluentAssertions;
+
 using Metrics.Core;
+
 using Xunit;
 
 namespace Metrics.Tests.HealthChecksTests

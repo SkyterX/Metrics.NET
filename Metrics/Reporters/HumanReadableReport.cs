@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 using Metrics.MetricData;
 using Metrics.Utils;
 
@@ -6,8 +7,6 @@ namespace Metrics.Reporters
 {
     public abstract class HumanReadableReport : BaseReport
     {
-        private readonly int padding;
-
         protected HumanReadableReport(int padding = 20)
         {
             this.padding = padding;
@@ -155,11 +154,11 @@ namespace Metrics.Reporters
             WriteValue("Mean", unit.FormatDuration(value.Mean, durationUnit));
             WriteValue("StdDev", unit.FormatDuration(value.StdDev, durationUnit));
             WriteValue("Median", unit.FormatDuration(value.Median, durationUnit));
-            WriteValue("75%", unit.FormatDuration(value.Percentile75, durationUnit), sign: "<=");
-            WriteValue("95%", unit.FormatDuration(value.Percentile95, durationUnit), sign: "<=");
-            WriteValue("98%", unit.FormatDuration(value.Percentile98, durationUnit), sign: "<=");
-            WriteValue("99%", unit.FormatDuration(value.Percentile99, durationUnit), sign: "<=");
-            WriteValue("99.9%", unit.FormatDuration(value.Percentile999, durationUnit), sign: "<=");
+            WriteValue("75%", unit.FormatDuration(value.Percentile75, durationUnit), sign : "<=");
+            WriteValue("95%", unit.FormatDuration(value.Percentile95, durationUnit), sign : "<=");
+            WriteValue("98%", unit.FormatDuration(value.Percentile98, durationUnit), sign : "<=");
+            WriteValue("99%", unit.FormatDuration(value.Percentile99, durationUnit), sign : "<=");
+            WriteValue("99.9%", unit.FormatDuration(value.Percentile999, durationUnit), sign : "<=");
         }
 
         public void WriteValue(string label, string value, string sign = "=")
@@ -178,5 +177,7 @@ namespace Metrics.Reporters
         {
             this.WriteLine(string.Empty);
         }
+
+        private readonly int padding;
     }
 }

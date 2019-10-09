@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using Metrics.MetricData;
 using Metrics.Reporters;
 using Metrics.Utils;
@@ -11,12 +12,6 @@ namespace Metrics.Graphite
 {
     public class GraphiteReport : BaseReport, IDisposable
     {
-        private static readonly Regex invalid = new Regex(@"[^a-zA-Z0-9\-%&]+", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-        private static readonly Regex invalidAllowDots = new Regex(@"[^a-zA-Z0-9\-%&.]+", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-        private static readonly Regex slash = new Regex(@"\s*/\s*", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-
-        private readonly GraphiteSender sender;
-
         public GraphiteReport(GraphiteSender sender)
         {
             this.sender = sender;
@@ -114,7 +109,8 @@ namespace Metrics.Graphite
         }
 
         protected override void ReportHealth(HealthStatus status)
-        { }
+        {
+        }
 
         protected virtual void Send(string name, long value)
         {
@@ -134,8 +130,8 @@ namespace Metrics.Graphite
 
         protected override string FormatContextName(IEnumerable<string> contextStack, string contextName)
         {
-            var parts = contextStack.Concat(new[] { contextName })
-                .Select(_ => GraphiteName(_, true));
+            var parts = contextStack.Concat(new[] {contextName})
+                                    .Select(_ => GraphiteName(_, true));
 
             return string.Join(".", parts);
         }
@@ -144,7 +140,6 @@ namespace Metrics.Graphite
         {
             return string.Concat(context, ".", GraphiteName(metric.Name));
         }
-
 
         protected virtual string AsRate(Unit unit, TimeUnit rateUnit)
         {
@@ -165,7 +160,6 @@ namespace Metrics.Graphite
         {
             return Name(string.Concat(cleanName, "-", GraphiteName(itemSuffix)), unit);
         }
-
 
         protected virtual string Name(string cleanName, Unit unit)
         {
@@ -201,9 +195,9 @@ namespace Metrics.Graphite
         protected virtual string GraphiteName(string name, bool allowDots = false)
         {
             var noSlash = slash.Replace(name, "-per-");
-            return allowDots ? 
-                invalidAllowDots.Replace(noSlash, "_").Trim('_') : 
-                invalid.Replace(noSlash, "_").Trim('_');
+            return allowDots ?
+                       invalidAllowDots.Replace(noSlash, "_").Trim('_') :
+                       invalid.Replace(noSlash, "_").Trim('_');
         }
 
         public void Dispose()
@@ -216,9 +210,16 @@ namespace Metrics.Graphite
         {
             if (disposing)
             {
-                using (this.sender) { }
+                using (this.sender)
+                {
+                }
             }
         }
+
+        private static readonly Regex invalid = new Regex(@"[^a-zA-Z0-9\-%&]+", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        private static readonly Regex invalidAllowDots = new Regex(@"[^a-zA-Z0-9\-%&.]+", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        private static readonly Regex slash = new Regex(@"\s*/\s*", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+        private readonly GraphiteSender sender;
     }
 }
-

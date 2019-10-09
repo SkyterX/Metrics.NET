@@ -1,19 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+
 using Metrics.Logging;
+
 namespace Metrics
 {
     public class MetricsErrorHandler
     {
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-        private static readonly Meter errorMeter = Metric.Internal.Meter("Metrics Errors", Unit.Errors);
-
-        private readonly ConcurrentBag<Action<Exception, string>> handlers = new ConcurrentBag<Action<Exception, string>>();
-
-        private static readonly bool isMono = Type.GetType("Mono.Runtime") != null;
-
         private MetricsErrorHandler()
         {
             this.AddHandler((x, msg) => log.ErrorException("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", x, msg, x.Message));
@@ -72,5 +66,12 @@ namespace Metrics
         {
             Handler.InternalHandle(exception, message);
         }
+
+        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
+        private static readonly Meter errorMeter = Metric.Internal.Meter("Metrics Errors", Unit.Errors);
+
+        private readonly ConcurrentBag<Action<Exception, string>> handlers = new ConcurrentBag<Action<Exception, string>>();
+
+        private static readonly bool isMono = Type.GetType("Mono.Runtime") != null;
     }
 }

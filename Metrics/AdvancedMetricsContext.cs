@@ -1,14 +1,16 @@
 ﻿using System;
+
 using Metrics.Core;
 using Metrics.MetricData;
 using Metrics.Sampling;
+using Metrics.Utils;
 
 namespace Metrics
 {
-    public interface AdvancedMetricsContext : Utils.IHideObjectMembers
+    public interface AdvancedMetricsContext : IHideObjectMembers
     {
         /// <summary>
-        /// Attach a context that has already been created (ex: by a library exposing internal metrics)
+        ///     Attach a context that has already been created (ex: by a library exposing internal metrics)
         /// </summary>
         /// <param name="contextName">name of the context to attach</param>
         /// <param name="context">Existing context instance.</param>
@@ -16,29 +18,29 @@ namespace Metrics
         bool AttachContext(string contextName, MetricsContext context);
 
         /// <summary>
-        /// All metrics operations will be NO-OP.
-        /// This is useful for measuring the impact of the metrics library on the application.
-        /// If you think the Metrics library is causing issues, this will disable all Metrics operations.
+        ///     All metrics operations will be NO-OP.
+        ///     This is useful for measuring the impact of the metrics library on the application.
+        ///     If you think the Metrics library is causing issues, this will disable all Metrics operations.
         /// </summary>
         void CompletelyDisableMetrics();
 
         /// <summary>
-        /// Clear all collected data for all the metrics in this context
+        ///     Clear all collected data for all the metrics in this context
         /// </summary>
         void ResetMetricsValues();
 
         /// <summary>
-        /// Event fired when the context is disposed or shutdown or the CompletelyDisableMetrics is called.
+        ///     Event fired when the context is disposed or shutdown or the CompletelyDisableMetrics is called.
         /// </summary>
         event EventHandler ContextShuttingDown;
 
         /// <summary>
-        /// Event fired when the context CompletelyDisableMetrics is called.
+        ///     Event fired when the context CompletelyDisableMetrics is called.
         /// </summary>
         event EventHandler ContextDisabled;
 
         /// <summary>
-        /// Register a custom Gauge instance.
+        ///     Register a custom Gauge instance.
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all counters in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -47,7 +49,7 @@ namespace Metrics
         void Gauge(string name, Func<MetricValueProvider<double>> valueProvider, Unit unit, MetricTags tags = default(MetricTags));
 
         /// <summary>
-        /// Register a custom Counter instance
+        ///     Register a custom Counter instance
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all counters in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -58,7 +60,7 @@ namespace Metrics
             where T : CounterImplementation;
 
         /// <summary>
-        /// Register a custom Meter instance.
+        ///     Register a custom Meter instance.
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all meters in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -70,7 +72,7 @@ namespace Metrics
             where T : MeterImplementation;
 
         /// <summary>
-        /// Register a custom Histogram instance
+        ///     Register a custom Histogram instance
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all histograms in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -81,7 +83,7 @@ namespace Metrics
             where T : HistogramImplementation;
 
         /// <summary>
-        /// Register a Histogram metric with a custom Reservoir instance
+        ///     Register a Histogram metric with a custom Reservoir instance
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all histograms in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -91,7 +93,7 @@ namespace Metrics
         Histogram Histogram(string name, Unit unit, Func<Reservoir> builder, MetricTags tags = default(MetricTags));
 
         /// <summary>
-        /// Register a custom Timer implementation.
+        ///     Register a custom Timer implementation.
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all timers in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -104,7 +106,7 @@ namespace Metrics
             where T : TimerImplementation;
 
         /// <summary>
-        /// Register a Timer metric with a custom Histogram implementation.
+        ///     Register a Timer metric with a custom Histogram implementation.
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all timers in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -116,7 +118,7 @@ namespace Metrics
         Timer Timer(string name, Unit unit, Func<HistogramImplementation> builder, TimeUnit rateUnit = TimeUnit.Seconds, TimeUnit durationUnit = TimeUnit.Milliseconds, MetricTags tags = default(MetricTags));
 
         /// <summary>
-        /// Register a Timer metric with a custom Reservoir implementation for the histogram.
+        ///     Register a Timer metric with a custom Reservoir implementation for the histogram.
         /// </summary>
         /// <param name="name">Name of the metric. Must be unique across all timers in this context.</param>
         /// <param name="unit">Description of what the is being measured ( Unit.Requests , Unit.Items etc ) .</param>
@@ -128,7 +130,7 @@ namespace Metrics
         Timer Timer(string name, Unit unit, Func<Reservoir> builder, TimeUnit rateUnit = TimeUnit.Seconds, TimeUnit durationUnit = TimeUnit.Milliseconds, MetricTags tags = default(MetricTags));
 
         /// <summary>
-        /// Replace the DefaultMetricsBuilder used in this context.
+        ///     Replace the DefaultMetricsBuilder used in this context.
         /// </summary>
         /// <param name="metricsBuilder">The custom metrics builder.</param>
         void WithCustomMetricsBuilder(MetricsBuilder metricsBuilder);
