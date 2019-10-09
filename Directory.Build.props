@@ -5,18 +5,15 @@
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <EmbedAllSources>true</EmbedAllSources>
-    <AssemblyConfiguration></AssemblyConfiguration>
-    <AssemblyCompany>Iulian Margarintescu @ Erata.NET, The Recognos Metrics.NET Team</AssemblyCompany>
-    <AssemblyProduct>Metrics.NET</AssemblyProduct>
-    <AssemblyCopyright>Copyright Iulian Margarintescu, The Recognos Metrics.NET Team © 2016</AssemblyCopyright>
-    <AssemblyVersion>0.4.7</AssemblyVersion>
-    <AssemblyFileVersion>0.4.7</AssemblyFileVersion>
-    <AssemblyInformationalVersion>0.4.7</AssemblyInformationalVersion>
   </PropertyGroup>
 
   <!-- include pdbs into nuget package -->
   <PropertyGroup>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.25" PrivateAssets="All" />
+  </ItemGroup>
 
 </Project>

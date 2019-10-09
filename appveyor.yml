@@ -34,10 +34,10 @@ build_script:
   - cmd: dotnet pack --no-build --configuration Release ./Metrics.sln
 
 test_script:
-  - cmd: dotnet test --no-build --configuration Release ./Src/Metrics.Tests/Metrics.Tests.csproj
+  - cmd: dotnet test --no-build --configuration Release ./Metrics.Tests/Metrics.Tests.csproj
 
 artifacts:
-  - path: './Src/Metrics/bin/Release/*.nupkg'
+  - path: './Metrics/bin/Release/*.nupkg'
 
 deploy:
   - provider: NuGet

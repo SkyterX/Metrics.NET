@@ -2,24 +2,11 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyTitle>Metrics.NET</AssemblyTitle>
-    <AssemblyDescription>Metrics monitoring and reporting library</AssemblyDescription>
     <RootNamespace>Metrics</RootNamespace>
-    <AssemblyName>Metrics</AssemblyName>
+    <AssemblyName>SkbKontur.Metrics.Net</AssemblyName>
     <TargetFramework>netstandard2.0</TargetFramework>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <PackageId>SkbKontur.Metrics.Net</PackageId>
-    <PackageVersion>0.4.8-rc1</PackageVersion>
-    <Authors>iulian.margarintescu, The Recognos Metrics.NET Team</Authors>
-    <PackageDescription>The library provides support for capturing: Gauges, Counters, Meters, Histograms and Timers</PackageDescription>
-    <PackageTags>metrics</PackageTags>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/skbkontur/Metrics.NET</RepositoryUrl>
-    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">

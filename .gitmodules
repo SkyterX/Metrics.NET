@@ -1,3 +1,0 @@
-[submodule "Src/ConcurrencyUtils"]
-	path = Src/ConcurrencyUtils
-	url = https://github.com/etishor/ConcurrencyUtilities.git

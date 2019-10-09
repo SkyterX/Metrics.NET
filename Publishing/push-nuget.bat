@@ -1,1 +1,0 @@
-..\.nuget\NuGet.exe push Metrics.NET.0.4.7.nupkg
