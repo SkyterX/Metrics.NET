@@ -1,12 +1,17 @@
 # Metrics.NET
 
 [![NuGet Status](https://img.shields.io/nuget/v/SkbKontur.Metrics.Net.svg)](https://www.nuget.org/packages/SkbKontur.Metrics.Net/)
+[![Build status](https://ci.appveyor.com/api/projects/status/kffjjornd6p6h3sl?svg=true)](https://ci.appveyor.com/project/skbkontur/metrics-net)
 
 Metrics.NET - a .NET Port, with lots of additional functionality, of the awesome Java [metrics library](https://github.com/dropwizard/metrics) by Coda Hale.
 
 This is a continuation of the original (now unmaintained) project https://github.com/etishor/Metrics.NET.
 
 A lot more [information and documentation are available in the wiki](https://github.com/Recognos/Metrics.NET/wiki).
+
+## Release Notes
+
+See [CHANGELOG](CHANGELOG.md).
 
 ## License
 This library will always keep the same license as the original [Java Metrics library](https://github.com/dropwizard/metrics) (as long as its an open source, permisive license). 
