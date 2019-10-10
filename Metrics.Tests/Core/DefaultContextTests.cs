@@ -6,15 +6,21 @@ using FluentAssertions;
 using Metrics.Core;
 using Metrics.MetricData;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Core
 {
     public class DefaultContextTests
     {
-        public MetricsData CurrentData { get { return this.context.DataProvider.CurrentMetricsData; } }
+        private MetricsData CurrentData => context.DataProvider.CurrentMetricsData;
 
-        [Fact]
+        [SetUp]
+        public void SetUp()
+        {
+            context = new DefaultMetricsContext();
+        }
+
+        [Test]
         public void MetricsContext_EmptyChildContextIsSameContext()
         {
             var child = context.Context(string.Empty);
@@ -23,7 +29,7 @@ namespace Metrics.Tests.Core
             ReferenceEquals(context, child).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_ChildWithSameNameAreSameInstance()
         {
             var first = context.Context("test");
@@ -32,7 +38,7 @@ namespace Metrics.Tests.Core
             ReferenceEquals(first, second).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_CanCreateSubcontext()
         {
             context.Context("test").Counter("counter", Unit.Requests);
@@ -42,7 +48,7 @@ namespace Metrics.Tests.Core
             counterValue.Name.Should().Be("counter");
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_MetricsArePresentInMetricsData()
         {
             var counter = context.Counter("test", Unit.Requests);
@@ -56,7 +62,7 @@ namespace Metrics.Tests.Core
             counterValue.Value.Count.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_RaisesShutdownEventOnMetricsDisable()
         {
             using (var monitor = ((DefaultMetricsContext)context).Monitor())
@@ -66,7 +72,7 @@ namespace Metrics.Tests.Core
             }
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_RaisesShutdownEventOnDispose()
         {
             using (var monitor = ((DefaultMetricsContext)context).Monitor())
@@ -76,7 +82,7 @@ namespace Metrics.Tests.Core
             }
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_DataProviderReflectsNewMetrics()
         {
             var provider = context.DataProvider;
@@ -88,7 +94,7 @@ namespace Metrics.Tests.Core
             provider.CurrentMetricsData.Counters.Single().Value.Count.Should().Be(1L);
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_DataProviderReflectsChildContxts()
         {
             var provider = context.DataProvider;
@@ -108,7 +114,7 @@ namespace Metrics.Tests.Core
             provider.CurrentMetricsData.ChildMetrics.Single().Counters.Single().Value.Count.Should().Be(2);
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_DisabledChildContextDoesNotShowInData()
         {
             context.Context("test").Counter("test", Unit.Bytes).Increment();
@@ -121,7 +127,7 @@ namespace Metrics.Tests.Core
             CurrentData.ChildMetrics.Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_DowsNotThrowOnMetricsOfDifferentTypeWithSameName()
         {
             ((Action)(() =>
@@ -135,7 +141,7 @@ namespace Metrics.Tests.Core
                 })).Should().NotThrow();
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_MetricsAddedAreVisibleInTheDataProvider()
         {
             context.DataProvider.CurrentMetricsData.Counters.Should().BeEmpty();
@@ -143,7 +149,7 @@ namespace Metrics.Tests.Core
             context.DataProvider.CurrentMetricsData.Counters.Should().HaveCount(1);
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_CanPropagateValueTags()
         {
             context.Counter("test", Unit.None, "tag");
@@ -159,6 +165,6 @@ namespace Metrics.Tests.Core
             context.DataProvider.CurrentMetricsData.Timers.Single().Tags.Should().Equal(new[] {"tag"});
         }
 
-        private readonly MetricsContext context = new DefaultMetricsContext();
+        private MetricsContext context;
     }
 }

@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Core
 {
     public class MetricTagsTests
     {
-        [Fact]
+        [Test]
         public void MetricTags_CanUseDefaultValue()
         {
             var tags = default(MetricTags);
@@ -14,7 +14,7 @@ namespace Metrics.Tests.Core
             tags.Tags.Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void MetricTags_CanCreateFromString()
         {
             MetricTags tags = "tag";
@@ -24,7 +24,7 @@ namespace Metrics.Tests.Core
             tags.Tags.Should().Equal(new[] {"tag"});
         }
 
-        [Fact]
+        [Test]
         public void MetricTags_CanCreateFromCSV()
         {
             MetricTags tags = "tag1,tag2";
@@ -34,14 +34,14 @@ namespace Metrics.Tests.Core
             tags.Tags.Should().Equal(new[] {"tag1", "tag2"});
         }
 
-        [Fact]
+        [Test]
         public void MetricTags_CanCreateFromCSVAndTrimValues()
         {
             MetricTags tags = "tag1 , tag2";
             tags.Tags.Should().Equal(new[] {"tag1", "tag2"});
         }
 
-        [Fact]
+        [Test]
         public void MetricTags_CanCreateFromStringArray()
         {
             MetricTags tags = new[] {"tag1", "tag2"};
@@ -51,7 +51,7 @@ namespace Metrics.Tests.Core
             tags.Tags.Should().Equal(new[] {"tag1", "tag2"});
         }
 
-        [Fact]
+        [Test]
         public void MetricTags_CanCreateFromParams()
         {
             MetricTags tags = new MetricTags("tag1", "tag2");

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 using FluentAssertions;
@@ -7,13 +7,19 @@ using Metrics.Core;
 using Metrics.MetricData;
 using Metrics.Sampling;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Core
 {
     public class DefaultContextCustomMetricsTests
     {
-        [Fact]
+        [SetUp]
+        public void SetUp()
+        {
+            context = new DefaultMetricsContext();
+        }
+
+        [Test]
         public void MetricsContext_CanRegisterCustomCounter()
         {
             var counter = context.Advanced.Counter("custom", Unit.Calls, () => new CustomCounter());
@@ -22,7 +28,7 @@ namespace Metrics.Tests.Core
             context.DataProvider.CurrentMetricsData.Counters.Single().Value.Count.Should().Be(10L);
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_CanRegisterTimerWithCustomReservoir()
         {
             var reservoir = new CustomReservoir();
@@ -34,7 +40,7 @@ namespace Metrics.Tests.Core
             reservoir.Values.Single().Should().Be(10L);
         }
 
-        [Fact]
+        [Test]
         public void MetricsContext_CanRegisterTimerWithCustomHistogram()
         {
             var histogram = new CustomHistogram();
@@ -47,7 +53,7 @@ namespace Metrics.Tests.Core
             histogram.Reservoir.Values.Single().Should().Be(10L);
         }
 
-        private readonly MetricsContext context = new DefaultMetricsContext();
+        private MetricsContext context;
 
         public class CustomCounter : CounterImplementation
         {
@@ -92,7 +98,7 @@ namespace Metrics.Tests.Core
                 return this.Value;
             }
 
-            public CounterValue Value { get { return new CounterValue(10L, new CounterValue.SetItem[0]); } }
+            public CounterValue Value => new CounterValue(10L, new CounterValue.SetItem[0]);
 
             public bool Merge(MetricValueProvider<CounterValue> other)
             {
@@ -102,8 +108,8 @@ namespace Metrics.Tests.Core
 
         public class CustomReservoir : Reservoir
         {
-            public long Count { get { return this.values.Count; } }
-            public int Size { get { return this.values.Count; } }
+            public long Count => this.values.Count;
+            public int Size => this.values.Count;
 
             public void Update(long value, string userValue)
             {
@@ -120,7 +126,7 @@ namespace Metrics.Tests.Core
                 this.values.Clear();
             }
 
-            public IEnumerable<long> Values { get { return this.values; } }
+            public IEnumerable<long> Values => this.values;
             private readonly List<long> values = new List<long>();
         }
 
@@ -143,7 +149,7 @@ namespace Metrics.Tests.Core
                 return this.Value;
             }
 
-            public HistogramValue Value { get { return new HistogramValue(this.Reservoir.Values.Last(), null, this.Reservoir.GetSnapshot()); } }
+            public HistogramValue Value => new HistogramValue(this.Reservoir.Values.Last(), null, this.Reservoir.GetSnapshot());
         }
     }
 }

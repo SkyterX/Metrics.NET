@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 
 using FluentAssertions;
 
 using Metrics.Core;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Metrics
 {
     public class GaugeMetricTests
     {
-        [Fact]
+        [Test]
         public void GaugeMetric_ReportsNanOnException()
         {
             new FunctionGauge(() => { throw new InvalidOperationException("test"); }).Value.Should().Be(double.NaN);

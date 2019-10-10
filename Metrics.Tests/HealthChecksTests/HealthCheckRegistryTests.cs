@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 
 using FluentAssertions;
 
 using Metrics.Core;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.HealthChecksTests
 {
     public class HealthCheckRegistryTests
     {
-        [Fact]
+        [Test]
         public void HealthCheck_RegistryExecutesCheckOnEachGetStatus()
         {
             HealthChecks.UnregisterAllHealthChecks();
@@ -29,7 +29,7 @@ namespace Metrics.Tests.HealthChecksTests
             count.Should().Be(2);
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_RegistryStatusIsFailedIfOneCheckFails()
         {
             HealthChecks.UnregisterAllHealthChecks();
@@ -43,7 +43,7 @@ namespace Metrics.Tests.HealthChecksTests
             status.Results.Length.Should().Be(2);
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_RegistryStatusIsHealthyIfAllChecksAreHealthy()
         {
             HealthChecks.UnregisterAllHealthChecks();
@@ -57,7 +57,7 @@ namespace Metrics.Tests.HealthChecksTests
             status.Results.Length.Should().Be(2);
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_RegistryDoesNotThrowOnDuplicateRegistration()
         {
             HealthChecks.UnregisterAllHealthChecks();

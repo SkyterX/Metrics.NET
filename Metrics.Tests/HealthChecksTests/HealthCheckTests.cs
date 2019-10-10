@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 
 using FluentAssertions;
 
 using Metrics.Core;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.HealthChecksTests
 {
     public class HealthCheckTests
     {
-        [Fact]
+        [Test]
         public void HealthCheck_ReturnsResultWithCorrectName()
         {
             string name = "test";
@@ -19,7 +19,7 @@ namespace Metrics.Tests.HealthChecksTests
             new HealthCheck(name, () => { HealthCheckResult.Healthy(); }).Execute().Name.Should().Be(name);
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_SuccessIfActionDoesNotThrow()
         {
             string name = "test";
@@ -33,7 +33,7 @@ namespace Metrics.Tests.HealthChecksTests
             throw new InvalidOperationException();
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_FailedIfActionThrows()
         {
             string name = "test";
@@ -55,7 +55,7 @@ namespace Metrics.Tests.HealthChecksTests
             throw new InvalidOperationException("an {example message}");
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_FailedAndDoesNotThrowUnhandledExceptionIfActionThrowsExceptionWithBracketsInMessage()
         {
             string name = "test";
@@ -72,13 +72,13 @@ namespace Metrics.Tests.HealthChecksTests
                 }).Execute().Check.IsHealthy.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_FailedIfResultUnhealthy()
         {
             new HealthCheck("test", () => HealthCheckResult.Unhealthy()).Execute().Check.IsHealthy.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void HealthCheck_ReturnsCorrectMessage()
         {
             string message = "message";

@@ -5,6 +5,7 @@
 - Remove ElasticSearch and InfluxDB reporters from the library.
 - Remove `MetricsConfig.WithHttpEndpoint()` feature from the library.
 - Remove [System.Configuration.ConfigurationManager](https://www.nuget.org/packages/System.Configuration.ConfigurationManager) dependency.
+- Migrate tests from xUnit to NUnit.
 - Switch to SDK-style project format and dotnet core build tooling.
 - Use [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning) to automate generation of assembly 
   and nuget package versions.

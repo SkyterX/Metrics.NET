@@ -1,14 +1,20 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
 using Metrics.Core;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Metrics
 {
     public class HistogramMetricTests
     {
-        [Fact]
+        [SetUp]
+        public void SetUp()
+        {
+            histogram = new HistogramMetric();
+        }
+
+        [Test]
         public void HistogramMetric_CanCount()
         {
             histogram.Update(1L);
@@ -17,7 +23,7 @@ namespace Metrics.Tests.Metrics
             histogram.Value.Count.Should().Be(2);
         }
 
-        [Fact]
+        [Test]
         public void HistogramMetric_CanReset()
         {
             histogram.Update(1L);
@@ -34,7 +40,7 @@ namespace Metrics.Tests.Metrics
             histogram.Value.Median.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void HistogramMetric_RecordsUserValue()
         {
             histogram.Update(1L, "A");
@@ -44,13 +50,13 @@ namespace Metrics.Tests.Metrics
             histogram.Value.MaxUserValue.Should().Be("B");
         }
 
-        [Fact]
+        [Test]
         public void HistogramMetric_RecordsMeanForOneElement()
         {
             histogram.Update(1L);
             histogram.Value.Mean.Should().Be(1);
         }
 
-        private readonly HistogramMetric histogram = new HistogramMetric();
+        private HistogramMetric histogram;
     }
 }

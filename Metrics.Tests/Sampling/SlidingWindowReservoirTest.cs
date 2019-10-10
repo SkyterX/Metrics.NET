@@ -1,14 +1,20 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
 using Metrics.Sampling;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Sampling
 {
     public class SlidingWindowReservoirTest
     {
-        [Fact]
+        [SetUp]
+        public void SetUp()
+        {
+            reservoir = new SlidingWindowReservoir(3);
+        }
+
+        [Test]
         public void SlidingWindowReservoir_CanStoreSmallSample()
         {
             reservoir.Update(1L);
@@ -17,7 +23,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().Values.Should().ContainInOrder(1L, 2L);
         }
 
-        [Fact]
+        [Test]
         public void SlidingWindowReservoir_OnlyStoresLastsValues()
         {
             reservoir.Update(1L);
@@ -29,7 +35,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().Values.Should().ContainInOrder(3L, 4L, 5L);
         }
 
-        [Fact]
+        [Test]
         public void SlidingWindowReservoir_RecordsUserValue()
         {
             reservoir.Update(2L, "B");
@@ -39,6 +45,6 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().MaxUserValue.Should().Be("B");
         }
 
-        private readonly SlidingWindowReservoir reservoir = new SlidingWindowReservoir(3);
+        private SlidingWindowReservoir reservoir;
     }
 }

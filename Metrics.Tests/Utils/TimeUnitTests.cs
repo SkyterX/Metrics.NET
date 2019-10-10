@@ -1,20 +1,20 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
 using Metrics.Utils;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Utils
 {
     public class TimeUnitTests
     {
-        [Fact]
+        [Test]
         public void TimeUnit_ConvertsToZeroOnFractionalUnit()
         {
             TimeUnit.Seconds.ToMinutes(30L).Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void TimeUnit_CanConvertBetweenUnits()
         {
             TimeUnit.Nanoseconds.ToNanoseconds(10L).Should().Be(10L);
@@ -74,7 +74,7 @@ namespace Metrics.Tests.Utils
             TimeUnit.Days.ToDays(10L).Should().Be(10L);
         }
 
-        [Fact]
+        [Test]
         public void TimeUnit_HasCorrectScalingFactor()
         {
             TimeUnit.Nanoseconds.ScalingFactorFor(TimeUnit.Nanoseconds).Should().Be(1.0);

@@ -1,14 +1,14 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
 using Metrics.Sampling;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Sampling
 {
     public class UniformReservoirTests
     {
-        [Fact]
+        [Test]
         public void UniformReservoir_Of100OutOf1000Elements()
         {
             UniformReservoir reservoir = new UniformReservoir(100);
@@ -23,7 +23,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().Values.Should().OnlyContain(v => 0 <= v && v < 1000);
         }
 
-        [Fact]
+        [Test]
         public void UniformReservoir_RecordsUserValue()
         {
             UniformReservoir reservoir = new UniformReservoir(100);

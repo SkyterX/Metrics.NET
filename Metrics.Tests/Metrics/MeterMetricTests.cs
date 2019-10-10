@@ -1,20 +1,22 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
 using Metrics.Core;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Metrics
 {
     public class MeterMetricTests
     {
-        public MeterMetricTests()
+        [SetUp]
+        public void SetUp()
         {
+            clock = new TestClock();
             this.scheduler = new TestScheduler(this.clock);
             this.meter = new MeterMetric(this.clock, this.scheduler);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanCount()
         {
             meter.Mark();
@@ -28,7 +30,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.Count.Should().Be(10L);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanCalculateMeanRate()
         {
             meter.Mark();
@@ -41,7 +43,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.MeanRate.Should().Be(0.5);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_StartsAtZero()
         {
             meter.Value.MeanRate.Should().Be(0L);
@@ -50,7 +52,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.FifteenMinuteRate.Should().Be(0L);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanComputeRates()
         {
             meter.Mark();
@@ -65,7 +67,7 @@ namespace Metrics.Tests.Metrics
             value.FifteenMinuteRate.Should().BeApproximately(0.1988, 0.001);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanReset()
         {
             meter.Mark();
@@ -80,7 +82,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.FifteenMinuteRate.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanCountForSetItem()
         {
             meter.Mark("A");
@@ -92,7 +94,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.Items[0].Percent.Should().Be(100);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanCountForMultipleSetItem()
         {
             meter.Mark("A");
@@ -110,7 +112,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.Items[1].Percent.Should().Be(50);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanResetSetItem()
         {
             meter.Mark("A");
@@ -119,7 +121,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.Items[0].Value.Count.Should().Be(0L);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_CanComputePercentWithZeroTotal()
         {
             meter.Mark("A");
@@ -132,7 +134,7 @@ namespace Metrics.Tests.Metrics
             meter.Value.Items[0].Percent.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_ValueCanScaleDown()
         {
             this.meter.Mark();
@@ -145,7 +147,7 @@ namespace Metrics.Tests.Metrics
             scaledValue.MeanRate.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_ValueCanScaleDownToDecimals()
         {
             this.meter.Mark();
@@ -158,7 +160,7 @@ namespace Metrics.Tests.Metrics
             scaledValue.MeanRate.Should().Be(0.001);
         }
 
-        [Fact]
+        [Test]
         public void MeterMetric_ValueCanScaleUp()
         {
             this.meter.Mark();
@@ -171,8 +173,8 @@ namespace Metrics.Tests.Metrics
             scaledValue.MeanRate.Should().Be(1);
         }
 
-        private readonly TestClock clock = new TestClock();
-        private readonly TestScheduler scheduler;
-        private readonly MeterMetric meter;
+        private TestClock clock;
+        private TestScheduler scheduler;
+        private MeterMetric meter;
     }
 }

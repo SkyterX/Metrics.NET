@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using FluentAssertions;
 
@@ -6,18 +6,20 @@ using Metrics.Core;
 using Metrics.Sampling;
 using Metrics.Utils;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Metrics
 {
     public class TimerMetricTests
     {
-        public TimerMetricTests()
+        [SetUp]
+        public void SetUp()
         {
+            clock = new TestClock();
             this.timer = new TimerMetric(new HistogramMetric(new UniformReservoir()), new MeterMetric(this.clock, new TestScheduler(this.clock)), this.clock);
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_CanCount()
         {
             timer.Value.Rate.Count.Should().Be(0);
@@ -35,7 +37,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Rate.Count.Should().Be(4);
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_CountsEvenIfActionThrows()
         {
             Action action = () => this.timer.Time(() => { throw new InvalidOperationException(); });
@@ -45,7 +47,7 @@ namespace Metrics.Tests.Metrics
             this.timer.Value.Rate.Count.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_CanTrackTime()
         {
             using (timer.NewContext())
@@ -57,7 +59,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Histogram.Max.Should().Be(TimeUnit.Milliseconds.ToNanoseconds(100));
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_ContextRecordsTimeOnlyOnFirstDispose()
         {
             var context = timer.NewContext();
@@ -70,7 +72,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Histogram.Max.Should().Be(TimeUnit.Milliseconds.ToNanoseconds(100));
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_ContextReportsElapsedTime()
         {
             using (var context = timer.NewContext())
@@ -80,7 +82,7 @@ namespace Metrics.Tests.Metrics
             }
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_CanReset()
         {
             using (var context = timer.NewContext())
@@ -97,7 +99,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Histogram.Count.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_RecordsUserValue()
         {
             timer.Record(1L, TimeUnit.Milliseconds, "A");
@@ -107,7 +109,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Histogram.MaxUserValue.Should().Be("B");
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_RecordsActiveSessions()
         {
             timer.Value.ActiveSessions.Should().Be(0);
@@ -121,7 +123,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.ActiveSessions.Should().Be(0);
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_UserValueCanBeSetAfterContextCreation()
         {
             using (var x = timer.NewContext())
@@ -132,7 +134,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Histogram.LastUserValue.Should().Be("test");
         }
 
-        [Fact]
+        [Test]
         public void TimerMetric_UserValueCanBeOverwrittenAfterContextCreation()
         {
             using (var x = timer.NewContext("a"))
@@ -143,7 +145,7 @@ namespace Metrics.Tests.Metrics
             timer.Value.Histogram.LastUserValue.Should().Be("b");
         }
 
-        private readonly TestClock clock = new TestClock();
-        private readonly TimerMetric timer;
+        private TestClock clock;
+        private TimerMetric timer;
     }
 }

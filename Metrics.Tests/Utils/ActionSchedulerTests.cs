@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,13 +6,13 @@ using FluentAssertions;
 
 using Metrics.Utils;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Utils
 {
     public class ActionSchedulerTests
     {
-        [Fact]
+        [Test]
         public void ActionScheduler_ExecutesScheduledFunction()
         {
             using (ActionScheduler scheduler = new ActionScheduler())
@@ -34,7 +34,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ExecutesScheduledAction()
         {
             using (ActionScheduler scheduler = new ActionScheduler())
@@ -55,7 +55,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ExecutesScheduledActionWithToken()
         {
             using (ActionScheduler scheduler = new ActionScheduler())
@@ -75,7 +75,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ExecutesScheduledActionMultipleTimes()
         {
             using (ActionScheduler scheduler = new ActionScheduler())
@@ -100,7 +100,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ReportsExceptionWithGlobalMetricHandler()
         {
             Exception x = null;
@@ -123,14 +123,14 @@ namespace Metrics.Tests.Utils
             x.Should().NotBeNull();
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_CannotCreateWithInvalidParameter()
         {
             var action = new Action(() => new ActionScheduler(-2));
             action.Should().Throw<Exception>();
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_DefaultDoesNotTolerateFailures()
         {
             using (var scheduler = new ActionScheduler())
@@ -139,7 +139,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_DoesNotTolerateFailures()
         {
             using (var scheduler = new ActionScheduler(0))
@@ -164,7 +164,7 @@ namespace Metrics.Tests.Utils
             actionCounter.Should().Be(1);
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ToleratesFailures()
         {
             using (var scheduler = new ActionScheduler(3))
@@ -193,7 +193,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ReportsErrorInCaseOfToleratedFailures()
         {
             using (var scheduler = new ActionScheduler(3))
@@ -232,7 +232,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void ActionScheduler_ToleratesUnlimitedFailures()
         {
             using (var scheduler = new ActionScheduler(-1))

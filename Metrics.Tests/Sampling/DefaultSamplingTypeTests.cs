@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 
 using FluentAssertions;
@@ -6,7 +6,7 @@ using FluentAssertions;
 using Metrics.Core;
 using Metrics.Sampling;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Sampling
 {
@@ -17,7 +17,7 @@ namespace Metrics.Tests.Sampling
             return reservoirField.GetValue(histogram) as Reservoir;
         }
 
-        [Fact]
+        [Test]
         public void SamplingType_CanUseConfiguredDefaultSamplingType()
         {
             GetReservoir(new HistogramMetric()).Should().BeOfType<ExponentiallyDecayingReservoir>();
@@ -31,7 +31,7 @@ namespace Metrics.Tests.Sampling
             GetReservoir(new HistogramMetric()).Should().BeOfType<UniformReservoir>();
         }
 
-        [Fact]
+        [Test]
         public void SamplingType_SettingDefaultValueMustBeConcreteValue()
         {
             Assert.Throws<ArgumentException>(() => { Metric.Config.WithDefaultSamplingType(SamplingType.Default); });

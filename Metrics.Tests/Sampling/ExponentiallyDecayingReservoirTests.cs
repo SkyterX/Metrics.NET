@@ -1,11 +1,11 @@
-﻿using System.Linq;
+using System.Linq;
 
 using FluentAssertions;
 
 using Metrics.Sampling;
 using Metrics.Utils;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Sampling
 {
@@ -16,7 +16,7 @@ namespace Metrics.Tests.Sampling
             this.scheduler = new TestScheduler(clock);
         }
 
-        [Fact]
+        [Test]
         public void EDR_ReservoirOf100OutOf1000Elements()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(100, 0.99);
@@ -31,7 +31,7 @@ namespace Metrics.Tests.Sampling
             snapshot.Values.Should().OnlyContain(v => 0 <= v && v < 1000);
         }
 
-        [Fact]
+        [Test]
         public void EDR_ReservoirOf100OutOf10Elements()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(100, 0.99);
@@ -46,7 +46,7 @@ namespace Metrics.Tests.Sampling
             snapshot.Values.Should().OnlyContain(v => 0 <= v && v < 10);
         }
 
-        [Fact]
+        [Test]
         public void EDR_HeavilyBiasedReservoirOf100OutOf1000Elements()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(1000, 0.01);
@@ -61,7 +61,7 @@ namespace Metrics.Tests.Sampling
             snapshot.Values.Should().OnlyContain(v => 0 <= v && v < 100);
         }
 
-        [Fact]
+        [Test]
         public void EDR_longPeriodsOfInactivityShouldNotCorruptSamplingState()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(10, 0.015, clock, scheduler);
@@ -100,7 +100,7 @@ namespace Metrics.Tests.Sampling
             finalSnapshot.Values.Skip(1).Should().OnlyContain(v => 3000 <= v && v < 4000);
         }
 
-        [Fact]
+        [Test]
         public void EDR_SpotLift()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(clock, scheduler);
@@ -125,7 +125,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().Median.Should().Be(9999);
         }
 
-        [Fact]
+        [Test]
         public void EDR_SpotFall()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(clock, scheduler);
@@ -150,7 +150,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().Percentile95.Should().Be(178);
         }
 
-        [Fact]
+        [Test]
         public void EDR_QuantiliesShouldBeBasedOnWeights()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(clock, scheduler);
@@ -176,7 +176,7 @@ namespace Metrics.Tests.Sampling
             reservoir.GetSnapshot().Percentile75.Should().Be(9999);
         }
 
-        [Fact]
+        [Test]
         public void EDR_RecordsUserValue()
         {
             ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(clock, scheduler);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Metrics.Utils;
 
@@ -6,9 +6,9 @@ namespace Metrics.Tests
 {
     public sealed class TestClock : Clock
     {
-        public override long Nanoseconds { get { return this.nanoseconds; } }
+        public override long Nanoseconds => this.nanoseconds;
 
-        public override DateTime UTCDateTime { get { return new DateTime(this.nanoseconds / 100L, DateTimeKind.Utc); } }
+        public override DateTime UTCDateTime => new DateTime(this.nanoseconds / 100L, DateTimeKind.Utc);
 
         public void Advance(TimeUnit unit, long value)
         {

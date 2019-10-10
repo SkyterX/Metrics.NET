@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
 using Metrics.Utils;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Utils
 {
@@ -16,7 +16,7 @@ namespace Metrics.Tests.Utils
             }
         }
 
-        [Fact]
+        [Test]
         public void EWMA_aOneMinuteEWMAWithAValueOfThree()
         {
             var ewma = EWMA.OneMinuteEWMA();
@@ -85,7 +85,7 @@ namespace Metrics.Tests.Utils
             ewma.GetRate(TimeUnit.Seconds).Should().BeApproximately(0.00000018, 0.000001);
         }
 
-        [Fact]
+        [Test]
         public void EWMA_aFiveMinuteEWMAWithAValueOfThree()
         {
             var ewma = EWMA.FiveMinuteEWMA();
@@ -155,7 +155,7 @@ namespace Metrics.Tests.Utils
             ewma.GetRate(TimeUnit.Seconds).Should().BeApproximately(0.02987224, 0.000001);
         }
 
-        [Fact]
+        [Test]
         public void EWMA_aFifteenMinuteEWMAWithAValueOfThree()
         {
             var ewma = EWMA.FifteenMinuteEWMA();

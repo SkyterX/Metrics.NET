@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,33 +6,39 @@ using FluentAssertions;
 
 using Metrics.Core;
 
-using Xunit;
+using NUnit.Framework;
 
 namespace Metrics.Tests.Metrics
 {
     public class CounterMetricTests
     {
-        [Fact]
+        [SetUp]
+        public void SetUp()
+        {
+            counter = new CounterMetric();
+        }
+
+        [Test]
         public void CounterMetric_StartsFromZero()
         {
             counter.Value.Count.Should().Be(0L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanIncrement()
         {
             counter.Increment();
             counter.Value.Count.Should().Be(1L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanIncrementWithValue()
         {
             counter.Increment(32L);
             counter.Value.Count.Should().Be(32L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanIncrementMultipleTimes()
         {
             counter.Increment();
@@ -41,21 +47,21 @@ namespace Metrics.Tests.Metrics
             counter.Value.Count.Should().Be(3L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanDecrement()
         {
             counter.Decrement();
             counter.Value.Count.Should().Be(-1L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanDecrementWithValue()
         {
             counter.Decrement(32L);
             counter.Value.Count.Should().Be(-32L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanDecrementMultipleTimes()
         {
             counter.Decrement();
@@ -64,7 +70,7 @@ namespace Metrics.Tests.Metrics
             counter.Value.Count.Should().Be(-3L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanBeIncrementedOnMultipleThreads()
         {
             const int threadCount = 16;
@@ -92,7 +98,7 @@ namespace Metrics.Tests.Metrics
             counter.Value.Count.Should().Be(threadCount * iterations);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanReset()
         {
             counter.Increment();
@@ -101,7 +107,7 @@ namespace Metrics.Tests.Metrics
             counter.Value.Count.Should().Be(0L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanCountForSetItem()
         {
             counter.Increment("A");
@@ -113,7 +119,7 @@ namespace Metrics.Tests.Metrics
             counter.Value.Items[0].Percent.Should().Be(100);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanCountForMultipleSetItem()
         {
             counter.Increment("A");
@@ -131,7 +137,7 @@ namespace Metrics.Tests.Metrics
             counter.Value.Items[1].Percent.Should().Be(50);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanResetSetItem()
         {
             counter.Increment("A");
@@ -140,7 +146,7 @@ namespace Metrics.Tests.Metrics
             counter.Value.Items[0].Count.Should().Be(0L);
         }
 
-        [Fact]
+        [Test]
         public void CounterMetric_CanComputePercentWithZeroTotal()
         {
             counter.Increment("A");
@@ -153,6 +159,6 @@ namespace Metrics.Tests.Metrics
             counter.Value.Items[0].Percent.Should().Be(0);
         }
 
-        private readonly CounterMetric counter = new CounterMetric();
+        private CounterMetric counter;
     }
 }
