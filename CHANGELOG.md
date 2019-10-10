@@ -8,12 +8,12 @@
 - Remove LibLog. Use `Metric.Config.WithErrorHandler((e, msg) => {...})` directly if you need to log Metrics.NET errors.
 - Migrate tests from xUnit to NUnit.
 - Switch to SDK-style project format and dotnet core build tooling.
-- Use [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning) to automate generation of assembly 
-  and nuget package versions.
+- Use [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning) to automate generation of assembly and nuget package versions.
 
 ## 0.4.7 - 2018.05.11
-* the Graphite and text file reporters now work with configurable error tolerance
-* improved memory allocations in timers: the internal meter no longer records user values (@SkyterX)
+- the Graphite and text file reporters now work with configurable error tolerance
+- improved memory allocations in timers: the internal meter no longer records user values (@SkyterX)
+- fixed all supported reporters to report TotalTime metric for timers
 
 ## 0.4.6-pre / 2016-12-06
 * reporting can now be configured to be error tolerant (Metrics.Reports.ToleratedConsecutiveFailures config key)
