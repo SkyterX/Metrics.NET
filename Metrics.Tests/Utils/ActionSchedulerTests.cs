@@ -106,7 +106,7 @@ namespace Metrics.Tests.Utils
             Exception x = null;
             var tcs = new TaskCompletionSource<bool>();
 
-            Metric.Config.WithErrorHandler(e =>
+            Metric.Config.WithErrorHandler((e, msg) =>
                 {
                     x = e;
                     tcs.SetResult(true);
@@ -202,7 +202,7 @@ namespace Metrics.Tests.Utils
                 var tcs = new TaskCompletionSource<bool>();
                 var errorCounter = 0;
 
-                Metric.Config.WithErrorHandler(e =>
+                Metric.Config.WithErrorHandler((e, msg) =>
                     {
                         if (e.Message == "reports_error")
                         {

@@ -1,16 +1,14 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 
 using Metrics.Core;
-using Metrics.Logging;
 
 namespace Metrics.PerfCounters
 {
     internal static class PerformanceCounters
     {
         private const string TotalInstance = "_Total";
-
         private const string Exceptions = ".NET CLR Exceptions";
         private const string Memory = ".NET CLR Memory";
         private const string LocksAndThreads = ".NET CLR LocksAndThreads";
@@ -83,8 +81,12 @@ namespace Metrics.PerfCounters
             ThreadPoolMetrics.RegisterThreadPoolGauges(context);
         }
 
-        private static void Register(this MetricsContext context, string name, Unit unit,
-                                     string category, string counter, string instance = null,
+        private static void Register(this MetricsContext context,
+                                     string name,
+                                     Unit unit,
+                                     string category,
+                                     string counter,
+                                     string instance = null,
                                      Func<double, double> derivate = null,
                                      MetricTags tags = default(MetricTags))
         {
@@ -94,25 +96,25 @@ namespace Metrics.PerfCounters
             }
             catch (UnauthorizedAccessException x)
             {
-                const string message = "Error reading performance counter data." +
-                                       " Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
+                const string message = "Error reading performance counter data. Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
                 MetricsErrorHandler.Handle(x, message);
             }
             catch (Exception x)
             {
-                const string message = "Error reading performance counter data." +
-                                       " Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
+                const string message = "Error reading performance counter data. Make sure the user has access to the performance counters. The user needs to be either Admin or belong to Performance Monitor user group.";
                 MetricsErrorHandler.Handle(x, message);
             }
         }
 
-        private static void WrappedRegister(MetricsContext context, string name, Unit unit,
-                                            string category, string counter, string instance = null,
+        private static void WrappedRegister(MetricsContext context,
+                                            string name,
+                                            Unit unit,
+                                            string category,
+                                            string counter,
+                                            string instance = null,
                                             Func<double, double> derivate = null,
                                             MetricTags tags = default(MetricTags))
         {
-            log.Debug(() => $"Registering performance counter [{counter}] in category [{category}] for instance [{instance ?? "none"}]");
-
             if (PerformanceCounterCategory.Exists(category))
             {
                 if (instance == null || PerformanceCounterCategory.InstanceExists(instance, category))
@@ -134,14 +136,7 @@ namespace Metrics.PerfCounters
                 }
             }
 
-            if (!isMono)
-            {
-                log.ErrorFormat("Performance counter does not exist [{0}] in category [{1}] for instance [{2}]", counter, category, instance ?? "none");
-            }
+            MetricsErrorHandler.Handle(null, $"Performance counter does not exist [{counter}] in category [{category}] for instance [{instance ?? "none"}]");
         }
-
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
-        private static readonly bool isMono = Type.GetType("Mono.Runtime") != null;
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 
-using Metrics.Logging;
 using Metrics.Reporters;
 using Metrics.Utils;
 
@@ -54,29 +53,7 @@ namespace Metrics
 
         /// <summary>
         ///     Error handler for the metrics library. If a handler is registered any error will be passed to the handler.
-        ///     By default unhandled errors are logged, printed to console if Environment.UserInteractive is true, and logged with Trace.TracError.
-        /// </summary>
-        /// <param name="errorHandler">Action with will be executed with the exception.</param>
-        /// <param name="clearExistingHandlers">Is set to true, remove any existing handler.</param>
-        /// <returns>Chain able configuration object.</returns>
-        public MetricsConfig WithErrorHandler(Action<Exception> errorHandler, bool clearExistingHandlers = false)
-        {
-            if (clearExistingHandlers)
-            {
-                MetricsErrorHandler.Handler.ClearHandlers();
-            }
-
-            if (!isDisabled)
-            {
-                MetricsErrorHandler.Handler.AddHandler(errorHandler);
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        ///     Error handler for the metrics library. If a handler is registered any error will be passed to the handler.
-        ///     By default unhandled errors are logged, printed to console if Environment.UserInteractive is true, and logged with Trace.TracError.
+        ///     By default unhandled errors are logged with Trace.TracError.
         /// </summary>
         /// <param name="errorHandler">Action with will be executed with the exception and a specific message.</param>
         /// <param name="clearExistingHandlers">Is set to true, remove any existing handler.</param>
@@ -85,12 +62,12 @@ namespace Metrics
         {
             if (clearExistingHandlers)
             {
-                MetricsErrorHandler.Handler.ClearHandlers();
+                MetricsErrorHandler.ClearHandlers();
             }
 
             if (!isDisabled)
             {
-                MetricsErrorHandler.Handler.AddHandler(errorHandler);
+                MetricsErrorHandler.AddHandler(errorHandler);
             }
 
             return this;
@@ -132,21 +109,6 @@ namespace Metrics
                     extension(m, h);
                     return this;
                 }, () => this);
-        }
-
-        /// <summary>
-        ///     This method is used for customizing the metrics configuration.
-        ///     The <paramref name="extension" /> will be called with the current MetricsContext and HealthStatus provider.
-        /// </summary>
-        /// <remarks>
-        ///     In general you don't need to call this method directly.
-        /// </remarks>
-        /// <param name="extension">Action to apply extra configuration.</param>
-        /// <returns>The result of calling the extension.</returns>
-        [Obsolete("This configuration method ignores the CompletelyDisableMetrics setting. Please use the overload instead.")]
-        public T WithConfigExtension<T>(Func<MetricsContext, Func<HealthStatus>, T> extension)
-        {
-            return extension(context, healthStatus);
         }
 
         /// <summary>
@@ -223,8 +185,6 @@ namespace Metrics
                 return false;
             }
         }
-
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
 
         public static readonly bool GloballyDisabledMetrics = ReadGloballyDisableMetricsSetting();
 

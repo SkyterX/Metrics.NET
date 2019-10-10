@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -81,7 +81,7 @@ namespace Metrics.Utils
                             }
                             catch (Exception x)
                             {
-                                MetricsErrorHandler.Handle(x, "Error while executing action scheduler.");
+                                MetricsErrorHandler.Handle(x, "Error while executing action scheduler");
                                 if (toleratedConsecutiveFailures >= 0)
                                 {
                                     nbFailures++;

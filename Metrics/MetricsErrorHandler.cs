@@ -1,46 +1,28 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
-using Metrics.Logging;
-
 namespace Metrics
 {
-    public class MetricsErrorHandler
+    internal static class MetricsErrorHandler
     {
-        private MetricsErrorHandler()
+        static MetricsErrorHandler()
         {
-            AddHandler((x, msg) => log.ErrorException("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", x, msg, x.Message));
-            AddHandler((x, msg) => Trace.TraceError("Metrics: Unhandled exception in Metrics.NET Library " + x.ToString()));
-
-            if (Environment.UserInteractive || isMono)
-            {
-                AddHandler((x, msg) => Console.WriteLine("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", msg, x.ToString()));
-            }
+            AddHandler((e, msg) => Trace.TraceError($"Metrics.NET: {msg} {e}"));
         }
 
-        internal static MetricsErrorHandler Handler { get; } = new MetricsErrorHandler();
-
-        internal void AddHandler(Action<Exception> handler)
-        {
-            AddHandler((x, msg) => handler(x));
-        }
-
-        internal void AddHandler(Action<Exception, string> handler)
+        public static void AddHandler(Action<Exception, string> handler)
         {
             handlers.Add(handler);
         }
 
-        internal void ClearHandlers()
+        public static void ClearHandlers()
         {
             while (!handlers.IsEmpty)
-            {
-                Action<Exception, string> item;
-                handlers.TryTake(out item);
-            }
+                handlers.TryTake(out _);
         }
 
-        private void InternalHandle(Exception exception, string message)
+        public static void Handle(Exception exception, string message)
         {
             errorMeter.Mark();
 
@@ -57,21 +39,7 @@ namespace Metrics
             }
         }
 
-        public static void Handle(Exception exception)
-        {
-            Handle(exception, string.Empty);
-        }
-
-        public static void Handle(Exception exception, string message)
-        {
-            Handler.InternalHandle(exception, message);
-        }
-
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
         private static readonly Meter errorMeter = Metric.Internal.Meter("Metrics Errors", Unit.Errors);
-
-        private readonly ConcurrentBag<Action<Exception, string>> handlers = new ConcurrentBag<Action<Exception, string>>();
-
-        private static readonly bool isMono = Type.GetType("Mono.Runtime") != null;
+        private static readonly ConcurrentBag<Action<Exception, string>> handlers = new ConcurrentBag<Action<Exception, string>>();
     }
 }

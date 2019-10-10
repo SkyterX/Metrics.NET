@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-using Metrics.Logging;
 using Metrics.Utils;
 
 namespace Metrics.Graphite
@@ -34,7 +33,7 @@ namespace Metrics.Graphite
                 {
                 }
                 client = null;
-                MetricsErrorHandler.Handle(x, "Error sending UDP data to graphite endpoint " + host + ":" + port.ToString());
+                MetricsErrorHandler.Handle(x, $"Error sending UDP data to graphite endpoint {host}:{port}");
             }
         }
 
@@ -47,7 +46,6 @@ namespace Metrics.Graphite
             var endpoint = new IPEndPoint(HostResolver.Resolve(host), port);
             var client = new UdpClient();
             client.Connect(endpoint);
-            log.Debug(() => "UDP client for graphite initialized for " + host + ":" + port.ToString());
             return client;
         }
 
@@ -67,11 +65,8 @@ namespace Metrics.Graphite
             base.Dispose(disposing);
         }
 
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
-
         private readonly string host;
         private readonly int port;
-
         private UdpClient client;
     }
 }

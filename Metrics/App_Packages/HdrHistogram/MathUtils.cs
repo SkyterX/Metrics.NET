@@ -35,19 +35,19 @@ namespace HdrHistogram
             // we put it here for brevity of this example.
             const double MaxULP = 1.9958403095347198116563727130368E+292;
 
-            if (Double.IsNaN(value))
+            if (double.IsNaN(value))
             {
-                return Double.NaN;
+                return double.NaN;
             }
-            else if (Double.IsPositiveInfinity(value) || Double.IsNegativeInfinity(value))
+            else if (double.IsPositiveInfinity(value) || double.IsNegativeInfinity(value))
             {
-                return Double.PositiveInfinity;
+                return double.PositiveInfinity;
             }
             else if (value == 0.0)
             {
-                return Double.Epsilon;    // Equivalent of Double.MIN_VALUE in Java; Double.MinValue in C# is the actual minimum value a double can hold.
+                return double.Epsilon;    // Equivalent of Double.MIN_VALUE in Java; Double.MinValue in C# is the actual minimum value a double can hold.
             }
-            else if (Math.Abs(value) == Double.MaxValue)
+            else if (Math.Abs(value) == double.MaxValue)
             {
                 return MaxULP;
             }

@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using Metrics.Core;
-using Metrics.Logging;
-using Metrics.Utils;
 
 namespace Metrics
 {
@@ -17,11 +15,10 @@ namespace Metrics
         static Metric()
         {
             globalContext = new DefaultMetricsContext(GetGlobalContextName());
+
             if (MetricsConfig.GloballyDisabledMetrics)
-            {
                 globalContext.CompletelyDisableMetrics();
-                log.Info(() => "Metrics: Metrics.NET Library is completely disabled. Set Metrics.CompletelyDisableMetrics to false to re-enable.");
-            }
+
             Config = new MetricsConfig(globalContext);
         }
 
@@ -191,7 +188,6 @@ namespace Metrics
                 const string contextNameKey = "Metrics.GlobalContextName";
                 var contextNameValue = Environment.GetEnvironmentVariable(contextNameKey);
                 var name = string.IsNullOrEmpty(contextNameValue) ? GetDefaultGlobalContextName() : ParseGlobalContextName(contextNameValue);
-                log.Debug(() => "Metrics: GlobalContext Name set to " + name);
                 return name;
             }
             catch (InvalidOperationException)
@@ -201,8 +197,7 @@ namespace Metrics
             }
             catch (Exception x)
             {
-                log.ErrorException("Metrics: Error reading config value for Metrics.GlobalContextName", x);
-                throw new InvalidOperationException("Invalid Metrics Configuration: Metrics.GlobalContextName must be non empty string", x);
+                throw new InvalidOperationException("Metrics: Error reading config value for Metrics.GlobalContextName", x);
             }
         }
 
@@ -210,15 +205,7 @@ namespace Metrics
         {
             configName = Regex.Replace(configName, @"\$Env\.MachineName\$", CleanName(Environment.MachineName), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
             configName = Regex.Replace(configName, @"\$Env\.ProcessName\$", CleanName(Process.GetCurrentProcess().ProcessName), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-
-            const string aspMacro = @"\$Env\.AppDomainAppVirtualPath\$";
-            if (Regex.IsMatch(configName, aspMacro, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))
-            {
-                configName = Regex.Replace(configName, aspMacro, CleanName(AppEnvironment.ResolveAspSiteName()), RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
-            }
-
             configName = ReplaceRemainingTokens(configName);
-
             return configName;
         }
 
@@ -234,7 +221,6 @@ namespace Metrics
                 if (string.IsNullOrWhiteSpace(key.Value))
                 {
                     var msg = $"Metrics: Error substituting Environment tokens in Metrics.GlobalContextName. Found token with no key. Original string {configName}";
-                    log.Error(msg);
                     throw new InvalidOperationException(msg);
                 }
 
@@ -243,7 +229,6 @@ namespace Metrics
                 if (string.IsNullOrWhiteSpace(val))
                 {
                     var msg = $"Metrics: Error substituting Environment tokens in Metrics.GlobalContextName. Found key '{key}' has no value in Environment. Original string {configName}";
-                    log.Error(msg);
                     throw new InvalidOperationException(msg);
                 }
 
@@ -262,8 +247,6 @@ namespace Metrics
         {
             return $@"{CleanName(Environment.MachineName)}.{CleanName(Process.GetCurrentProcess().ProcessName)}";
         }
-
-        private static readonly ILog log = LogProvider.GetCurrentClassLogger();
 
         private static readonly DefaultMetricsContext globalContext;
     }
