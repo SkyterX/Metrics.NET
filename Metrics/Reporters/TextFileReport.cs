@@ -14,7 +14,7 @@ namespace Metrics.Reporters
 
         protected override void StartReport(string contextName)
         {
-            this.buffer = new StringBuilder();
+            buffer = new StringBuilder();
             base.StartReport(contextName);
         }
 
@@ -28,15 +28,15 @@ namespace Metrics.Reporters
         {
             try
             {
-                File.WriteAllText(this.fileName, this.buffer.ToString());
+                File.WriteAllText(fileName, buffer.ToString());
             }
             catch (Exception x)
             {
-                MetricsErrorHandler.Handle(x, "Error writing text file " + this.fileName);
+                MetricsErrorHandler.Handle(x, "Error writing text file " + fileName);
             }
 
             base.EndReport(contextName);
-            this.buffer = null;
+            buffer = null;
         }
 
         private readonly string fileName;

@@ -13,7 +13,7 @@ namespace Metrics.Core
         {
             this.registry = registry;
             this.metricsBuilder = metricsBuilder;
-            this.DataProvider = new DefaultDataProvider(context, timestampProvider, this.registry.DataProvider, () => this.childContexts.Values.Select(c => c.DataProvider));
+            DataProvider = new DefaultDataProvider(context, timestampProvider, this.registry.DataProvider, () => childContexts.Values.Select(c => c.DataProvider));
         }
 
         protected abstract MetricsContext CreateChildContextInstance(string contextName);
@@ -27,12 +27,12 @@ namespace Metrics.Core
 
         public MetricsContext Context(string contextName)
         {
-            return this.Context(contextName, c => CreateChildContextInstance(contextName));
+            return Context(contextName, c => CreateChildContextInstance(contextName));
         }
 
         public MetricsContext Context(string contextName, Func<string, MetricsContext> contextCreator)
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return this;
             }
@@ -42,12 +42,12 @@ namespace Metrics.Core
                 return this;
             }
 
-            return this.childContexts.GetOrAdd(contextName, contextCreator);
+            return childContexts.GetOrAdd(contextName, contextCreator);
         }
 
         public bool AttachContext(string contextName, MetricsContext context)
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return true;
             }
@@ -56,7 +56,7 @@ namespace Metrics.Core
             {
                 throw new ArgumentException("Context name can't be null or empty for attached contexts");
             }
-            var attached = this.childContexts.GetOrAdd(contextName, context);
+            var attached = childContexts.GetOrAdd(contextName, context);
             return ReferenceEquals(attached, context);
         }
 
@@ -68,7 +68,7 @@ namespace Metrics.Core
             }
 
             MetricsContext context;
-            if (this.childContexts.TryRemove(contextName, out context))
+            if (childContexts.TryRemove(contextName, out context))
             {
                 using (context)
                 {
@@ -78,89 +78,89 @@ namespace Metrics.Core
 
         public void PerformanceCounter(string name, string counterCategory, string counterName, string counterInstance, Unit unit, MetricTags tags)
         {
-            this.Gauge(name, () => this.metricsBuilder.BuildPerformanceCounter(name, unit, counterCategory, counterName, counterInstance), unit, tags);
+            Gauge(name, () => metricsBuilder.BuildPerformanceCounter(name, unit, counterCategory, counterName, counterInstance), unit, tags);
         }
 
         public void Gauge(string name, Func<double> valueProvider, Unit unit, MetricTags tags)
         {
-            this.Gauge(name, () => this.metricsBuilder.BuildGauge(name, unit, valueProvider), unit, tags);
+            Gauge(name, () => metricsBuilder.BuildGauge(name, unit, valueProvider), unit, tags);
         }
 
         public void Gauge(string name, Func<MetricValueProvider<double>> valueProvider, Unit unit, MetricTags tags)
         {
-            this.registry.Gauge(name, valueProvider, unit, tags);
+            registry.Gauge(name, valueProvider, unit, tags);
         }
 
         public Counter Counter(string name, Unit unit, MetricTags tags)
         {
-            return this.Counter(name, unit, () => this.metricsBuilder.BuildCounter(name, unit), tags);
+            return Counter(name, unit, () => metricsBuilder.BuildCounter(name, unit), tags);
         }
 
         public Counter Counter<T>(string name, Unit unit, Func<T> builder, MetricTags tags)
             where T : CounterImplementation
         {
-            return this.registry.Counter(name, builder, unit, tags);
+            return registry.Counter(name, builder, unit, tags);
         }
 
         public Meter Meter(string name, Unit unit, TimeUnit rateUnit, MetricTags tags)
         {
-            return this.Meter(name, unit, () => this.metricsBuilder.BuildMeter(name, unit, rateUnit), rateUnit, tags);
+            return Meter(name, unit, () => metricsBuilder.BuildMeter(name, unit, rateUnit), rateUnit, tags);
         }
 
         public Meter Meter<T>(string name, Unit unit, Func<T> builder, TimeUnit rateUnit, MetricTags tags)
             where T : MeterImplementation
         {
-            return this.registry.Meter(name, builder, unit, rateUnit, tags);
+            return registry.Meter(name, builder, unit, rateUnit, tags);
         }
 
         public Histogram Histogram(string name, Unit unit, SamplingType samplingType, MetricTags tags)
         {
-            return this.Histogram(name, unit, () => this.metricsBuilder.BuildHistogram(name, unit, samplingType), tags);
+            return Histogram(name, unit, () => metricsBuilder.BuildHistogram(name, unit, samplingType), tags);
         }
 
         public Histogram Histogram<T>(string name, Unit unit, Func<T> builder, MetricTags tags)
             where T : HistogramImplementation
         {
-            return this.registry.Histogram(name, builder, unit, tags);
+            return registry.Histogram(name, builder, unit, tags);
         }
 
         public Histogram Histogram(string name, Unit unit, Func<Reservoir> builder, MetricTags tags)
         {
-            return Histogram(name, unit, () => this.metricsBuilder.BuildHistogram(name, unit, builder()), tags);
+            return Histogram(name, unit, () => metricsBuilder.BuildHistogram(name, unit, builder()), tags);
         }
 
         public Timer Timer(string name, Unit unit, SamplingType samplingType, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
         {
-            return this.registry.Timer(name, () => this.metricsBuilder.BuildTimer(name, unit, rateUnit, durationUnit, samplingType), unit, rateUnit, durationUnit, tags);
+            return registry.Timer(name, () => metricsBuilder.BuildTimer(name, unit, rateUnit, durationUnit, samplingType), unit, rateUnit, durationUnit, tags);
         }
 
         public Timer Timer<T>(string name, Unit unit, Func<T> builder, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
             where T : TimerImplementation
         {
-            return this.registry.Timer(name, builder, unit, rateUnit, durationUnit, tags);
+            return registry.Timer(name, builder, unit, rateUnit, durationUnit, tags);
         }
 
         public Timer Timer(string name, Unit unit, Func<HistogramImplementation> builder, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
         {
-            return this.Timer(name, unit, () => this.metricsBuilder.BuildTimer(name, unit, rateUnit, durationUnit, builder()), rateUnit, durationUnit, tags);
+            return Timer(name, unit, () => metricsBuilder.BuildTimer(name, unit, rateUnit, durationUnit, builder()), rateUnit, durationUnit, tags);
         }
 
         public Timer Timer(string name, Unit unit, Func<Reservoir> builder, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
         {
-            return this.Timer(name, unit, () => this.metricsBuilder.BuildTimer(name, unit, rateUnit, durationUnit, builder()), rateUnit, durationUnit, tags);
+            return Timer(name, unit, () => metricsBuilder.BuildTimer(name, unit, rateUnit, durationUnit, builder()), rateUnit, durationUnit, tags);
         }
 
         public void CompletelyDisableMetrics()
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return;
             }
 
-            this.isDisabled = true;
+            isDisabled = true;
 
-            var oldRegistry = this.registry;
-            this.registry = new NullMetricsRegistry();
+            var oldRegistry = registry;
+            registry = new NullMetricsRegistry();
             oldRegistry.ClearAllMetrics();
             using (oldRegistry as IDisposable)
             {
@@ -168,8 +168,8 @@ namespace Metrics.Core
 
             ForAllChildContexts(c => c.Advanced.CompletelyDisableMetrics());
 
-            this.ContextShuttingDown?.Invoke(this, EventArgs.Empty);
-            this.ContextDisabled?.Invoke(this, EventArgs.Empty);
+            ContextShuttingDown?.Invoke(this, EventArgs.Empty);
+            ContextDisabled?.Invoke(this, EventArgs.Empty);
         }
 
         public void Dispose()
@@ -182,16 +182,16 @@ namespace Metrics.Core
         {
             if (disposing)
             {
-                if (!this.isDisabled)
+                if (!isDisabled)
                 {
-                    this.ContextShuttingDown?.Invoke(this, EventArgs.Empty);
+                    ContextShuttingDown?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
 
         public void ResetMetricsValues()
         {
-            this.registry.ResetMetricsValues();
+            registry.ResetMetricsValues();
             ForAllChildContexts(c => c.Advanced.ResetMetricsValues());
         }
 
@@ -203,7 +203,7 @@ namespace Metrics.Core
 
         private void ForAllChildContexts(Action<MetricsContext> action)
         {
-            foreach (var context in this.childContexts.Values)
+            foreach (var context in childContexts.Values)
             {
                 action(context);
             }

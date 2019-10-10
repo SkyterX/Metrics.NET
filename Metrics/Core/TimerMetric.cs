@@ -50,61 +50,61 @@ namespace Metrics.Core
             var nanos = unit.ToNanoseconds(duration);
             if (nanos >= 0)
             {
-                this.histogram.Update(nanos, userValue);
-                this.totalRecordedTime.Add(nanos);
+                histogram.Update(nanos, userValue);
+                totalRecordedTime.Add(nanos);
                 // Do not save user value in meter, because its only purpose is to provide overall rate metrics.
                 // Unlike meter, user values for histogram are not restricted to come from a finite set, and generally they are unique.
                 // Saving them will cause huge number of sub-meter-per-item allocations inside a meter metric. 
                 // Moreover those sub-meters are useless, since rates-per-item are not reported for timers.
-                this.meter.Mark();
+                meter.Mark();
             }
         }
 
         public void Time(Action action, string userValue = null)
         {
-            var start = this.clock.Nanoseconds;
+            var start = clock.Nanoseconds;
             try
             {
-                this.activeSessionsCounter.Increment();
+                activeSessionsCounter.Increment();
                 action();
             }
             finally
             {
-                this.activeSessionsCounter.Decrement();
-                Record(this.clock.Nanoseconds - start, TimeUnit.Nanoseconds, userValue);
+                activeSessionsCounter.Decrement();
+                Record(clock.Nanoseconds - start, TimeUnit.Nanoseconds, userValue);
             }
         }
 
         public T Time<T>(Func<T> action, string userValue = null)
         {
-            var start = this.clock.Nanoseconds;
+            var start = clock.Nanoseconds;
             try
             {
-                this.activeSessionsCounter.Increment();
+                activeSessionsCounter.Increment();
                 return action();
             }
             finally
             {
-                this.activeSessionsCounter.Decrement();
-                Record(this.clock.Nanoseconds - start, TimeUnit.Nanoseconds, userValue);
+                activeSessionsCounter.Decrement();
+                Record(clock.Nanoseconds - start, TimeUnit.Nanoseconds, userValue);
             }
         }
 
         public long StartRecording()
         {
-            this.activeSessionsCounter.Increment();
-            return this.clock.Nanoseconds;
+            activeSessionsCounter.Increment();
+            return clock.Nanoseconds;
         }
 
         public long CurrentTime()
         {
-            return this.clock.Nanoseconds;
+            return clock.Nanoseconds;
         }
 
         public long EndRecording()
         {
-            this.activeSessionsCounter.Decrement();
-            return this.clock.Nanoseconds;
+            activeSessionsCounter.Decrement();
+            return clock.Nanoseconds;
         }
 
         public TimerContext NewContext(string userValue = null)
@@ -116,22 +116,22 @@ namespace Metrics.Core
 
         public TimerValue GetValue(bool resetMetric = false)
         {
-            var total = resetMetric ? this.totalRecordedTime.GetAndReset() : this.totalRecordedTime.GetValue();
-            return new TimerValue(this.meter.GetValue(resetMetric), this.histogram.GetValue(resetMetric), this.activeSessionsCounter.GetValue(), total, TimeUnit.Nanoseconds);
+            var total = resetMetric ? totalRecordedTime.GetAndReset() : totalRecordedTime.GetValue();
+            return new TimerValue(meter.GetValue(resetMetric), histogram.GetValue(resetMetric), activeSessionsCounter.GetValue(), total, TimeUnit.Nanoseconds);
         }
 
         public void Reset()
         {
-            this.meter.Reset();
-            this.histogram.Reset();
+            meter.Reset();
+            histogram.Reset();
         }
 
         public void Dispose()
         {
-            using (this.histogram as IDisposable)
+            using (histogram as IDisposable)
             {
             }
-            using (this.meter as IDisposable)
+            using (meter as IDisposable)
             {
             }
         }

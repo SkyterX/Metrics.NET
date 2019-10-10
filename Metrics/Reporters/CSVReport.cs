@@ -125,7 +125,7 @@ namespace Metrics.Reporters
 
         private void Write(string metricType, string metricName, IEnumerable<Value> values)
         {
-            this.appender.AppendLine(CurrentContextTimestamp, metricType, metricName, values);
+            appender.AppendLine(CurrentContextTimestamp, metricType, metricName, values);
         }
 
         private readonly CSVAppender appender;
@@ -149,8 +149,8 @@ namespace Metrics.Reporters
 
             public Value(string name, string value)
             {
-                this.Name = name;
-                this.FormattedValue = value;
+                Name = name;
+                FormattedValue = value;
             }
 
             public string Name { get; private set; }

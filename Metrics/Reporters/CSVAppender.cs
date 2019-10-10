@@ -36,12 +36,12 @@ namespace Metrics.Reporters
 
         protected virtual string GetHeader(IEnumerable<CSVReport.Value> values)
         {
-            return string.Join(this.delimiter, new[] {"Date", "Ticks"}.Concat(values.Select(v => v.Name)));
+            return string.Join(delimiter, new[] {"Date", "Ticks"}.Concat(values.Select(v => v.Name)));
         }
 
         protected virtual string GetValues(DateTime timestamp, IEnumerable<CSVReport.Value> values)
         {
-            return string.Join(this.delimiter, new[] {timestamp.ToString("u"), timestamp.Ticks.ToString("D")}.Concat(values.Select(v => v.FormattedValue)));
+            return string.Join(delimiter, new[] {timestamp.ToString("u"), timestamp.Ticks.ToString("D")}.Concat(values.Select(v => v.FormattedValue)));
         }
 
         private readonly string delimiter;

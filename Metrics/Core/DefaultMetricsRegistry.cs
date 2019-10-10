@@ -11,14 +11,14 @@ namespace Metrics.Core
     {
         public DefaultMetricsRegistry()
         {
-            this.DataProvider = new DefaultRegistryDataProvider(() => this.gauges.All, () => this.counters.All, () => this.meters.All, () => this.histograms.All, () => this.timers.All);
+            DataProvider = new DefaultRegistryDataProvider(() => gauges.All, () => counters.All, () => meters.All, () => histograms.All, () => timers.All);
         }
 
         public RegistryDataProvider DataProvider { get; }
 
         public void Gauge(string name, Func<MetricValueProvider<double>> valueProvider, Unit unit, MetricTags tags)
         {
-            this.gauges.GetOrAdd(name, () =>
+            gauges.GetOrAdd(name, () =>
                 {
                     MetricValueProvider<double> gauge = valueProvider();
                     return Tuple.Create(gauge, new GaugeValueSource(name, gauge, unit, tags));
@@ -28,7 +28,7 @@ namespace Metrics.Core
         public Counter Counter<T>(string name, Func<T> builder, Unit unit, MetricTags tags)
             where T : CounterImplementation
         {
-            return this.counters.GetOrAdd(name, () =>
+            return counters.GetOrAdd(name, () =>
                 {
                     T counter = builder();
                     return Tuple.Create((Counter)counter, new CounterValueSource(name, counter, unit, tags));
@@ -38,7 +38,7 @@ namespace Metrics.Core
         public Meter Meter<T>(string name, Func<T> builder, Unit unit, TimeUnit rateUnit, MetricTags tags)
             where T : MeterImplementation
         {
-            return this.meters.GetOrAdd(name, () =>
+            return meters.GetOrAdd(name, () =>
                 {
                     T meter = builder();
                     return Tuple.Create((Meter)meter, new MeterValueSource(name, meter, unit, rateUnit, tags));
@@ -48,7 +48,7 @@ namespace Metrics.Core
         public Histogram Histogram<T>(string name, Func<T> builder, Unit unit, MetricTags tags)
             where T : HistogramImplementation
         {
-            return this.histograms.GetOrAdd(name, () =>
+            return histograms.GetOrAdd(name, () =>
                 {
                     T histogram = builder();
                     return Tuple.Create((Histogram)histogram, new HistogramValueSource(name, histogram, unit, tags));
@@ -58,7 +58,7 @@ namespace Metrics.Core
         public Timer Timer<T>(string name, Func<T> builder, Unit unit, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
             where T : TimerImplementation
         {
-            return this.timers.GetOrAdd(name, () =>
+            return timers.GetOrAdd(name, () =>
                 {
                     T timer = builder();
                     return Tuple.Create((Timer)timer, new TimerValueSource(name, timer, unit, rateUnit, durationUnit, tags));
@@ -67,20 +67,20 @@ namespace Metrics.Core
 
         public void ClearAllMetrics()
         {
-            this.gauges.Clear();
-            this.counters.Clear();
-            this.meters.Clear();
-            this.histograms.Clear();
-            this.timers.Clear();
+            gauges.Clear();
+            counters.Clear();
+            meters.Clear();
+            histograms.Clear();
+            timers.Clear();
         }
 
         public void ResetMetricsValues()
         {
-            this.gauges.Reset();
-            this.counters.Reset();
-            this.meters.Reset();
-            this.histograms.Reset();
-            this.timers.Reset();
+            gauges.Reset();
+            counters.Reset();
+            meters.Reset();
+            histograms.Reset();
+            timers.Reset();
         }
 
         private readonly MetricMetaCatalog<MetricValueProvider<double>, GaugeValueSource, double> gauges = new MetricMetaCatalog<MetricValueProvider<double>, GaugeValueSource, double>();
@@ -95,11 +95,11 @@ namespace Metrics.Core
         private class MetricMetaCatalog<TMetric, TValue, TMetricValue>
             where TValue : MetricValueSource<TMetricValue>
         {
-            public IEnumerable<TValue> All { get { return this.metrics.Values.OrderBy(m => m.Name).Select(v => v.Value); } }
+            public IEnumerable<TValue> All { get { return metrics.Values.OrderBy(m => m.Name).Select(v => v.Value); } }
 
             public TMetric GetOrAdd(string name, Func<Tuple<TMetric, TValue>> metricProvider)
             {
-                return this.metrics.GetOrAdd(name, n =>
+                return metrics.GetOrAdd(name, n =>
                     {
                         var result = metricProvider();
                         return new MetricMeta(result.Item1, result.Item2);
@@ -108,8 +108,8 @@ namespace Metrics.Core
 
             public void Clear()
             {
-                var values = this.metrics.Values;
-                this.metrics.Clear();
+                var values = metrics.Values;
+                metrics.Clear();
                 foreach (var value in values)
                 {
                     using (value.Metric as IDisposable)
@@ -120,7 +120,7 @@ namespace Metrics.Core
 
             public void Reset()
             {
-                foreach (var metric in this.metrics.Values)
+                foreach (var metric in metrics.Values)
                 {
                     var resetable = metric.Metric as ResetableMetric;
                     resetable?.Reset();
@@ -134,11 +134,11 @@ namespace Metrics.Core
             {
                 public MetricMeta(TMetric metric, TValue valueUnit)
                 {
-                    this.Metric = metric;
-                    this.Value = valueUnit;
+                    Metric = metric;
+                    Value = valueUnit;
                 }
 
-                public string Name => this.Value.Name;
+                public string Name => Value.Name;
                 public TMetric Metric { get; }
                 public TValue Value { get; }
             }

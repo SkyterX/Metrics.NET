@@ -24,15 +24,15 @@ namespace Metrics.Reporters
 
         private void RunReport(CancellationToken token)
         {
-            report.RunReport(this.metricsDataProvider.CurrentMetricsData, this.healthStatus, token);
+            report.RunReport(metricsDataProvider.CurrentMetricsData, healthStatus, token);
         }
 
         public void Dispose()
         {
-            using (this.scheduler)
+            using (scheduler)
             {
             }
-            using (this.report as IDisposable)
+            using (report as IDisposable)
             {
             }
         }

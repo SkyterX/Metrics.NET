@@ -12,8 +12,8 @@ namespace Metrics.Tests.Metrics
         public void SetUp()
         {
             clock = new TestClock();
-            this.scheduler = new TestScheduler(this.clock);
-            this.meter = new MeterMetric(this.clock, this.scheduler);
+            scheduler = new TestScheduler(clock);
+            meter = new MeterMetric(clock, scheduler);
         }
 
         [Test]
@@ -137,12 +137,12 @@ namespace Metrics.Tests.Metrics
         [Test]
         public void MeterMetric_ValueCanScaleDown()
         {
-            this.meter.Mark();
-            this.clock.Advance(TimeUnit.Milliseconds, 1);
-            this.meter.Mark();
-            this.clock.Advance(TimeUnit.Milliseconds, 1);
+            meter.Mark();
+            clock.Advance(TimeUnit.Milliseconds, 1);
+            meter.Mark();
+            clock.Advance(TimeUnit.Milliseconds, 1);
 
-            var scaledValue = this.meter.Value.Scale(TimeUnit.Milliseconds);
+            var scaledValue = meter.Value.Scale(TimeUnit.Milliseconds);
 
             scaledValue.MeanRate.Should().Be(1);
         }
@@ -150,12 +150,12 @@ namespace Metrics.Tests.Metrics
         [Test]
         public void MeterMetric_ValueCanScaleDownToDecimals()
         {
-            this.meter.Mark();
-            this.clock.Advance(TimeUnit.Seconds, 1);
-            this.meter.Mark();
-            this.clock.Advance(TimeUnit.Seconds, 1);
+            meter.Mark();
+            clock.Advance(TimeUnit.Seconds, 1);
+            meter.Mark();
+            clock.Advance(TimeUnit.Seconds, 1);
 
-            var scaledValue = this.meter.Value.Scale(TimeUnit.Milliseconds);
+            var scaledValue = meter.Value.Scale(TimeUnit.Milliseconds);
 
             scaledValue.MeanRate.Should().Be(0.001);
         }
@@ -163,12 +163,12 @@ namespace Metrics.Tests.Metrics
         [Test]
         public void MeterMetric_ValueCanScaleUp()
         {
-            this.meter.Mark();
-            this.clock.Advance(TimeUnit.Minutes, 1);
-            this.meter.Mark();
-            this.clock.Advance(TimeUnit.Minutes, 1);
+            meter.Mark();
+            clock.Advance(TimeUnit.Minutes, 1);
+            meter.Mark();
+            clock.Advance(TimeUnit.Minutes, 1);
 
-            var scaledValue = this.meter.Value.Scale(TimeUnit.Minutes);
+            var scaledValue = meter.Value.Scale(TimeUnit.Minutes);
 
             scaledValue.MeanRate.Should().Be(1);
         }

@@ -39,18 +39,18 @@ namespace HdrHistogram
         protected void resetIterator(AbstractHistogram histogram)
         {
             this.histogram = histogram;
-            this.savedHistogramTotalRawCount = histogram.getTotalCount();
-            this.arrayTotalCount = histogram.getTotalCount();
-            this.integerToDoubleValueConversionRatio = histogram.integerToDoubleValueConversionRatio;
-            this.currentIndex = 0;
-            this.currentValueAtIndex = 0;
-            this.nextValueAtIndex = 1 << histogram.unitMagnitude;
-            this.prevValueIteratedTo = 0;
-            this.totalCountToPrevIndex = 0;
-            this.totalCountToCurrentIndex = 0;
-            this.totalValueToCurrentIndex = 0;
-            this.countAtThisValue = 0;
-            this.freshSubBucket = true;
+            savedHistogramTotalRawCount = histogram.getTotalCount();
+            arrayTotalCount = histogram.getTotalCount();
+            integerToDoubleValueConversionRatio = histogram.integerToDoubleValueConversionRatio;
+            currentIndex = 0;
+            currentValueAtIndex = 0;
+            nextValueAtIndex = 1 << histogram.unitMagnitude;
+            prevValueIteratedTo = 0;
+            totalCountToPrevIndex = 0;
+            totalCountToCurrentIndex = 0;
+            totalValueToCurrentIndex = 0;
+            countAtThisValue = 0;
+            freshSubBucket = true;
             currentIterationValue.reset();
         }
 
@@ -117,7 +117,7 @@ namespace HdrHistogram
 
         double getPercentileIteratedTo()
         {
-            return (100.0 * this.totalCountToCurrentIndex) / arrayTotalCount;
+            return (100.0 * totalCountToCurrentIndex) / arrayTotalCount;
         }
 
         long getValueIteratedTo()

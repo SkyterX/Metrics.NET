@@ -18,9 +18,9 @@ namespace Metrics.Core
         {
             get
             {
-                if (this.setCounters == null || this.setCounters.Count == 0)
+                if (setCounters == null || setCounters.Count == 0)
                 {
-                    return new CounterValue(this.counter.GetValue());
+                    return new CounterValue(counter.GetValue());
                 }
                 return GetValueWithSetItems();
             }
@@ -28,40 +28,40 @@ namespace Metrics.Core
 
         public CounterValue GetValue(bool resetMetric = false)
         {
-            var value = this.Value;
+            var value = Value;
             if (resetMetric)
             {
-                this.Reset();
+                Reset();
             }
             return value;
         }
 
         public void Increment()
         {
-            this.counter.Increment();
+            counter.Increment();
         }
 
         public void Increment(long value)
         {
-            this.counter.Add(value);
+            counter.Add(value);
         }
 
         public void Decrement()
         {
-            this.counter.Decrement();
+            counter.Decrement();
         }
 
         public void Decrement(long value)
         {
-            this.counter.Add(-value);
+            counter.Add(-value);
         }
 
         public void Reset()
         {
-            this.counter.Reset();
-            if (this.setCounters != null)
+            counter.Reset();
+            if (setCounters != null)
             {
-                foreach (var item in this.setCounters)
+                foreach (var item in setCounters)
                 {
                     item.Value.Reset();
                 }
@@ -94,22 +94,22 @@ namespace Metrics.Core
 
         private StripedLongAdder SetCounter(string item)
         {
-            if (this.setCounters == null)
+            if (setCounters == null)
             {
-                Interlocked.CompareExchange(ref this.setCounters, new ConcurrentDictionary<string, StripedLongAdder>(), null);
+                Interlocked.CompareExchange(ref setCounters, new ConcurrentDictionary<string, StripedLongAdder>(), null);
             }
-            Debug.Assert(this.setCounters != null);
-            return this.setCounters.GetOrAdd(item, v => new StripedLongAdder());
+            Debug.Assert(setCounters != null);
+            return setCounters.GetOrAdd(item, v => new StripedLongAdder());
         }
 
         private CounterValue GetValueWithSetItems()
         {
-            Debug.Assert(this.setCounters != null);
-            var total = this.counter.GetValue();
+            Debug.Assert(setCounters != null);
+            var total = counter.GetValue();
 
-            var items = new CounterValue.SetItem[this.setCounters.Count];
+            var items = new CounterValue.SetItem[setCounters.Count];
             var index = 0;
-            foreach (var item in this.setCounters)
+            foreach (var item in setCounters)
             {
                 var itemValue = item.Value.GetValue();
 

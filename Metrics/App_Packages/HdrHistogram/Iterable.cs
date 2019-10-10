@@ -21,12 +21,12 @@ namespace HdrHistogram
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this.iterator();
+            return iterator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

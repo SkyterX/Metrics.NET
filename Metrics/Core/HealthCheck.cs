@@ -25,7 +25,7 @@ namespace Metrics.Core
 
         public HealthCheck(string name, Func<HealthCheckResult> check)
         {
-            this.Name = name;
+            Name = name;
             this.check = check;
         }
 
@@ -33,8 +33,8 @@ namespace Metrics.Core
         {
             public Result(string name, HealthCheckResult check)
             {
-                this.Name = name;
-                this.Check = check;
+                Name = name;
+                Check = check;
             }
 
             public readonly string Name;
@@ -45,18 +45,18 @@ namespace Metrics.Core
 
         protected virtual HealthCheckResult Check()
         {
-            return this.check();
+            return check();
         }
 
         public Result Execute()
         {
             try
             {
-                return new Result(this.Name, this.Check());
+                return new Result(Name, Check());
             }
             catch (Exception x)
             {
-                return new Result(this.Name, HealthCheckResult.Unhealthy(x));
+                return new Result(Name, HealthCheckResult.Unhealthy(x));
             }
         }
 

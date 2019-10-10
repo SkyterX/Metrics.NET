@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 using FluentAssertions;
@@ -13,8 +13,8 @@ namespace Metrics.Tests
         public TestContext(string contextName, TestClock clock, TestScheduler scheduler)
             : base(contextName, new DefaultMetricsRegistry(), new TestMetricsBuilder(clock, scheduler), () => clock.UTCDateTime)
         {
-            this.Clock = clock;
-            this.Scheduler = scheduler;
+            Clock = clock;
+            Scheduler = scheduler;
         }
 
         private TestContext(string contextName, TestClock clock)
@@ -32,7 +32,7 @@ namespace Metrics.Tests
 
         protected override MetricsContext CreateChildContextInstance(string contextName)
         {
-            return new TestContext(contextName, this.Clock, this.Scheduler);
+            return new TestContext(contextName, Clock, Scheduler);
         }
 
         public double GaugeValue(params string[] nameWithContext)
@@ -83,7 +83,7 @@ namespace Metrics.Tests
                 return this;
             }
 
-            return (this.Context(nameWithContext.First()) as TestContext).GetContextFor(nameWithContext.Skip(1).ToArray());
+            return (Context(nameWithContext.First()) as TestContext).GetContextFor(nameWithContext.Skip(1).ToArray());
         }
     }
 }

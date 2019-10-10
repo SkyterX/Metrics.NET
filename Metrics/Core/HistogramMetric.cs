@@ -28,16 +28,16 @@ namespace Metrics.Core
 
         public void Update(long value, string userValue = null)
         {
-            this.last = new UserValueWrapper(value, userValue);
-            this.reservoir.Update(value, userValue);
+            last = new UserValueWrapper(value, userValue);
+            reservoir.Update(value, userValue);
         }
 
         public HistogramValue GetValue(bool resetMetric = false)
         {
-            var value = new HistogramValue(this.last.Value, this.last.UserValue, this.reservoir.GetSnapshot(resetMetric));
+            var value = new HistogramValue(last.Value, last.UserValue, reservoir.GetSnapshot(resetMetric));
             if (resetMetric)
             {
-                this.last = UserValueWrapper.Empty;
+                last = UserValueWrapper.Empty;
             }
             return value;
         }
@@ -46,8 +46,8 @@ namespace Metrics.Core
 
         public void Reset()
         {
-            this.last = UserValueWrapper.Empty;
-            this.reservoir.Reset();
+            last = UserValueWrapper.Empty;
+            reservoir.Reset();
         }
 
         private static Reservoir SamplingTypeToReservoir(SamplingType samplingType)

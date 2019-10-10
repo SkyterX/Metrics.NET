@@ -43,35 +43,35 @@ namespace Metrics.Utils
 
         public void Update(long value)
         {
-            this.uncounted.Add(value);
+            uncounted.Add(value);
         }
 
         public void Tick(long externallyCounted = 0L)
         {
-            var count = this.uncounted.GetAndReset() + externallyCounted;
+            var count = uncounted.GetAndReset() + externallyCounted;
 
-            var instantRate = count / this.interval;
-            if (this.initialized)
+            var instantRate = count / interval;
+            if (initialized)
             {
-                var doubleRate = this.rate.GetValue();
-                this.rate.SetValue(doubleRate + this.alpha * (instantRate - doubleRate));
+                var doubleRate = rate.GetValue();
+                rate.SetValue(doubleRate + alpha * (instantRate - doubleRate));
             }
             else
             {
-                this.rate.SetValue(instantRate);
-                this.initialized = true;
+                rate.SetValue(instantRate);
+                initialized = true;
             }
         }
 
         public double GetRate(TimeUnit rateUnit)
         {
-            return this.rate.GetValue() * rateUnit.ToNanoseconds(1L);
+            return rate.GetValue() * rateUnit.ToNanoseconds(1L);
         }
 
         public void Reset()
         {
-            this.uncounted.Reset();
-            this.rate.SetValue(0.0);
+            uncounted.Reset();
+            rate.SetValue(0.0);
         }
 
         private static readonly double M1Alpha = 1 - Math.Exp(-Interval / SecondsPerMinute / OneMinute);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -11,8 +11,8 @@ namespace Metrics
     {
         private HealthCheckResult(bool isHealthy, string message)
         {
-            this.IsHealthy = isHealthy;
-            this.Message = message;
+            IsHealthy = isHealthy;
+            Message = message;
         }
 
         /// <summary>

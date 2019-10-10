@@ -14,7 +14,7 @@ namespace Metrics.Reporters
         {
             this.token = token;
 
-            this.ReportTimestamp = Clock.Default.UTCDateTime;
+            ReportTimestamp = Clock.Default.UTCDateTime;
 
             StartReport(metricsData.Context);
 
@@ -27,7 +27,7 @@ namespace Metrics.Reporters
 
         private void ReportContext(MetricsData data, IEnumerable<string> contextStack)
         {
-            this.CurrentContextTimestamp = data.Timestamp;
+            CurrentContextTimestamp = data.Timestamp;
             var contextName = FormatContextName(contextStack, data.Context);
 
             StartContext(contextName);

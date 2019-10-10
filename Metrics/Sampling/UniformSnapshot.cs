@@ -8,41 +8,41 @@ namespace Metrics.Sampling
     {
         public UniformSnapshot(long count, IEnumerable<long> values, bool valuesAreSorted = false, string minUserValue = null, string maxUserValue = null)
         {
-            this.Count = count;
+            Count = count;
             this.values = values.ToArray();
             if (!valuesAreSorted)
             {
                 Array.Sort(this.values);
             }
-            this.MinUserValue = minUserValue;
-            this.MaxUserValue = maxUserValue;
+            MinUserValue = minUserValue;
+            MaxUserValue = maxUserValue;
         }
 
         public long Count { get; }
 
-        public int Size => this.values.Length;
+        public int Size => values.Length;
 
-        public long Max => this.values.LastOrDefault();
-        public long Min => this.values.FirstOrDefault();
+        public long Max => values.LastOrDefault();
+        public long Min => values.FirstOrDefault();
 
         public string MaxUserValue { get; }
         public string MinUserValue { get; }
 
-        public double Mean => Size == 0 ? 0.0 : this.values.Average();
+        public double Mean => Size == 0 ? 0.0 : values.Average();
 
         public double StdDev
         {
             get
             {
-                if (this.Size <= 1)
+                if (Size <= 1)
                 {
                     return 0;
                 }
 
-                var avg = this.values.Average();
-                var sum = this.values.Sum(d => Math.Pow(d - avg, 2));
+                var avg = values.Average();
+                var sum = values.Sum(d => Math.Pow(d - avg, 2));
 
-                return Math.Sqrt((sum) / (this.values.Length - 1));
+                return Math.Sqrt((sum) / (values.Length - 1));
             }
         }
 
@@ -53,7 +53,7 @@ namespace Metrics.Sampling
         public double Percentile99 => GetValue(0.99d);
         public double Percentile999 => GetValue(0.999d);
 
-        public IEnumerable<long> Values => this.values;
+        public IEnumerable<long> Values => values;
 
         public double GetValue(double quantile)
         {
@@ -62,26 +62,26 @@ namespace Metrics.Sampling
                 throw new ArgumentException($"{quantile} is not in [0..1]");
             }
 
-            if (this.Size == 0)
+            if (Size == 0)
             {
                 return 0;
             }
 
-            var pos = quantile * (this.values.Length + 1);
+            var pos = quantile * (values.Length + 1);
             var index = (int)pos;
 
             if (index < 1)
             {
-                return this.values[0];
+                return values[0];
             }
 
-            if (index >= this.values.Length)
+            if (index >= values.Length)
             {
-                return this.values[this.values.Length - 1];
+                return values[values.Length - 1];
             }
 
-            double lower = this.values[index - 1];
-            double upper = this.values[index];
+            double lower = values[index - 1];
+            double upper = values[index];
 
             return lower + (pos - Math.Floor(pos)) * (upper - lower);
         }

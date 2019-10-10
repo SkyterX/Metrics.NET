@@ -20,7 +20,7 @@ namespace Metrics.Graphite
         protected override void EndReport(string contextName)
         {
             base.EndReport(contextName);
-            this.sender.Flush();
+            sender.Flush();
         }
 
         protected override void ReportGauge(string name, double value, Unit unit, MetricTags tags)
@@ -124,8 +124,8 @@ namespace Metrics.Graphite
 
         protected virtual void Send(string name, string value)
         {
-            var timestamp = this.CurrentContextTimestamp.ToUnixTime().ToString("D", CultureInfo.InvariantCulture);
-            this.sender.Send(name, value, timestamp);
+            var timestamp = CurrentContextTimestamp.ToUnixTime().ToString("D", CultureInfo.InvariantCulture);
+            sender.Send(name, value, timestamp);
         }
 
         protected override string FormatContextName(IEnumerable<string> contextStack, string contextName)
@@ -210,7 +210,7 @@ namespace Metrics.Graphite
         {
             if (disposing)
             {
-                using (this.sender)
+                using (sender)
                 {
                 }
             }

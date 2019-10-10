@@ -26,7 +26,7 @@ namespace Metrics.Core
             {
                 try
                 {
-                    return this.valueProvider();
+                    return valueProvider();
                 }
                 catch (Exception x)
                 {
@@ -58,7 +58,7 @@ namespace Metrics.Core
             {
                 try
                 {
-                    return this.transformation(this.gauge.Value);
+                    return transformation(gauge.Value);
                 }
                 catch (Exception x)
                 {

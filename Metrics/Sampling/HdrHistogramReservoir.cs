@@ -19,13 +19,13 @@ namespace Metrics.Sampling
         {
             this.recorder = recorder;
 
-            this.intervalHistogram = recorder.GetIntervalHistogram();
-            this.runningTotals = new HdrHistogram.Histogram(this.intervalHistogram.NumberOfSignificantValueDigits);
+            intervalHistogram = recorder.GetIntervalHistogram();
+            runningTotals = new HdrHistogram.Histogram(intervalHistogram.NumberOfSignificantValueDigits);
         }
 
         public void Update(long value, string userValue = null)
         {
-            this.recorder.RecordValue(value);
+            recorder.RecordValue(value);
             if (userValue != null)
             {
                 TrackMinMaxUserValue(value, userValue);
@@ -34,39 +34,39 @@ namespace Metrics.Sampling
 
         public Snapshot GetSnapshot(bool resetReservoir = false)
         {
-            var snapshot = new HdrSnapshot(UpdateTotals(), this.minValue.GetValue(), this.minUserValue, this.maxValue.GetValue(), this.maxUserValue);
+            var snapshot = new HdrSnapshot(UpdateTotals(), minValue.GetValue(), minUserValue, maxValue.GetValue(), maxUserValue);
             if (resetReservoir)
             {
-                this.Reset();
+                Reset();
             }
             return snapshot;
         }
 
         public void Reset()
         {
-            this.recorder.Reset();
-            this.runningTotals.reset();
-            this.intervalHistogram.reset();
+            recorder.Reset();
+            runningTotals.reset();
+            intervalHistogram.reset();
         }
 
         private HdrHistogram.Histogram UpdateTotals()
         {
-            lock (this.runningTotals)
+            lock (runningTotals)
             {
-                this.intervalHistogram = this.recorder.GetIntervalHistogram(this.intervalHistogram);
-                this.runningTotals.add(this.intervalHistogram);
-                return this.runningTotals.copy() as HdrHistogram.Histogram;
+                intervalHistogram = recorder.GetIntervalHistogram(intervalHistogram);
+                runningTotals.add(intervalHistogram);
+                return runningTotals.copy() as HdrHistogram.Histogram;
             }
         }
 
         private void TrackMinMaxUserValue(long value, string userValue)
         {
-            if (value > this.maxValue.NonVolatileGetValue())
+            if (value > maxValue.NonVolatileGetValue())
             {
                 SetMaxValue(value, userValue);
             }
 
-            if (value < this.minValue.NonVolatileGetValue())
+            if (value < minValue.NonVolatileGetValue())
             {
                 SetMinValue(value, userValue);
             }
@@ -75,18 +75,18 @@ namespace Metrics.Sampling
         private void SetMaxValue(long value, string userValue)
         {
             long current;
-            while (value > (current = this.maxValue.GetValue()))
+            while (value > (current = maxValue.GetValue()))
             {
-                this.maxValue.CompareAndSwap(current, value);
+                maxValue.CompareAndSwap(current, value);
             }
 
             if (value == current)
             {
-                lock (this.maxValueLock)
+                lock (maxValueLock)
                 {
-                    if (value == this.maxValue.GetValue())
+                    if (value == maxValue.GetValue())
                     {
-                        this.maxUserValue = userValue;
+                        maxUserValue = userValue;
                     }
                 }
             }
@@ -95,18 +95,18 @@ namespace Metrics.Sampling
         private void SetMinValue(long value, string userValue)
         {
             long current;
-            while (value < (current = this.minValue.GetValue()))
+            while (value < (current = minValue.GetValue()))
             {
-                this.minValue.CompareAndSwap(current, value);
+                minValue.CompareAndSwap(current, value);
             }
 
             if (value == current)
             {
-                lock (this.minValueLock)
+                lock (minValueLock)
                 {
-                    if (value == this.minValue.GetValue())
+                    if (value == minValue.GetValue())
                     {
-                        this.minUserValue = userValue;
+                        minUserValue = userValue;
                     }
                 }
             }

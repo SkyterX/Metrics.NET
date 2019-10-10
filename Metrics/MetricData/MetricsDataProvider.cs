@@ -21,7 +21,7 @@ namespace Metrics.MetricData
             this.filter = filter;
         }
 
-        public MetricsData CurrentMetricsData { get { return this.provider.CurrentMetricsData.Filter(this.filter); } }
+        public MetricsData CurrentMetricsData { get { return provider.CurrentMetricsData.Filter(filter); } }
 
         private readonly MetricsDataProvider provider;
         private readonly MetricsFilter filter;

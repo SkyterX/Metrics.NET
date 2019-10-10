@@ -4,8 +4,8 @@
     {
         public EnvironmentEntry(string name, string value)
         {
-            this.Name = name;
-            this.Value = value;
+            Name = name;
+            Value = value;
         }
 
         public readonly string Name;

@@ -16,7 +16,7 @@ namespace Metrics.PerfCounters
         {
             try
             {
-                this.performanceCounter = instance == null ? new PerformanceCounter(category, counter, true) : new PerformanceCounter(category, counter, instance, true);
+                performanceCounter = instance == null ? new PerformanceCounter(category, counter, true) : new PerformanceCounter(category, counter, instance, true);
                 Metric.Internal.Counter("Performance Counters", Unit.Custom("Perf Counters")).Increment();
             }
             catch (Exception x)
@@ -29,7 +29,7 @@ namespace Metrics.PerfCounters
 
         public double GetValue(bool resetMetric = false)
         {
-            return this.Value;
+            return Value;
         }
 
         public double Value
@@ -38,7 +38,7 @@ namespace Metrics.PerfCounters
             {
                 try
                 {
-                    return this.performanceCounter?.NextValue() ?? double.NaN;
+                    return performanceCounter?.NextValue() ?? double.NaN;
                 }
                 catch (Exception x)
                 {

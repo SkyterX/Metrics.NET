@@ -30,12 +30,12 @@ namespace HdrHistogram
 
         public E Current { get; private set; }
         public void Dispose() { }
-        object System.Collections.IEnumerator.Current { get { return this.Current; } }
+        object System.Collections.IEnumerator.Current { get { return Current; } }
         public bool MoveNext()
         {
             if (hasNext())
             {
-                this.Current = this.next();
+                Current = next();
                 return true;
             }
             return false;

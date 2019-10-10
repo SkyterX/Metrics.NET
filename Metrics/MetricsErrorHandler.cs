@@ -10,12 +10,12 @@ namespace Metrics
     {
         private MetricsErrorHandler()
         {
-            this.AddHandler((x, msg) => log.ErrorException("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", x, msg, x.Message));
-            this.AddHandler((x, msg) => Trace.TraceError("Metrics: Unhandled exception in Metrics.NET Library " + x.ToString()));
+            AddHandler((x, msg) => log.ErrorException("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", x, msg, x.Message));
+            AddHandler((x, msg) => Trace.TraceError("Metrics: Unhandled exception in Metrics.NET Library " + x.ToString()));
 
             if (Environment.UserInteractive || isMono)
             {
-                this.AddHandler((x, msg) => Console.WriteLine("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", msg, x.ToString()));
+                AddHandler((x, msg) => Console.WriteLine("Metrics: Unhandled exception in Metrics.NET Library {0} {1}", msg, x.ToString()));
             }
         }
 
@@ -28,15 +28,15 @@ namespace Metrics
 
         internal void AddHandler(Action<Exception, string> handler)
         {
-            this.handlers.Add(handler);
+            handlers.Add(handler);
         }
 
         internal void ClearHandlers()
         {
-            while (!this.handlers.IsEmpty)
+            while (!handlers.IsEmpty)
             {
                 Action<Exception, string> item;
-                this.handlers.TryTake(out item);
+                handlers.TryTake(out item);
             }
         }
 
@@ -44,7 +44,7 @@ namespace Metrics
         {
             errorMeter.Mark();
 
-            foreach (var handler in this.handlers)
+            foreach (var handler in handlers)
             {
                 try
                 {

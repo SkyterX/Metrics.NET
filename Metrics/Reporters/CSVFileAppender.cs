@@ -26,7 +26,7 @@ namespace Metrics.Reporters
 
         public override void AppendLine(DateTime timestamp, string metricType, string metricName, IEnumerable<CSVReport.Value> values)
         {
-            var fileName = FormatFileName(this.directory, metricName, metricType);
+            var fileName = FormatFileName(directory, metricName, metricType);
 
             if (!File.Exists(fileName))
             {

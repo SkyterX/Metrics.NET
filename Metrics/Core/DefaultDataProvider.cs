@@ -38,14 +38,15 @@ namespace Metrics.Core
         {
             get
             {
-                return new MetricsData(this.context, this.timestampProvider(),
-                                       this.environment,
-                                       this.registryDataProvider.Gauges.ToArray(),
-                                       this.registryDataProvider.Counters.ToArray(),
-                                       this.registryDataProvider.Meters.ToArray(),
-                                       this.registryDataProvider.Histograms.ToArray(),
-                                       this.registryDataProvider.Timers.ToArray(),
-                                       this.childProviders().Select(p => p.CurrentMetricsData));
+                return new MetricsData(context,
+                                       timestampProvider(),
+                                       environment,
+                                       registryDataProvider.Gauges.ToArray(),
+                                       registryDataProvider.Counters.ToArray(),
+                                       registryDataProvider.Meters.ToArray(),
+                                       registryDataProvider.Histograms.ToArray(),
+                                       registryDataProvider.Timers.ToArray(),
+                                       childProviders().Select(p => p.CurrentMetricsData));
             }
         }
 

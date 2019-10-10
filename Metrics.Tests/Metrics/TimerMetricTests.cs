@@ -16,7 +16,7 @@ namespace Metrics.Tests.Metrics
         public void SetUp()
         {
             clock = new TestClock();
-            this.timer = new TimerMetric(new HistogramMetric(new UniformReservoir()), new MeterMetric(this.clock, new TestScheduler(this.clock)), this.clock);
+            timer = new TimerMetric(new HistogramMetric(new UniformReservoir()), new MeterMetric(clock, new TestScheduler(clock)), clock);
         }
 
         [Test]
@@ -40,11 +40,11 @@ namespace Metrics.Tests.Metrics
         [Test]
         public void TimerMetric_CountsEvenIfActionThrows()
         {
-            Action action = () => this.timer.Time(() => { throw new InvalidOperationException(); });
+            Action action = () => timer.Time(() => throw new InvalidOperationException());
 
             action.Should().Throw<InvalidOperationException>();
 
-            this.timer.Value.Rate.Count.Should().Be(1);
+            timer.Value.Rate.Count.Should().Be(1);
         }
 
         [Test]

@@ -9,18 +9,18 @@ namespace Metrics.MetricData
     {
         public TimerValue(MeterValue rate, HistogramValue histogram, long activeSessions, long totalTime, TimeUnit durationUnit)
         {
-            this.Rate = rate;
-            this.Histogram = histogram;
-            this.ActiveSessions = activeSessions;
-            this.TotalTime = totalTime;
+            Rate = rate;
+            Histogram = histogram;
+            ActiveSessions = activeSessions;
+            TotalTime = totalTime;
             this.durationUnit = durationUnit;
         }
 
         public TimerValue Scale(TimeUnit rate, TimeUnit duration)
         {
-            var durationFactor = this.durationUnit.ScalingFactorFor(duration);
-            var total = this.durationUnit.Convert(duration, this.TotalTime);
-            return new TimerValue(this.Rate.Scale(rate), this.Histogram.Scale(durationFactor), this.ActiveSessions, total, duration);
+            var durationFactor = durationUnit.ScalingFactorFor(duration);
+            var total = durationUnit.Convert(duration, TotalTime);
+            return new TimerValue(Rate.Scale(rate), Histogram.Scale(durationFactor), ActiveSessions, total, duration);
         }
 
         public readonly MeterValue Rate;
@@ -38,8 +38,8 @@ namespace Metrics.MetricData
         public TimerValueSource(string name, MetricValueProvider<TimerValue> value, Unit unit, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
             : base(name, new ScaledValueProvider<TimerValue>(value, v => v.Scale(rateUnit, durationUnit)), unit, tags)
         {
-            this.RateUnit = rateUnit;
-            this.DurationUnit = durationUnit;
+            RateUnit = rateUnit;
+            DurationUnit = durationUnit;
         }
 
         public TimeUnit RateUnit { get; private set; }

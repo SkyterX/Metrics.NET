@@ -13,7 +13,7 @@ namespace Metrics.Tests.Sampling
     {
         public ExponentiallyDecayingReservoirTests()
         {
-            this.scheduler = new TestScheduler(clock);
+            scheduler = new TestScheduler(clock);
         }
 
         [Test]

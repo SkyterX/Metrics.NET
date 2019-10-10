@@ -35,7 +35,7 @@ namespace Metrics.MetricData
 
         public Filter WhereContext(Predicate<string> condition)
         {
-            this.context = condition;
+            context = condition;
             return this;
         }
 
@@ -46,7 +46,7 @@ namespace Metrics.MetricData
 
         public Filter WhereName(Predicate<string> condition)
         {
-            this.name = condition;
+            name = condition;
             return this;
         }
 

@@ -29,15 +29,15 @@ namespace Metrics.MetricData
     {
         public ScaledValueProvider(MetricValueProvider<T> valueProvider, Func<T, T> transformation)
         {
-            this.ValueProvider = valueProvider;
-            this.scalingFunction = transformation;
+            ValueProvider = valueProvider;
+            scalingFunction = transformation;
         }
 
-        public T Value { get { return this.scalingFunction(this.ValueProvider.Value); } }
+        public T Value { get { return scalingFunction(ValueProvider.Value); } }
 
         public T GetValue(bool resetMetric = false)
         {
-            return this.scalingFunction(this.ValueProvider.GetValue(resetMetric));
+            return scalingFunction(ValueProvider.GetValue(resetMetric));
         }
 
         public MetricValueProvider<T> ValueProvider { get; }
@@ -54,10 +54,10 @@ namespace Metrics.MetricData
     {
         protected MetricValueSource(string name, MetricValueProvider<T> valueProvider, Unit unit, MetricTags tags)
         {
-            this.Name = name;
-            this.Unit = unit;
-            this.ValueProvider = valueProvider;
-            this.Tags = tags.Tags;
+            Name = name;
+            Unit = unit;
+            ValueProvider = valueProvider;
+            Tags = tags.Tags;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Metrics.MetricData
         /// <summary>
         ///     The current value of the metric.
         /// </summary>
-        public T Value { get { return this.ValueProvider.Value; } }
+        public T Value { get { return ValueProvider.Value; } }
 
         /// <summary>
         ///     Unit representing what the metric is measuring.

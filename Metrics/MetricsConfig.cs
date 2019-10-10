@@ -15,12 +15,12 @@ namespace Metrics
 
             if (!GloballyDisabledMetrics)
             {
-                this.healthStatus = HealthChecks.GetStatus;
-                this.reports = new MetricsReports(this.context.DataProvider, this.healthStatus);
+                healthStatus = HealthChecks.GetStatus;
+                reports = new MetricsReports(this.context.DataProvider, healthStatus);
 
                 this.context.Advanced.ContextDisabled += (s, e) =>
                     {
-                        this.isDisabled = true;
+                        isDisabled = true;
                         DisableAllReports();
                     };
             }
@@ -33,8 +33,8 @@ namespace Metrics
         {
             get
             {
-                Debug.Assert(this.defaultSamplingType != SamplingType.Default);
-                return this.defaultSamplingType;
+                Debug.Assert(defaultSamplingType != SamplingType.Default);
+                return defaultSamplingType;
             }
         }
 
@@ -45,7 +45,7 @@ namespace Metrics
         /// <returns>Chain-able configuration object.</returns>
         public MetricsConfig WithHealthStatus(Func<HealthStatus> healthStatus)
         {
-            if (!this.isDisabled)
+            if (!isDisabled)
             {
                 this.healthStatus = healthStatus;
             }
@@ -66,7 +66,7 @@ namespace Metrics
                 MetricsErrorHandler.Handler.ClearHandlers();
             }
 
-            if (!this.isDisabled)
+            if (!isDisabled)
             {
                 MetricsErrorHandler.Handler.AddHandler(errorHandler);
             }
@@ -88,7 +88,7 @@ namespace Metrics
                 MetricsErrorHandler.Handler.ClearHandlers();
             }
 
-            if (!this.isDisabled)
+            if (!isDisabled)
             {
                 MetricsErrorHandler.Handler.AddHandler(errorHandler);
             }
@@ -103,9 +103,9 @@ namespace Metrics
         /// <returns>Chain-able configuration object.</returns>
         public MetricsConfig WithReporting(Action<MetricsReports> reportsConfig)
         {
-            if (!this.isDisabled)
+            if (!isDisabled)
             {
-                reportsConfig(this.reports);
+                reportsConfig(reports);
             }
 
             return this;
@@ -122,7 +122,7 @@ namespace Metrics
         /// <returns>Chain-able configuration object.</returns>
         public MetricsConfig WithConfigExtension(Action<MetricsContext, Func<HealthStatus>> extension)
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return this;
             }
@@ -146,7 +146,7 @@ namespace Metrics
         [Obsolete("This configuration method ignores the CompletelyDisableMetrics setting. Please use the overload instead.")]
         public T WithConfigExtension<T>(Func<MetricsContext, Func<HealthStatus>, T> extension)
         {
-            return extension(this.context, this.healthStatus);
+            return extension(context, healthStatus);
         }
 
         /// <summary>
@@ -161,12 +161,12 @@ namespace Metrics
         /// <returns>The result of calling the extension.</returns>
         public T WithConfigExtension<T>(Func<MetricsContext, Func<HealthStatus>, T> extension, Func<T> defaultValueProvider)
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return defaultValueProvider();
             }
 
-            return extension(this.context, this.healthStatus);
+            return extension(context, healthStatus);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Metrics
         /// <returns>Chain-able configuration object.</returns>
         public MetricsConfig WithDefaultSamplingType(SamplingType type)
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return this;
             }
@@ -185,13 +185,13 @@ namespace Metrics
             {
                 throw new ArgumentException("Sampling type other than default must be specified", nameof(type));
             }
-            this.defaultSamplingType = type;
+            defaultSamplingType = type;
             return this;
         }
 
         public MetricsConfig WithInternalMetrics()
         {
-            if (this.isDisabled)
+            if (isDisabled)
             {
                 return this;
             }
@@ -202,12 +202,12 @@ namespace Metrics
 
         public void Dispose()
         {
-            this.reports.Dispose();
+            reports.Dispose();
         }
 
         private void DisableAllReports()
         {
-            this.reports.StopAndClearAllReports();
+            reports.StopAndClearAllReports();
         }
 
         private static bool ReadGloballyDisableMetricsSetting()

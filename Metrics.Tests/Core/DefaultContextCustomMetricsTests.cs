@@ -95,61 +95,56 @@ namespace Metrics.Tests.Core
 
             public CounterValue GetValue(bool resetMetric = false)
             {
-                return this.Value;
+                return Value;
             }
 
             public CounterValue Value => new CounterValue(10L, new CounterValue.SetItem[0]);
-
-            public bool Merge(MetricValueProvider<CounterValue> other)
-            {
-                return true;
-            }
         }
 
         public class CustomReservoir : Reservoir
         {
-            public long Count => this.values.Count;
-            public int Size => this.values.Count;
+            public long Count => values.Count;
+            public int Size => values.Count;
+            public IEnumerable<long> Values => values;
 
             public void Update(long value, string userValue)
             {
-                this.values.Add(value);
+                values.Add(value);
             }
 
             public Snapshot GetSnapshot(bool resetReservoir = false)
             {
-                return new UniformSnapshot(this.values.Count, this.values);
+                return new UniformSnapshot(values.Count, values);
             }
 
             public void Reset()
             {
-                this.values.Clear();
+                values.Clear();
             }
 
-            public IEnumerable<long> Values => this.values;
             private readonly List<long> values = new List<long>();
         }
 
         public class CustomHistogram : HistogramImplementation
         {
+            public CustomReservoir Reservoir { get; } = new CustomReservoir();
+
             public void Update(long value, string userValue)
             {
-                this.Reservoir.Update(value, userValue);
+                Reservoir.Update(value, userValue);
             }
 
             public void Reset()
             {
-                this.Reservoir.Reset();
+                Reservoir.Reset();
             }
-
-            public CustomReservoir Reservoir { get; } = new CustomReservoir();
 
             public HistogramValue GetValue(bool resetMetric = false)
             {
-                return this.Value;
+                return Value;
             }
 
-            public HistogramValue Value => new HistogramValue(this.Reservoir.Values.Last(), null, this.Reservoir.GetSnapshot());
+            public HistogramValue Value => new HistogramValue(Reservoir.Values.Last(), null, Reservoir.GetSnapshot());
         }
     }
 }

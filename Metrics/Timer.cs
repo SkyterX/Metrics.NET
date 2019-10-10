@@ -99,7 +99,7 @@ namespace Metrics
     {
         public TimerContext(Timer timer, string userValue)
         {
-            this.start = timer.StartRecording();
+            start = timer.StartRecording();
             this.timer = timer;
             this.userValue = userValue;
         }
@@ -110,7 +110,7 @@ namespace Metrics
         /// <param name="value">New user value to use for this context.</param>
         public void TrackUserValue(string value)
         {
-            this.userValue = value;
+            userValue = value;
         }
 
         /// <summary>
@@ -120,22 +120,22 @@ namespace Metrics
         {
             get
             {
-                if (this.timer == null)
+                if (timer == null)
                 {
                     return TimeSpan.Zero;
                 }
-                var milliseconds = TimeUnit.Nanoseconds.Convert(TimeUnit.Milliseconds, this.timer.CurrentTime() - this.start);
+                var milliseconds = TimeUnit.Nanoseconds.Convert(TimeUnit.Milliseconds, timer.CurrentTime() - start);
                 return TimeSpan.FromMilliseconds(milliseconds);
             }
         }
 
         public void Dispose()
         {
-            if (this.timer != null)
+            if (timer != null)
             {
                 var end = timer.EndRecording();
                 timer.Record(end - start, TimeUnit.Nanoseconds, userValue);
-                this.timer = null;
+                timer = null;
             }
         }
 

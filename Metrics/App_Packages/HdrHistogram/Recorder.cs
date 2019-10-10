@@ -179,7 +179,7 @@ namespace HdrHistogram
             public InternalConcurrentHistogram(long id, int numberOfSignificantValueDigits)
                 : base(numberOfSignificantValueDigits)
             {
-                this.ContainingInstanceId = id;
+                ContainingInstanceId = id;
             }
         }
 

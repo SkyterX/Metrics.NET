@@ -20,14 +20,14 @@ namespace Metrics.Graphite
 
         public void Append(string name, string value, string timestamp)
         {
-            this.jar.Add(new Pickle {Name = name, Value = value, Timestamp = timestamp});
+            jar.Add(new Pickle {Name = name, Value = value, Timestamp = timestamp});
         }
 
-        public int Size { get { return this.jar.Count; } }
+        public int Size { get { return jar.Count; } }
 
         public void WritePickleData(Stream stream)
         {
-            if (this.Size == 0)
+            if (Size == 0)
             {
                 return;
             }
@@ -52,7 +52,7 @@ namespace Metrics.Graphite
             buffer.Append(Mark);
             buffer.Append(List);
 
-            foreach (var pickle in this.jar)
+            foreach (var pickle in jar)
             {
                 // start the outer tuple
                 buffer.Append(Mark);

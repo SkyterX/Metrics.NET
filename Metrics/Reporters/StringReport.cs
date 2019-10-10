@@ -17,16 +17,16 @@ namespace Metrics.Reporters
 
         protected override void StartReport(string contextName)
         {
-            this.buffer = new StringBuilder();
+            buffer = new StringBuilder();
             base.StartReport(contextName);
         }
 
         protected override void WriteLine(string line, params string[] args)
         {
-            this.buffer.AppendLine(string.Format(line, args));
+            buffer.AppendLine(string.Format(line, args));
         }
 
-        public string Result => this.buffer.ToString();
+        public string Result => buffer.ToString();
 
         private StringBuilder buffer;
     }

@@ -54,7 +54,7 @@ namespace HdrHistogram
             this.valueIteratedTo = valueIteratedTo;
             this.valueIteratedFrom = valueIteratedFrom;
             this.countAtValueIteratedTo = countAtValueIteratedTo;
-            this.countAddedInThisIterationStep = countInThisIterationStep;
+            countAddedInThisIterationStep = countInThisIterationStep;
             this.totalCountToThisValue = totalCountToThisValue;
             this.totalValueToThisValue = totalValueToThisValue;
             this.percentile = percentile;
@@ -64,14 +64,14 @@ namespace HdrHistogram
 
         internal void reset()
         {
-            this.valueIteratedTo = 0;
-            this.valueIteratedFrom = 0;
-            this.countAtValueIteratedTo = 0;
-            this.countAddedInThisIterationStep = 0;
-            this.totalCountToThisValue = 0;
-            this.totalValueToThisValue = 0;
-            this.percentile = 0.0;
-            this.percentileLevelIteratedTo = 0.0;
+            valueIteratedTo = 0;
+            valueIteratedFrom = 0;
+            countAtValueIteratedTo = 0;
+            countAddedInThisIterationStep = 0;
+            totalCountToThisValue = 0;
+            totalValueToThisValue = 0;
+            percentile = 0.0;
+            percentileLevelIteratedTo = 0.0;
         }
 
         public long getValueIteratedTo()

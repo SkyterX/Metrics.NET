@@ -23,22 +23,22 @@ namespace Metrics.MetricData
                 throw new ArgumentNullException(nameof(items));
             }
 
-            this.Count = count;
-            this.MeanRate = meanRate;
-            this.OneMinuteRate = oneMinuteRate;
-            this.FiveMinuteRate = fiveMinuteRate;
-            this.FifteenMinuteRate = fifteenMinuteRate;
-            this.RateUnit = rateUnit;
-            this.Items = items;
+            Count = count;
+            MeanRate = meanRate;
+            OneMinuteRate = oneMinuteRate;
+            FiveMinuteRate = fiveMinuteRate;
+            FifteenMinuteRate = fifteenMinuteRate;
+            RateUnit = rateUnit;
+            Items = items;
         }
 
         public struct SetItem
         {
             public SetItem(string item, double percent, MeterValue value)
             {
-                this.Item = item;
-                this.Percent = percent;
-                this.Value = value;
+                Item = item;
+                Percent = percent;
+                Value = value;
             }
 
             public readonly string Item;
@@ -48,19 +48,19 @@ namespace Metrics.MetricData
 
         public MeterValue Scale(TimeUnit unit)
         {
-            if (unit == this.RateUnit)
+            if (unit == RateUnit)
             {
                 return this;
             }
 
             var factor = unit.ScalingFactorFor(TimeUnit.Seconds);
-            return new MeterValue(this.Count,
-                                  this.MeanRate * factor,
-                                  this.OneMinuteRate * factor,
-                                  this.FiveMinuteRate * factor,
-                                  this.FifteenMinuteRate * factor,
+            return new MeterValue(Count,
+                                  MeanRate * factor,
+                                  OneMinuteRate * factor,
+                                  FiveMinuteRate * factor,
+                                  FifteenMinuteRate * factor,
                                   unit,
-                                  this.Items.Select(i => new SetItem(i.Item, i.Percent, i.Value.Scale(unit))).ToArray());
+                                  Items.Select(i => new SetItem(i.Item, i.Percent, i.Value.Scale(unit))).ToArray());
         }
 
         private static readonly SetItem[] noItems = new SetItem[0];
@@ -88,7 +88,7 @@ namespace Metrics.MetricData
         public MeterValueSource(string name, MetricValueProvider<MeterValue> value, Unit unit, TimeUnit rateUnit, MetricTags tags)
             : base(name, new ScaledValueProvider<MeterValue>(value, v => v.Scale(rateUnit)), unit, tags)
         {
-            this.RateUnit = rateUnit;
+            RateUnit = rateUnit;
         }
 
         public TimeUnit RateUnit { get; private set; }

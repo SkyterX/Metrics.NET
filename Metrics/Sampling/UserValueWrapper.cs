@@ -6,8 +6,8 @@ namespace Metrics.Sampling
     {
         public UserValueWrapper(long value, string userValue = null)
         {
-            this.Value = value;
-            this.UserValue = userValue;
+            Value = value;
+            UserValue = userValue;
         }
 
         public static readonly UserValueWrapper Empty = new UserValueWrapper();

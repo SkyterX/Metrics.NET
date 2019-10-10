@@ -17,17 +17,17 @@ namespace Metrics.MetricData
                 throw new ArgumentNullException(nameof(items));
             }
 
-            this.Count = count;
-            this.Items = items;
+            Count = count;
+            Items = items;
         }
 
         public struct SetItem
         {
             public SetItem(string item, long count, double percent)
             {
-                this.Item = item;
-                this.Count = count;
-                this.Percent = percent;
+                Item = item;
+                Count = count;
+                Percent = percent;
             }
 
             /// <summary>

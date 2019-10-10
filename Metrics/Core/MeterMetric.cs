@@ -22,9 +22,9 @@ namespace Metrics.Core
         public MeterMetric(Clock clock, Scheduler scheduler)
         {
             this.clock = clock;
-            this.startTime = this.clock.Nanoseconds;
-            this.tickScheduler = scheduler;
-            this.tickScheduler.Start(TickInterval, (Action)Tick);
+            startTime = this.clock.Nanoseconds;
+            tickScheduler = scheduler;
+            tickScheduler.Start(TickInterval, (Action)Tick);
         }
 
         public MeterValue Value { get { return GetValue(); } }
@@ -53,20 +53,20 @@ namespace Metrics.Core
                 return;
             }
 
-            if (this.setMeters == null)
+            if (setMeters == null)
             {
-                Interlocked.CompareExchange(ref this.setMeters, new ConcurrentDictionary<string, SimpleMeter>(), null);
+                Interlocked.CompareExchange(ref setMeters, new ConcurrentDictionary<string, SimpleMeter>(), null);
             }
 
-            Debug.Assert(this.setMeters != null);
-            this.setMeters.GetOrAdd(item, v => new SimpleMeter()).Mark(count);
+            Debug.Assert(setMeters != null);
+            setMeters.GetOrAdd(item, v => new SimpleMeter()).Mark(count);
         }
 
         public MeterValue GetValue(bool resetMetric = false)
         {
-            if (this.setMeters == null || this.setMeters.Count == 0)
+            if (setMeters == null || setMeters.Count == 0)
             {
-                double elapsed = (this.clock.Nanoseconds - this.startTime);
+                double elapsed = (clock.Nanoseconds - startTime);
                 var value = base.GetValue(elapsed);
                 if (resetMetric)
                 {
@@ -80,15 +80,15 @@ namespace Metrics.Core
 
         private MeterValue GetValueWithSetItems(bool resetMetric)
         {
-            double elapsed = this.clock.Nanoseconds - this.startTime;
+            double elapsed = clock.Nanoseconds - startTime;
             var value = base.GetValue(elapsed);
 
-            Debug.Assert(this.setMeters != null);
+            Debug.Assert(setMeters != null);
 
-            var items = new MeterValue.SetItem[this.setMeters.Count];
+            var items = new MeterValue.SetItem[setMeters.Count];
             var index = 0;
 
-            foreach (var meter in this.setMeters)
+            foreach (var meter in setMeters)
             {
                 var itemValue = meter.Value.GetValue(elapsed);
                 var percent = value.Count > 0 ? itemValue.Count / (double)value.Count * 100 : 0.0;
@@ -111,9 +111,9 @@ namespace Metrics.Core
         private new void Tick()
         {
             base.Tick();
-            if (this.setMeters != null)
+            if (setMeters != null)
             {
-                foreach (var value in this.setMeters.Values)
+                foreach (var value in setMeters.Values)
                 {
                     value.Tick();
                 }
@@ -122,25 +122,25 @@ namespace Metrics.Core
 
         public void Dispose()
         {
-            this.tickScheduler.Stop();
-            using (this.tickScheduler)
+            tickScheduler.Stop();
+            using (tickScheduler)
             {
             }
 
-            if (this.setMeters != null)
+            if (setMeters != null)
             {
-                this.setMeters.Clear();
-                this.setMeters = null;
+                setMeters.Clear();
+                setMeters = null;
             }
         }
 
         public new void Reset()
         {
-            this.startTime = this.clock.Nanoseconds;
+            startTime = clock.Nanoseconds;
             base.Reset();
-            if (this.setMeters != null)
+            if (setMeters != null)
             {
-                foreach (var meter in this.setMeters.Values)
+                foreach (var meter in setMeters.Values)
                 {
                     meter.Reset();
                 }

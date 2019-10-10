@@ -35,13 +35,13 @@ namespace HdrHistogram
                 throw new ArgumentException("numberOfSignificantValueDigits must be between 0 and 5");
             }
 
-            this.LowestDiscernibleValue = lowestDiscernibleValue;
-            this.Identity = constructionIdentityCount.GetAndIncrement();
-            this.NumberOfSignificantValueDigits = numberOfSignificantValueDigits;
-            this.WordSizeInBytes = wordSizeInBytes;
-            this.AutoResize = autoResize;
+            LowestDiscernibleValue = lowestDiscernibleValue;
+            Identity = constructionIdentityCount.GetAndIncrement();
+            NumberOfSignificantValueDigits = numberOfSignificantValueDigits;
+            WordSizeInBytes = wordSizeInBytes;
+            AutoResize = autoResize;
 
-            this.recordedValuesIterator = new RecordedValuesIterator(this as AbstractHistogram);
+            recordedValuesIterator = new RecordedValuesIterator(this as AbstractHistogram);
         }
 
         // "Cold" accessed fields. Not used in the recording code path:

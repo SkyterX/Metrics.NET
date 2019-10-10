@@ -23,8 +23,8 @@ namespace Metrics.Reporters
         public MetricsReports WithReport(MetricsReport report, TimeSpan interval, MetricsFilter filter = null)
         {
             var toleratedConsecutiveFailures = ReadToleratedFailuresConfig();
-            var newReport = new ScheduledReporter(report, this.metricsDataProvider.WithFilter(filter), this.healthStatus, interval, new ActionScheduler(toleratedConsecutiveFailures));
-            this.reports.Add(newReport);
+            var newReport = new ScheduledReporter(report, metricsDataProvider.WithFilter(filter), healthStatus, interval, new ActionScheduler(toleratedConsecutiveFailures));
+            reports.Add(newReport);
             return this;
         }
 
@@ -66,8 +66,8 @@ namespace Metrics.Reporters
         /// </summary>
         public void StopAndClearAllReports()
         {
-            this.reports.ForEach(r => r.Dispose());
-            this.reports.Clear();
+            reports.ForEach(r => r.Dispose());
+            reports.Clear();
         }
 
         public void Dispose()

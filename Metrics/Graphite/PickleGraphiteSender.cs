@@ -13,19 +13,19 @@ namespace Metrics.Graphite
         {
             this.host = host;
             this.port = port;
-            this.pickleJarSize = batchSize;
+            pickleJarSize = batchSize;
         }
 
         public const int DefaultPickleJarSize = 100;
 
         public override void Send(string name, string value, string timestamp)
         {
-            this.jar.Append(name, value, timestamp);
+            jar.Append(name, value, timestamp);
 
-            if (jar.Size >= this.pickleJarSize)
+            if (jar.Size >= pickleJarSize)
             {
                 WriteCurrentJar();
-                this.jar = new PickleJar();
+                jar = new PickleJar();
             }
         }
 
@@ -33,19 +33,19 @@ namespace Metrics.Graphite
         {
             try
             {
-                if (this.client == null)
+                if (client == null)
                 {
-                    this.client = InitClient(this.host, this.port);
+                    client = InitClient(host, port);
                 }
 
-                this.jar.WritePickleData(this.client.GetStream());
+                jar.WritePickleData(client.GetStream());
             }
             catch (Exception x)
             {
-                using (this.client)
+                using (client)
                 {
                 }
-                this.client = null;
+                client = null;
                 MetricsErrorHandler.Handle(x, "Error sending Pickled data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
@@ -59,14 +59,14 @@ namespace Metrics.Graphite
             try
             {
                 WriteCurrentJar();
-                this.client?.GetStream().Flush();
+                client?.GetStream().Flush();
             }
             catch (Exception x)
             {
-                using (this.client)
+                using (client)
                 {
                 }
-                this.client = null;
+                client = null;
                 MetricsErrorHandler.Handle(x, "Error sending Pickled data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
@@ -83,17 +83,17 @@ namespace Metrics.Graphite
         protected override void Dispose(bool disposing)
         {
             Flush();
-            using (this.client)
+            using (client)
             {
                 try
                 {
-                    this.client.Close();
+                    client.Close();
                 }
                 catch
                 {
                 }
             }
-            this.client = null;
+            client = null;
             base.Dispose(disposing);
         }
 

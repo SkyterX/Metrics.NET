@@ -20,21 +20,21 @@ namespace Metrics.Graphite
         {
             try
             {
-                if (this.client == null)
+                if (client == null)
                 {
-                    this.client = InitClient(this.host, this.port);
+                    client = InitClient(host, port);
                 }
 
                 var bytes = Encoding.UTF8.GetBytes(data);
 
-                this.client.GetStream().Write(bytes, 0, bytes.Length);
+                client.GetStream().Write(bytes, 0, bytes.Length);
             }
             catch (Exception x)
             {
-                using (this.client)
+                using (client)
                 {
                 }
-                this.client = null;
+                client = null;
                 MetricsErrorHandler.Handle(x, "Error sending TCP data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
@@ -43,14 +43,14 @@ namespace Metrics.Graphite
         {
             try
             {
-                this.client?.GetStream().Flush();
+                client?.GetStream().Flush();
             }
             catch (Exception x)
             {
-                using (this.client)
+                using (client)
                 {
                 }
-                this.client = null;
+                client = null;
                 MetricsErrorHandler.Handle(x, "Error sending TCP data to graphite endpoint " + host + ":" + port.ToString());
             }
         }
@@ -66,17 +66,17 @@ namespace Metrics.Graphite
 
         protected override void Dispose(bool disposing)
         {
-            using (this.client)
+            using (client)
             {
                 try
                 {
-                    this.client.Close();
+                    client.Close();
                 }
                 catch
                 {
                 }
             }
-            this.client = null;
+            client = null;
             base.Dispose(disposing);
         }
 

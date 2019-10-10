@@ -21,11 +21,11 @@ namespace Metrics.Core
             this.timers = timers;
         }
 
-        public IEnumerable<GaugeValueSource> Gauges { get { return this.gauges(); } }
-        public IEnumerable<CounterValueSource> Counters { get { return this.counters(); } }
-        public IEnumerable<MeterValueSource> Meters { get { return this.meters(); } }
-        public IEnumerable<HistogramValueSource> Histograms { get { return this.histograms(); } }
-        public IEnumerable<TimerValueSource> Timers { get { return this.timers(); } }
+        public IEnumerable<GaugeValueSource> Gauges { get { return gauges(); } }
+        public IEnumerable<CounterValueSource> Counters { get { return counters(); } }
+        public IEnumerable<MeterValueSource> Meters { get { return meters(); } }
+        public IEnumerable<HistogramValueSource> Histograms { get { return histograms(); } }
+        public IEnumerable<TimerValueSource> Timers { get { return timers(); } }
         private readonly Func<IEnumerable<GaugeValueSource>> gauges;
         private readonly Func<IEnumerable<CounterValueSource>> counters;
         private readonly Func<IEnumerable<MeterValueSource>> meters;

@@ -18,51 +18,51 @@ namespace Metrics.Core
 
         public void Mark(long count)
         {
-            this.uncounted.Add(count);
+            uncounted.Add(count);
         }
 
         public void Tick()
         {
-            var count = this.uncounted.GetAndReset();
+            var count = uncounted.GetAndReset();
             Tick(count);
         }
 
         private void Tick(long count)
         {
-            this.total.Add(count);
+            total.Add(count);
             var instantRate = count / Interval;
-            if (this.initialized)
+            if (initialized)
             {
-                var rate = this.m1Rate.GetValue();
-                this.m1Rate.SetValue(rate + M1Alpha * (instantRate - rate));
+                var rate = m1Rate.GetValue();
+                m1Rate.SetValue(rate + M1Alpha * (instantRate - rate));
 
-                rate = this.m5Rate.GetValue();
-                this.m5Rate.SetValue(rate + M5Alpha * (instantRate - rate));
+                rate = m5Rate.GetValue();
+                m5Rate.SetValue(rate + M5Alpha * (instantRate - rate));
 
-                rate = this.m15Rate.GetValue();
-                this.m15Rate.SetValue(rate + M15Alpha * (instantRate - rate));
+                rate = m15Rate.GetValue();
+                m15Rate.SetValue(rate + M15Alpha * (instantRate - rate));
             }
             else
             {
-                this.m1Rate.SetValue(instantRate);
-                this.m5Rate.SetValue(instantRate);
-                this.m15Rate.SetValue(instantRate);
-                this.initialized = true;
+                m1Rate.SetValue(instantRate);
+                m5Rate.SetValue(instantRate);
+                m15Rate.SetValue(instantRate);
+                initialized = true;
             }
         }
 
         public void Reset()
         {
-            this.uncounted.Reset();
-            this.total.SetValue(0L);
-            this.m1Rate.SetValue(0.0);
-            this.m5Rate.SetValue(0.0);
-            this.m15Rate.SetValue(0.0);
+            uncounted.Reset();
+            total.SetValue(0L);
+            m1Rate.SetValue(0.0);
+            m5Rate.SetValue(0.0);
+            m15Rate.SetValue(0.0);
         }
 
         public MeterValue GetValue(double elapsed)
         {
-            var count = this.total.GetValue() + this.uncounted.GetValue();
+            var count = total.GetValue() + uncounted.GetValue();
             return new MeterValue(count, GetMeanRate(count, elapsed), OneMinuteRate, FiveMinuteRate, FifteenMinuteRate, TimeUnit.Seconds);
         }
 
@@ -76,9 +76,9 @@ namespace Metrics.Core
             return value / elapsed * TimeUnit.Seconds.ToNanoseconds(1);
         }
 
-        private double FifteenMinuteRate { get { return this.m15Rate.GetValue() * NanosInSecond; } }
-        private double FiveMinuteRate { get { return this.m5Rate.GetValue() * NanosInSecond; } }
-        private double OneMinuteRate { get { return this.m1Rate.GetValue() * NanosInSecond; } }
+        private double FifteenMinuteRate { get { return m15Rate.GetValue() * NanosInSecond; } }
+        private double FiveMinuteRate { get { return m5Rate.GetValue() * NanosInSecond; } }
+        private double OneMinuteRate { get { return m1Rate.GetValue() * NanosInSecond; } }
         private static readonly double M1Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / OneMinute);
         private static readonly double M5Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / FiveMinutes);
         private static readonly double M15Alpha = 1 - Math.Exp(-IntervalSeconds / SecondsPerMinute / FifteenMinutes);
