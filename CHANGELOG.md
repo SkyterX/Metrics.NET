@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.0.12 - 2019.10.10
-- Target .NET Standard 2.0.
+- Target .NET Standard 2.0 (PR [#1](https://github.com/skbkontur/Metrics.NET/pull/1)).
 - Remove ElasticSearch and InfluxDB reporters from the library.
 - Remove `MetricsConfig.WithHttpEndpoint()` feature from the library.
 - Remove [System.Configuration.ConfigurationManager](https://www.nuget.org/packages/System.Configuration.ConfigurationManager) dependency.
