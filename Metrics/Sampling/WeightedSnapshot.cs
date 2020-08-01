@@ -35,7 +35,7 @@ namespace Metrics.Sampling
             for (var i = 0; i < sample.Length; i++)
             {
                 this.values[i] = sample[i].Value;
-                normWeights[i] = sample[i].Weight / sumWeight;
+                normWeights[i] = sumWeight == 0.0 ? 0.0 : sample[i].Weight / sumWeight;
                 if (i > 0)
                 {
                     quantiles[i] = quantiles[i - 1] + normWeights[i - 1];

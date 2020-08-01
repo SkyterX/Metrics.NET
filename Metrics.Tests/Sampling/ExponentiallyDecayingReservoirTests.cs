@@ -99,6 +99,23 @@ namespace Metrics.Tests.Sampling
             // TODO: double check the Skip first value - sometimes first value is 2000 - which might or not be correct
             finalSnapshot.Values.Skip(1).Should().OnlyContain(v => 3000 <= v && v < 4000);
         }
+        
+        [Test]
+        public void EDR_canGetValidSnapshotAfterLongPeriodsOfInactivity()
+        {
+            ExponentiallyDecayingReservoir reservoir = new ExponentiallyDecayingReservoir(10, 0.015, clock, scheduler);
+
+            reservoir.Update(1000);
+            reservoir.GetSnapshot().Size.Should().Be(1);
+
+            // wait for 15 hours. this should trigger a rescale
+            clock.Advance(TimeUnit.Hours, 15);
+
+            var snapshot = reservoir.GetSnapshot();
+            snapshot.Size.Should().Be(1);
+            // the weights tend to zero as time passes, so the mean will also be zero since no new values were added
+            snapshot.Mean.Should().Be(0);
+        }
 
         [Test]
         public void EDR_SpotLift()
