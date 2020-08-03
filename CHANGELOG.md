@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.20 - 2020.08.03
+- Fixed division by zero issue in WeightedSnapshot (PR [#2](https://github.com/skbkontur/Metrics.NET/pull/2)).
+
 ## v1.0.15 - 2019.11.13
 - Use [SourceLink](https://github.com/dotnet/sourcelink) to help ReSharper decompiler show actual code.
 

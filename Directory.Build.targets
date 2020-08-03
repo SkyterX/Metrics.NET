@@ -9,14 +9,13 @@
 
   <Target Name="SetNuSpecProperties" BeforeTargets="GenerateNuspec" DependsOnTargets="GetBuildVersion">
     <PropertyGroup>
-      <PackageId>$(AssemblyName)</PackageId>
       <Authors>iulian.margarintescu, The Recognos Metrics.NET Team</Authors>
       <PackageDescription>The library provides support for capturing: Gauges, Counters, Meters, Histograms and Timers. This is Metrics.NET fork for SKB Kontur projects.</PackageDescription>
       <PackageTags>metrics</PackageTags>
       <RepositoryType>git</RepositoryType>
       <RepositoryUrl>https://github.com/skbkontur/Metrics.NET</RepositoryUrl>
       <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-      <PackageReleaseNotes>$(RepositoryUrl)/releases/tag/v$(MajorMinorVersion)-release</PackageReleaseNotes>
+      <PackageReleaseNotes>$(RepositoryUrl)/releases</PackageReleaseNotes>
     </PropertyGroup>
   </Target>
 

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>SkbKontur.Metrics.Net</PackageId>
     <AssemblyName>SkbKontur.Metrics.Net</AssemblyName>
     <RootNamespace>Metrics</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -10,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="4.6.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="4.7.0" />
   </ItemGroup>
 
 </Project>
