@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.21 - 2021.03.10
+- Update System.Diagnostics.PerformanceCounter dependency to v5.0.1.
+
 ## v1.0.20 - 2020.08.03
 - Fixed division by zero issue in WeightedSnapshot (PR [#2](https://github.com/skbkontur/Metrics.NET/pull/2)).
 
