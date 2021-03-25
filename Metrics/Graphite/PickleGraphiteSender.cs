@@ -45,7 +45,7 @@ namespace Metrics.Graphite
                 {
                 }
                 client = null;
-                MetricsErrorHandler.Handle(x, $"Error sending Pickled data to graphite endpoint {host}:{port}");
+                MetricsErrorHandler.Handle(x, "Error sending Pickled data to graphite endpoint {0}:{1}", host, port);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Metrics.Graphite
                 {
                 }
                 client = null;
-                MetricsErrorHandler.Handle(x, $"Error sending Pickled data to graphite endpoint {host}:{port}");
+                MetricsErrorHandler.Handle(x, "Error sending Pickled data to graphite endpoint {0}:{1}", host, port);
             }
         }
 

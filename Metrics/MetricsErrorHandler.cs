@@ -8,10 +8,10 @@ namespace Metrics
     {
         static MetricsErrorHandler()
         {
-            AddHandler((e, msg) => Trace.TraceError($"Metrics.NET: {msg} {e}"));
+            AddHandler((e, msg, args) => Trace.TraceError($"Metrics.NET: {string.Format(msg, args)} {e}"));
         }
 
-        public static void AddHandler(Action<Exception, string> handler)
+        public static void AddHandler(Action<Exception, string, object[]> handler)
         {
             handlers.Add(handler);
         }
@@ -22,7 +22,7 @@ namespace Metrics
                 handlers.TryTake(out _);
         }
 
-        public static void Handle(Exception exception, string message)
+        public static void Handle(Exception exception, string messageTemplate, params object[] templateArgs)
         {
             errorMeter.Mark();
 
@@ -30,7 +30,7 @@ namespace Metrics
             {
                 try
                 {
-                    handler(exception, message);
+                    handler(exception, messageTemplate, templateArgs);
                 }
                 catch
                 {
@@ -40,6 +40,6 @@ namespace Metrics
         }
 
         private static readonly Meter errorMeter = Metric.Internal.Meter("Metrics Errors", Unit.Errors);
-        private static readonly ConcurrentBag<Action<Exception, string>> handlers = new ConcurrentBag<Action<Exception, string>>();
+        private static readonly ConcurrentBag<Action<Exception, string, object[]>> handlers = new ConcurrentBag<Action<Exception, string, object[]>>();
     }
 }

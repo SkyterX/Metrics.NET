@@ -58,7 +58,7 @@ namespace Metrics
         /// <param name="errorHandler">Action with will be executed with the exception and a specific message.</param>
         /// <param name="clearExistingHandlers">Is set to true, remove any existing handler.</param>
         /// <returns>Chain able configuration object.</returns>
-        public MetricsConfig WithErrorHandler(Action<Exception, string> errorHandler, bool clearExistingHandlers = false)
+        public MetricsConfig WithErrorHandler(Action<Exception, string, object[]> errorHandler, bool clearExistingHandlers = false)
         {
             if (clearExistingHandlers)
             {

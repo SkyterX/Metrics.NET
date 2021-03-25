@@ -136,7 +136,7 @@ namespace Metrics.PerfCounters
                 }
             }
 
-            MetricsErrorHandler.Handle(null, $"Performance counter does not exist [{counter}] in category [{category}] for instance [{instance ?? "none"}]");
+            MetricsErrorHandler.Handle(null, "Performance counter does not exist [{0}] in category [{1}] for instance [{2}]", counter, category, instance ?? "none");
         }
     }
 }

@@ -15,18 +15,18 @@ namespace Metrics.Tests.Utils
         [Test]
         public void ActionScheduler_ExecutesScheduledFunction()
         {
-            using (ActionScheduler scheduler = new ActionScheduler())
+            using (var scheduler = new ActionScheduler())
             {
                 var tcs = new TaskCompletionSource<bool>();
-                int data = 0;
+                var data = 0;
 
-                Func<CancellationToken, Task> function = (t) => Task.Factory.StartNew(() =>
+                Task Function(CancellationToken t) => Task.Factory.StartNew(() =>
                     {
                         data++;
                         tcs.SetResult(true);
-                    });
+                    }, t);
 
-                scheduler.Start(TimeSpan.FromMilliseconds(10), function);
+                scheduler.Start(TimeSpan.FromMilliseconds(10), Function);
                 tcs.Task.Wait();
                 scheduler.Stop();
 
@@ -37,10 +37,10 @@ namespace Metrics.Tests.Utils
         [Test]
         public void ActionScheduler_ExecutesScheduledAction()
         {
-            using (ActionScheduler scheduler = new ActionScheduler())
+            using (var scheduler = new ActionScheduler())
             {
                 var tcs = new TaskCompletionSource<bool>();
-                int data = 0;
+                var data = 0;
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
                     {
@@ -58,9 +58,9 @@ namespace Metrics.Tests.Utils
         [Test]
         public void ActionScheduler_ExecutesScheduledActionWithToken()
         {
-            using (ActionScheduler scheduler = new ActionScheduler())
+            using (var scheduler = new ActionScheduler())
             {
-                int data = 0;
+                var data = 0;
                 var tcs = new TaskCompletionSource<bool>();
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), t =>
@@ -78,9 +78,9 @@ namespace Metrics.Tests.Utils
         [Test]
         public void ActionScheduler_ExecutesScheduledActionMultipleTimes()
         {
-            using (ActionScheduler scheduler = new ActionScheduler())
+            using (var scheduler = new ActionScheduler())
             {
-                int data = 0;
+                var data = 0;
                 var tcs = new TaskCompletionSource<bool>();
 
                 scheduler.Start(TimeSpan.FromMilliseconds(10), () =>
@@ -106,15 +106,15 @@ namespace Metrics.Tests.Utils
             Exception x = null;
             var tcs = new TaskCompletionSource<bool>();
 
-            Metric.Config.WithErrorHandler((e, msg) =>
+            Metric.Config.WithErrorHandler((e, msg, args) =>
                 {
                     x = e;
                     tcs.SetResult(true);
                 });
 
-            using (ActionScheduler scheduler = new ActionScheduler())
+            using (var scheduler = new ActionScheduler())
             {
-                scheduler.Start(TimeSpan.FromMilliseconds(10), t => { throw new InvalidOperationException("boom"); });
+                scheduler.Start(TimeSpan.FromMilliseconds(10), t => throw new InvalidOperationException("boom"));
 
                 tcs.Task.Wait(1000);
                 scheduler.Stop();
@@ -202,7 +202,7 @@ namespace Metrics.Tests.Utils
                 var tcs = new TaskCompletionSource<bool>();
                 var errorCounter = 0;
 
-                Metric.Config.WithErrorHandler((e, msg) =>
+                Metric.Config.WithErrorHandler((e, msg, args) =>
                     {
                         if (e.Message == "reports_error")
                         {
