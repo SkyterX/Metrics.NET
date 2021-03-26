@@ -32,7 +32,7 @@ namespace Metrics.Reporters
             }
             catch (Exception x)
             {
-                MetricsErrorHandler.Handle(x, "Error writing text file " + fileName);
+                MetricsErrorHandler.Handle(x, "Error writing text file {0}", fileName);
             }
 
             base.EndReport(contextName);
