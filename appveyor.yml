@@ -42,7 +42,7 @@ build_script:
   - cmd: dotnet pack --no-build --configuration Release ./Metrics.sln
 
 test_script:
-  - cmd: dotnet jb cleanupcode Metrics.sln --profile=CatalogueCleanup --exclude=./Metrics/App_Packages/*.cs --verbosity=WARN
+  - cmd: dotnet jb cleanupcode Metrics.sln --profile=CatalogueCleanup --exclude=./Metrics/App_Packages/**/*.cs --verbosity=WARN
   - cmd: git diff --exit-code
   - cmd: dotnet test --no-build --verbosity normal --configuration Release ./Metrics.Tests/Metrics.Tests.csproj
 
