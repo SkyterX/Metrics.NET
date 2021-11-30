@@ -100,8 +100,8 @@ namespace Metrics.Tests.Core
             var provider = context.DataProvider;
 
             var counter = context
-                .Context("test")
-                .Counter("test", Unit.Bytes);
+                          .Context("test")
+                          .Counter("test", Unit.Bytes);
 
             counter.Increment();
 
@@ -131,14 +131,14 @@ namespace Metrics.Tests.Core
         public void MetricsContext_DowsNotThrowOnMetricsOfDifferentTypeWithSameName()
         {
             ((Action)(() =>
-                {
-                    var name = "Test";
-                    context.Gauge(name, () => 0.0, Unit.Calls);
-                    context.Counter(name, Unit.Calls);
-                    context.Meter(name, Unit.Calls);
-                    context.Histogram(name, Unit.Calls);
-                    context.Timer(name, Unit.Calls);
-                })).Should().NotThrow();
+                             {
+                                 var name = "Test";
+                                 context.Gauge(name, () => 0.0, Unit.Calls);
+                                 context.Counter(name, Unit.Calls);
+                                 context.Meter(name, Unit.Calls);
+                                 context.Histogram(name, Unit.Calls);
+                                 context.Timer(name, Unit.Calls);
+                             })).Should().NotThrow();
         }
 
         [Test]

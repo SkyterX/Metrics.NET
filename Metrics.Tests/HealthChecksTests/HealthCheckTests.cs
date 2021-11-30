@@ -14,7 +14,7 @@ namespace Metrics.Tests.HealthChecksTests
         public void HealthCheck_ReturnsResultWithCorrectName()
         {
             string name = "test";
-            new HealthCheck(name, () => { }).Execute().Name.Should().Be(name);
+            new HealthCheck(name, () => {}).Execute().Name.Should().Be(name);
             new HealthCheck(name, () => { return "string"; }).Execute().Name.Should().Be(name);
             new HealthCheck(name, () => { HealthCheckResult.Healthy(); }).Execute().Name.Should().Be(name);
         }
@@ -23,7 +23,7 @@ namespace Metrics.Tests.HealthChecksTests
         public void HealthCheck_SuccessIfActionDoesNotThrow()
         {
             string name = "test";
-            new HealthCheck(name, () => { }).Execute().Check.IsHealthy.Should().BeTrue();
+            new HealthCheck(name, () => {}).Execute().Check.IsHealthy.Should().BeTrue();
             new HealthCheck(name, () => { return "string"; }).Execute().Check.IsHealthy.Should().BeTrue();
             new HealthCheck(name, () => { HealthCheckResult.Healthy(); }).Execute().Check.IsHealthy.Should().BeTrue();
         }

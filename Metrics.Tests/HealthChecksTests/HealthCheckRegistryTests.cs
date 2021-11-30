@@ -34,7 +34,7 @@ namespace Metrics.Tests.HealthChecksTests
         {
             HealthChecks.UnregisterAllHealthChecks();
 
-            HealthChecks.RegisterHealthCheck(new HealthCheck("ok", () => { }));
+            HealthChecks.RegisterHealthCheck(new HealthCheck("ok", () => {}));
             HealthChecks.RegisterHealthCheck(new HealthCheck("bad", () => HealthCheckResult.Unhealthy()));
 
             var status = HealthChecks.GetStatus();
@@ -48,7 +48,7 @@ namespace Metrics.Tests.HealthChecksTests
         {
             HealthChecks.UnregisterAllHealthChecks();
 
-            HealthChecks.RegisterHealthCheck(new HealthCheck("ok", () => { }));
+            HealthChecks.RegisterHealthCheck(new HealthCheck("ok", () => {}));
             HealthChecks.RegisterHealthCheck(new HealthCheck("another", () => HealthCheckResult.Healthy()));
 
             var status = HealthChecks.GetStatus();
@@ -62,9 +62,9 @@ namespace Metrics.Tests.HealthChecksTests
         {
             HealthChecks.UnregisterAllHealthChecks();
 
-            HealthChecks.RegisterHealthCheck(new HealthCheck("test", () => { }));
+            HealthChecks.RegisterHealthCheck(new HealthCheck("test", () => {}));
 
-            Action action = () => HealthChecks.RegisterHealthCheck(new HealthCheck("test", () => { }));
+            Action action = () => HealthChecks.RegisterHealthCheck(new HealthCheck("test", () => {}));
             action.Should().NotThrow<InvalidOperationException>();
         }
     }

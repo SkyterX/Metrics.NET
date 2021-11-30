@@ -5,7 +5,7 @@ namespace Metrics.Core
     public class HealthCheck
     {
         protected HealthCheck(string name)
-            : this(name, () => { })
+            : this(name, () => {})
         {
         }
 

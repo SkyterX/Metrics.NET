@@ -99,7 +99,7 @@ namespace Metrics.Tests.Sampling
             // TODO: double check the Skip first value - sometimes first value is 2000 - which might or not be correct
             finalSnapshot.Values.Skip(1).Should().OnlyContain(v => 3000 <= v && v < 4000);
         }
-        
+
         [Test]
         public void EDR_canGetValidSnapshotAfterLongPeriodsOfInactivity()
         {

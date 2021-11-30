@@ -36,12 +36,12 @@ namespace Metrics.Reporters
         protected override void ReportTimer(string name, TimerValue value, Unit unit, TimeUnit rateUnit, TimeUnit durationUnit, MetricTags tags)
         {
             var values = MeterValues(value.Rate, unit, rateUnit)
-                .Concat(HistogramValues(value.Histogram, unit, durationUnit))
-                .Concat(new[]
-                    {
-                        new Value("Active Sessions", value.ActiveSessions),
-                        new Value("Total Time", value.TotalTime)
-                    });
+                         .Concat(HistogramValues(value.Histogram, unit, durationUnit))
+                         .Concat(new[]
+                             {
+                                 new Value("Active Sessions", value.ActiveSessions),
+                                 new Value("Total Time", value.TotalTime)
+                             });
 
             Write("Timer", name, values);
         }
@@ -52,11 +52,11 @@ namespace Metrics.Reporters
                 {
                     new Value("All Healthy", status.IsHealthy)
                 }.Union(
-                    status.Results.SelectMany(r => new[]
-                        {
-                            new Value(r.Name + " IsHealthy", r.Check.IsHealthy),
-                            new Value(r.Name + " Message", r.Check.Message.Split('\n').First()) // only first line
-                        })));
+                status.Results.SelectMany(r => new[]
+                    {
+                        new Value(r.Name + " IsHealthy", r.Check.IsHealthy),
+                        new Value(r.Name + " Message", r.Check.Message.Split('\n').First()) // only first line
+                    })));
         }
 
         private static IEnumerable<Value> GaugeValues(double gaugeValue, Unit unit)
