@@ -1,4 +1,8 @@
 # Changelog
+
+## v1.0.28 - 2021.11.30
+- Update System.Diagnostics.PerformanceCounter dependency to v6.0.0.
+
 ## v1.0.25 - 2021.03.26
 - Error message template and template arguments now being passed separately to error handler
 
